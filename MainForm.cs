@@ -17,6 +17,8 @@ namespace IonImplationEtherCAT
         private RecipeView recipeView;
         private LogView logView;
 
+        public static bool IsLogined {  get; set; }
+
         public MainForm()
         {
             InitializeComponent();
@@ -64,8 +66,15 @@ namespace IonImplationEtherCAT
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            // (여기서 실제로는 txtUsername.Text와 txtPassword.Text로 DB나 파일 검증)
-            bool loginSuccess = true; // 임시로 무조건 성공 처리
+            string adminId = "admin";
+            string adminPw = "1234";
+            bool loginSuccess = false;
+
+            if (textBoxId.Text == adminId && textBoxPw.Text == adminPw) 
+            { 
+                loginSuccess = true; 
+                IsLogined = true;  
+            }
 
             if (loginSuccess)
             {
@@ -74,6 +83,9 @@ namespace IonImplationEtherCAT
                 lblCurrentUserName.Text = "User: " + textBoxId.Text; // 사용자 이름 표시
                 panelLoginView.Visible = false;     // 로그인 뷰 숨기기
                 panelUserInfoView.Visible = true;   // 사용자 정보 뷰 보여주기
+
+                //기타 버튼 전부 활성화
+                recipeView.ActivateToggle(true);
             }
             else
             {
@@ -88,6 +100,7 @@ namespace IonImplationEtherCAT
             textBoxPw.Text = "";
             panelLoginView.Visible = true;      // 로그인 뷰 보여주기
             panelUserInfoView.Visible = false; // 사용자 정보 뷰 숨기기
+            recipeView.ActivateToggle(false);
         }
 
         // --- 푸터 버튼 클릭 이벤트 핸들러 ---

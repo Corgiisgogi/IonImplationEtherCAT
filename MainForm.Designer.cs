@@ -58,13 +58,13 @@
             this.panelNetworkAlartView = new System.Windows.Forms.Panel();
             this.btnConnect = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.lblSlaveStatus = new System.Windows.Forms.Label();
+            this.lblEtherCatStatus = new System.Windows.Forms.Label();
+            this.lblSlave = new System.Windows.Forms.Label();
             this.lblEthercat = new System.Windows.Forms.Label();
             this.panelAlartContainer = new System.Windows.Forms.Panel();
             this.lblAlartContent = new System.Windows.Forms.Label();
             this.lblAlart = new System.Windows.Forms.Label();
-            this.lblSlave = new System.Windows.Forms.Label();
-            this.lblEtherCatStatus = new System.Windows.Forms.Label();
-            this.lblSlaveStatus = new System.Windows.Forms.Label();
             this.panelFooter.SuspendLayout();
             this.panelHeader.SuspendLayout();
             this.panelLoginContainer.SuspendLayout();
@@ -79,14 +79,14 @@
             // panelFooter
             // 
             this.panelFooter.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelFooter.Controls.Add(this.btnRecipe);
             this.panelFooter.Controls.Add(this.btnMain);
+            this.panelFooter.Controls.Add(this.btnRecipe);
             this.panelFooter.Controls.Add(this.btnAlarmManager);
             this.panelFooter.Controls.Add(this.btnLog);
             this.panelFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelFooter.Location = new System.Drawing.Point(0, 827);
+            this.panelFooter.Location = new System.Drawing.Point(0, 864);
             this.panelFooter.Name = "panelFooter";
-            this.panelFooter.Size = new System.Drawing.Size(1424, 158);
+            this.panelFooter.Size = new System.Drawing.Size(1424, 121);
             this.panelFooter.TabIndex = 1;
             // 
             // btnRecipe
@@ -94,7 +94,7 @@
             this.btnRecipe.Font = new System.Drawing.Font("나눔고딕", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.btnRecipe.Location = new System.Drawing.Point(717, 1);
             this.btnRecipe.Name = "btnRecipe";
-            this.btnRecipe.Size = new System.Drawing.Size(347, 154);
+            this.btnRecipe.Size = new System.Drawing.Size(347, 111);
             this.btnRecipe.TabIndex = 4;
             this.btnRecipe.Text = "Recipe Management";
             this.btnRecipe.UseVisualStyleBackColor = true;
@@ -103,9 +103,9 @@
             // btnMain
             // 
             this.btnMain.Font = new System.Drawing.Font("나눔고딕", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnMain.Location = new System.Drawing.Point(11, 1);
+            this.btnMain.Location = new System.Drawing.Point(11, 5);
             this.btnMain.Name = "btnMain";
-            this.btnMain.Size = new System.Drawing.Size(347, 154);
+            this.btnMain.Size = new System.Drawing.Size(347, 111);
             this.btnMain.TabIndex = 5;
             this.btnMain.Text = "Main";
             this.btnMain.UseVisualStyleBackColor = true;
@@ -116,7 +116,7 @@
             this.btnAlarmManager.Font = new System.Drawing.Font("나눔고딕", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.btnAlarmManager.Location = new System.Drawing.Point(364, 3);
             this.btnAlarmManager.Name = "btnAlarmManager";
-            this.btnAlarmManager.Size = new System.Drawing.Size(347, 154);
+            this.btnAlarmManager.Size = new System.Drawing.Size(347, 111);
             this.btnAlarmManager.TabIndex = 3;
             this.btnAlarmManager.Text = "Alarm Manager";
             this.btnAlarmManager.UseVisualStyleBackColor = true;
@@ -127,7 +127,7 @@
             this.btnLog.Font = new System.Drawing.Font("나눔고딕", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.btnLog.Location = new System.Drawing.Point(1072, 1);
             this.btnLog.Name = "btnLog";
-            this.btnLog.Size = new System.Drawing.Size(347, 154);
+            this.btnLog.Size = new System.Drawing.Size(347, 111);
             this.btnLog.TabIndex = 2;
             this.btnLog.Text = "Log";
             this.btnLog.UseVisualStyleBackColor = true;
@@ -138,7 +138,7 @@
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelContent.Location = new System.Drawing.Point(0, 149);
             this.panelContent.Name = "panelContent";
-            this.panelContent.Size = new System.Drawing.Size(1424, 678);
+            this.panelContent.Size = new System.Drawing.Size(1424, 715);
             this.panelContent.TabIndex = 2;
             // 
             // panelHeader
@@ -283,7 +283,7 @@
             // 
             // panelPm3StatusView
             // 
-            this.panelPm3StatusView.BackColor = System.Drawing.Color.Chartreuse;
+            this.panelPm3StatusView.BackColor = System.Drawing.Color.DarkGray;
             this.panelPm3StatusView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelPm3StatusView.Location = new System.Drawing.Point(260, 60);
             this.panelPm3StatusView.Name = "panelPm3StatusView";
@@ -302,7 +302,7 @@
             // 
             // panelPm2StatusView
             // 
-            this.panelPm2StatusView.BackColor = System.Drawing.Color.Chartreuse;
+            this.panelPm2StatusView.BackColor = System.Drawing.Color.DarkGray;
             this.panelPm2StatusView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelPm2StatusView.Location = new System.Drawing.Point(190, 60);
             this.panelPm2StatusView.Name = "panelPm2StatusView";
@@ -321,7 +321,7 @@
             // 
             // panelPm1StatusView
             // 
-            this.panelPm1StatusView.BackColor = System.Drawing.Color.Chartreuse;
+            this.panelPm1StatusView.BackColor = System.Drawing.Color.DarkGray;
             this.panelPm1StatusView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelPm1StatusView.Location = new System.Drawing.Point(120, 60);
             this.panelPm1StatusView.Name = "panelPm1StatusView";
@@ -340,7 +340,7 @@
             // 
             // panelTmStatusView
             // 
-            this.panelTmStatusView.BackColor = System.Drawing.Color.Chartreuse;
+            this.panelTmStatusView.BackColor = System.Drawing.Color.DarkGray;
             this.panelTmStatusView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelTmStatusView.Location = new System.Drawing.Point(52, 60);
             this.panelTmStatusView.Name = "panelTmStatusView";
@@ -392,6 +392,36 @@
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             // 
+            // lblSlaveStatus
+            // 
+            this.lblSlaveStatus.AutoSize = true;
+            this.lblSlaveStatus.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblSlaveStatus.Location = new System.Drawing.Point(141, 70);
+            this.lblSlaveStatus.Name = "lblSlaveStatus";
+            this.lblSlaveStatus.Size = new System.Drawing.Size(78, 21);
+            this.lblSlaveStatus.TabIndex = 2;
+            this.lblSlaveStatus.Text = "STATUS";
+            // 
+            // lblEtherCatStatus
+            // 
+            this.lblEtherCatStatus.AutoSize = true;
+            this.lblEtherCatStatus.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblEtherCatStatus.Location = new System.Drawing.Point(141, 25);
+            this.lblEtherCatStatus.Name = "lblEtherCatStatus";
+            this.lblEtherCatStatus.Size = new System.Drawing.Size(78, 21);
+            this.lblEtherCatStatus.TabIndex = 0;
+            this.lblEtherCatStatus.Text = "STATUS";
+            // 
+            // lblSlave
+            // 
+            this.lblSlave.AutoSize = true;
+            this.lblSlave.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblSlave.Location = new System.Drawing.Point(21, 69);
+            this.lblSlave.Name = "lblSlave";
+            this.lblSlave.Size = new System.Drawing.Size(67, 21);
+            this.lblSlave.TabIndex = 1;
+            this.lblSlave.Text = "SLAVE";
+            // 
             // lblEthercat
             // 
             this.lblEthercat.AutoSize = true;
@@ -433,36 +463,6 @@
             this.lblAlart.Size = new System.Drawing.Size(79, 24);
             this.lblAlart.TabIndex = 0;
             this.lblAlart.Text = "ALART";
-            // 
-            // lblSlave
-            // 
-            this.lblSlave.AutoSize = true;
-            this.lblSlave.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblSlave.Location = new System.Drawing.Point(21, 69);
-            this.lblSlave.Name = "lblSlave";
-            this.lblSlave.Size = new System.Drawing.Size(67, 21);
-            this.lblSlave.TabIndex = 1;
-            this.lblSlave.Text = "SLAVE";
-            // 
-            // lblEtherCatStatus
-            // 
-            this.lblEtherCatStatus.AutoSize = true;
-            this.lblEtherCatStatus.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblEtherCatStatus.Location = new System.Drawing.Point(141, 25);
-            this.lblEtherCatStatus.Name = "lblEtherCatStatus";
-            this.lblEtherCatStatus.Size = new System.Drawing.Size(78, 21);
-            this.lblEtherCatStatus.TabIndex = 0;
-            this.lblEtherCatStatus.Text = "STATUS";
-            // 
-            // lblSlaveStatus
-            // 
-            this.lblSlaveStatus.AutoSize = true;
-            this.lblSlaveStatus.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblSlaveStatus.Location = new System.Drawing.Point(141, 70);
-            this.lblSlaveStatus.Name = "lblSlaveStatus";
-            this.lblSlaveStatus.Size = new System.Drawing.Size(78, 21);
-            this.lblSlaveStatus.TabIndex = 2;
-            this.lblSlaveStatus.Text = "STATUS";
             // 
             // MainForm
             // 

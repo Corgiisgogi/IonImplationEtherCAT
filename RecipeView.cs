@@ -12,15 +12,28 @@ namespace IonImplationEtherCAT
 {
     public partial class RecipeView : UserControl
     {
-        public RecipeView()
-        {
-            InitializeComponent();
-        }
-
         int currentRecipe = 1;
         List<object> currentPm1RecipeList = new List<object>() { null, null, "", "", "", "", "" };
         List<object> currentPm2RecipeList = new List<object>() { null, null, "", "", "", "", "" };
         List<object> currentPm3RecipeList = new List<object>() { "", "", "" };
+
+        public RecipeView()
+        {
+            InitializeComponent();
+            this.ActivateToggle(false);
+        }
+
+        public void ActivateToggle(bool activation)
+        {
+            panelPm1.Enabled = activation;
+            panelPm2.Enabled = activation;
+            panelPm3.Enabled = activation;
+            btnRecipePm1.Enabled = activation;
+            btnRecipePm2.Enabled = activation;
+            btnRecipePm3.Enabled = activation;
+            btnLoad.Enabled = activation;
+            btnSave.Enabled = activation;
+        }
 
         public void RecipeApply()
         {
@@ -80,6 +93,14 @@ namespace IonImplationEtherCAT
                     break;
 
                 case 2:
+                    if (currentPm2RecipeList[0] != null) { currentPm2RecipeList[0] = listBoxIonGas.SelectedItem; }
+                    if (currentPm2RecipeList[1] != null) { currentPm2RecipeList[1] = listBoxGas.SelectedItem; }
+                    currentPm2RecipeList[2] = textBoxDose.Text;
+                    currentPm2RecipeList[3] = textBoxVoltage.Text;
+                    currentPm2RecipeList[4] = textBoxCurrent.Text;
+                    currentPm2RecipeList[5] = textBoxMotor.Text;
+                    currentPm2RecipeList[6] = textBoxScannerVoltage.Text;
+                    MessageBox.Show("적용이 완료되었습니다.");
                     break;
 
                 case 3:
@@ -103,6 +124,14 @@ namespace IonImplationEtherCAT
                     break;
 
                 case 2:
+                    if (currentPm2RecipeList[0] != null) { listBoxIonGas.SelectedItem = currentPm1RecipeList[0]; }
+                    if (currentPm2RecipeList[1] != null) { listBoxGas.SelectedItem = currentPm1RecipeList[1]; }
+                    textBoxDose.Text = currentPm2RecipeList[2].ToString();
+                    textBoxVoltage.Text = currentPm2RecipeList[3].ToString();
+                    textBoxCurrent.Text = currentPm2RecipeList[4].ToString();
+                    textBoxMotor.Text = currentPm2RecipeList[5].ToString();
+                    textBoxScannerVoltage.Text = currentPm2RecipeList[6].ToString();
+                    MessageBox.Show("불러오기가 완료되었습니다.");
                     break;
 
                 case 3:

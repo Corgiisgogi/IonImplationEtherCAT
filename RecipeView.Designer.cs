@@ -34,22 +34,22 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.btnLoad = new System.Windows.Forms.Button();
             this.panelPm1 = new System.Windows.Forms.Panel();
-            this.textBoxDose = new System.Windows.Forms.TextBox();
-            this.listBoxIonGas = new System.Windows.Forms.ListBox();
-            this.listBoxGas = new System.Windows.Forms.ListBox();
-            this.textBoxVoltage = new System.Windows.Forms.TextBox();
-            this.lblIonGas = new System.Windows.Forms.Label();
-            this.lblGas = new System.Windows.Forms.Label();
-            this.lblDose = new System.Windows.Forms.Label();
-            this.lblVoltage = new System.Windows.Forms.Label();
-            this.gBoxAnalyzer = new System.Windows.Forms.GroupBox();
             this.gBoxScanner = new System.Windows.Forms.GroupBox();
-            this.lblCurrent = new System.Windows.Forms.Label();
-            this.textBoxCurrent = new System.Windows.Forms.TextBox();
-            this.lblMotor = new System.Windows.Forms.Label();
-            this.textBoxMotor = new System.Windows.Forms.TextBox();
             this.lblScannerVoltage = new System.Windows.Forms.Label();
             this.textBoxScannerVoltage = new System.Windows.Forms.TextBox();
+            this.lblMotor = new System.Windows.Forms.Label();
+            this.textBoxMotor = new System.Windows.Forms.TextBox();
+            this.gBoxAnalyzer = new System.Windows.Forms.GroupBox();
+            this.lblCurrent = new System.Windows.Forms.Label();
+            this.textBoxCurrent = new System.Windows.Forms.TextBox();
+            this.lblVoltage = new System.Windows.Forms.Label();
+            this.lblDose = new System.Windows.Forms.Label();
+            this.lblGas = new System.Windows.Forms.Label();
+            this.lblIonGas = new System.Windows.Forms.Label();
+            this.textBoxVoltage = new System.Windows.Forms.TextBox();
+            this.listBoxGas = new System.Windows.Forms.ListBox();
+            this.listBoxIonGas = new System.Windows.Forms.ListBox();
+            this.textBoxDose = new System.Windows.Forms.TextBox();
             this.panelPm2 = new System.Windows.Forms.Panel();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lblScannerVoltage2 = new System.Windows.Forms.Label();
@@ -68,15 +68,15 @@
             this.listBoxIonGas2 = new System.Windows.Forms.ListBox();
             this.textBoxDose2 = new System.Windows.Forms.TextBox();
             this.panelPm3 = new System.Windows.Forms.Panel();
+            this.textBoxVaccum = new System.Windows.Forms.TextBox();
+            this.textBoxTemperature = new System.Windows.Forms.TextBox();
             this.labelProcesstime = new System.Windows.Forms.Label();
             this.lblTemperature = new System.Windows.Forms.Label();
             this.lblVaccum = new System.Windows.Forms.Label();
             this.textBoxProcesstime = new System.Windows.Forms.TextBox();
-            this.textBoxTemperature = new System.Windows.Forms.TextBox();
-            this.textBoxVaccum = new System.Windows.Forms.TextBox();
             this.panelPm1.SuspendLayout();
-            this.gBoxAnalyzer.SuspendLayout();
             this.gBoxScanner.SuspendLayout();
+            this.gBoxAnalyzer.SuspendLayout();
             this.panelPm2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -155,94 +155,6 @@
             this.panelPm1.Size = new System.Drawing.Size(1022, 449);
             this.panelPm1.TabIndex = 5;
             // 
-            // textBoxDose
-            // 
-            this.textBoxDose.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBoxDose.Location = new System.Drawing.Point(130, 133);
-            this.textBoxDose.Name = "textBoxDose";
-            this.textBoxDose.Size = new System.Drawing.Size(188, 29);
-            this.textBoxDose.TabIndex = 0;
-            // 
-            // listBoxIonGas
-            // 
-            this.listBoxIonGas.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.listBoxIonGas.FormattingEnabled = true;
-            this.listBoxIonGas.ItemHeight = 21;
-            this.listBoxIonGas.Location = new System.Drawing.Point(130, 47);
-            this.listBoxIonGas.Name = "listBoxIonGas";
-            this.listBoxIonGas.Size = new System.Drawing.Size(188, 25);
-            this.listBoxIonGas.TabIndex = 1;
-            // 
-            // listBoxGas
-            // 
-            this.listBoxGas.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.listBoxGas.FormattingEnabled = true;
-            this.listBoxGas.ItemHeight = 21;
-            this.listBoxGas.Location = new System.Drawing.Point(130, 89);
-            this.listBoxGas.Name = "listBoxGas";
-            this.listBoxGas.Size = new System.Drawing.Size(188, 25);
-            this.listBoxGas.TabIndex = 2;
-            // 
-            // textBoxVoltage
-            // 
-            this.textBoxVoltage.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBoxVoltage.Location = new System.Drawing.Point(130, 186);
-            this.textBoxVoltage.Name = "textBoxVoltage";
-            this.textBoxVoltage.Size = new System.Drawing.Size(188, 29);
-            this.textBoxVoltage.TabIndex = 3;
-            // 
-            // lblIonGas
-            // 
-            this.lblIonGas.AutoSize = true;
-            this.lblIonGas.Font = new System.Drawing.Font("나눔고딕", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblIonGas.Location = new System.Drawing.Point(28, 47);
-            this.lblIonGas.Name = "lblIonGas";
-            this.lblIonGas.Size = new System.Drawing.Size(96, 24);
-            this.lblIonGas.TabIndex = 4;
-            this.lblIonGas.Text = "이온 가스";
-            // 
-            // lblGas
-            // 
-            this.lblGas.AutoSize = true;
-            this.lblGas.Font = new System.Drawing.Font("나눔고딕", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblGas.Location = new System.Drawing.Point(74, 89);
-            this.lblGas.Name = "lblGas";
-            this.lblGas.Size = new System.Drawing.Size(50, 24);
-            this.lblGas.TabIndex = 5;
-            this.lblGas.Text = "가스";
-            // 
-            // lblDose
-            // 
-            this.lblDose.AutoSize = true;
-            this.lblDose.Font = new System.Drawing.Font("나눔고딕", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblDose.Location = new System.Drawing.Point(66, 138);
-            this.lblDose.Name = "lblDose";
-            this.lblDose.Size = new System.Drawing.Size(58, 24);
-            this.lblDose.TabIndex = 6;
-            this.lblDose.Text = "Dose";
-            // 
-            // lblVoltage
-            // 
-            this.lblVoltage.AutoSize = true;
-            this.lblVoltage.Font = new System.Drawing.Font("나눔고딕", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblVoltage.Location = new System.Drawing.Point(28, 191);
-            this.lblVoltage.Name = "lblVoltage";
-            this.lblVoltage.Size = new System.Drawing.Size(96, 24);
-            this.lblVoltage.TabIndex = 7;
-            this.lblVoltage.Text = "목표 전압";
-            // 
-            // gBoxAnalyzer
-            // 
-            this.gBoxAnalyzer.Controls.Add(this.lblCurrent);
-            this.gBoxAnalyzer.Controls.Add(this.textBoxCurrent);
-            this.gBoxAnalyzer.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.gBoxAnalyzer.Location = new System.Drawing.Point(14, 230);
-            this.gBoxAnalyzer.Name = "gBoxAnalyzer";
-            this.gBoxAnalyzer.Size = new System.Drawing.Size(317, 86);
-            this.gBoxAnalyzer.TabIndex = 8;
-            this.gBoxAnalyzer.TabStop = false;
-            this.gBoxAnalyzer.Text = "분석기";
-            // 
             // gBoxScanner
             // 
             this.gBoxScanner.Controls.Add(this.lblScannerVoltage);
@@ -257,23 +169,23 @@
             this.gBoxScanner.TabStop = false;
             this.gBoxScanner.Text = "스캐너";
             // 
-            // lblCurrent
+            // lblScannerVoltage
             // 
-            this.lblCurrent.AutoSize = true;
-            this.lblCurrent.Font = new System.Drawing.Font("나눔고딕", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblCurrent.Location = new System.Drawing.Point(13, 33);
-            this.lblCurrent.Name = "lblCurrent";
-            this.lblCurrent.Size = new System.Drawing.Size(96, 24);
-            this.lblCurrent.TabIndex = 11;
-            this.lblCurrent.Text = "자석 전류";
+            this.lblScannerVoltage.AutoSize = true;
+            this.lblScannerVoltage.Font = new System.Drawing.Font("나눔고딕", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblScannerVoltage.Location = new System.Drawing.Point(25, 77);
+            this.lblScannerVoltage.Name = "lblScannerVoltage";
+            this.lblScannerVoltage.Size = new System.Drawing.Size(50, 24);
+            this.lblScannerVoltage.TabIndex = 15;
+            this.lblScannerVoltage.Text = "전압";
             // 
-            // textBoxCurrent
+            // textBoxScannerVoltage
             // 
-            this.textBoxCurrent.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBoxCurrent.Location = new System.Drawing.Point(115, 28);
-            this.textBoxCurrent.Name = "textBoxCurrent";
-            this.textBoxCurrent.Size = new System.Drawing.Size(188, 29);
-            this.textBoxCurrent.TabIndex = 10;
+            this.textBoxScannerVoltage.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.textBoxScannerVoltage.Location = new System.Drawing.Point(92, 76);
+            this.textBoxScannerVoltage.Name = "textBoxScannerVoltage";
+            this.textBoxScannerVoltage.Size = new System.Drawing.Size(188, 29);
+            this.textBoxScannerVoltage.TabIndex = 14;
             // 
             // lblMotor
             // 
@@ -293,23 +205,111 @@
             this.textBoxMotor.Size = new System.Drawing.Size(188, 29);
             this.textBoxMotor.TabIndex = 12;
             // 
-            // lblScannerVoltage
+            // gBoxAnalyzer
             // 
-            this.lblScannerVoltage.AutoSize = true;
-            this.lblScannerVoltage.Font = new System.Drawing.Font("나눔고딕", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblScannerVoltage.Location = new System.Drawing.Point(25, 77);
-            this.lblScannerVoltage.Name = "lblScannerVoltage";
-            this.lblScannerVoltage.Size = new System.Drawing.Size(50, 24);
-            this.lblScannerVoltage.TabIndex = 15;
-            this.lblScannerVoltage.Text = "전압";
+            this.gBoxAnalyzer.Controls.Add(this.lblCurrent);
+            this.gBoxAnalyzer.Controls.Add(this.textBoxCurrent);
+            this.gBoxAnalyzer.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.gBoxAnalyzer.Location = new System.Drawing.Point(14, 230);
+            this.gBoxAnalyzer.Name = "gBoxAnalyzer";
+            this.gBoxAnalyzer.Size = new System.Drawing.Size(317, 86);
+            this.gBoxAnalyzer.TabIndex = 8;
+            this.gBoxAnalyzer.TabStop = false;
+            this.gBoxAnalyzer.Text = "분석기";
             // 
-            // textBoxScannerVoltage
+            // lblCurrent
             // 
-            this.textBoxScannerVoltage.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBoxScannerVoltage.Location = new System.Drawing.Point(92, 76);
-            this.textBoxScannerVoltage.Name = "textBoxScannerVoltage";
-            this.textBoxScannerVoltage.Size = new System.Drawing.Size(188, 29);
-            this.textBoxScannerVoltage.TabIndex = 14;
+            this.lblCurrent.AutoSize = true;
+            this.lblCurrent.Font = new System.Drawing.Font("나눔고딕", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblCurrent.Location = new System.Drawing.Point(13, 33);
+            this.lblCurrent.Name = "lblCurrent";
+            this.lblCurrent.Size = new System.Drawing.Size(96, 24);
+            this.lblCurrent.TabIndex = 11;
+            this.lblCurrent.Text = "자석 전류";
+            // 
+            // textBoxCurrent
+            // 
+            this.textBoxCurrent.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.textBoxCurrent.Location = new System.Drawing.Point(115, 28);
+            this.textBoxCurrent.Name = "textBoxCurrent";
+            this.textBoxCurrent.Size = new System.Drawing.Size(188, 29);
+            this.textBoxCurrent.TabIndex = 10;
+            // 
+            // lblVoltage
+            // 
+            this.lblVoltage.AutoSize = true;
+            this.lblVoltage.Font = new System.Drawing.Font("나눔고딕", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblVoltage.Location = new System.Drawing.Point(28, 191);
+            this.lblVoltage.Name = "lblVoltage";
+            this.lblVoltage.Size = new System.Drawing.Size(96, 24);
+            this.lblVoltage.TabIndex = 7;
+            this.lblVoltage.Text = "목표 전압";
+            // 
+            // lblDose
+            // 
+            this.lblDose.AutoSize = true;
+            this.lblDose.Font = new System.Drawing.Font("나눔고딕", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblDose.Location = new System.Drawing.Point(66, 138);
+            this.lblDose.Name = "lblDose";
+            this.lblDose.Size = new System.Drawing.Size(58, 24);
+            this.lblDose.TabIndex = 6;
+            this.lblDose.Text = "Dose";
+            // 
+            // lblGas
+            // 
+            this.lblGas.AutoSize = true;
+            this.lblGas.Font = new System.Drawing.Font("나눔고딕", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblGas.Location = new System.Drawing.Point(74, 89);
+            this.lblGas.Name = "lblGas";
+            this.lblGas.Size = new System.Drawing.Size(50, 24);
+            this.lblGas.TabIndex = 5;
+            this.lblGas.Text = "가스";
+            // 
+            // lblIonGas
+            // 
+            this.lblIonGas.AutoSize = true;
+            this.lblIonGas.Font = new System.Drawing.Font("나눔고딕", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblIonGas.Location = new System.Drawing.Point(28, 47);
+            this.lblIonGas.Name = "lblIonGas";
+            this.lblIonGas.Size = new System.Drawing.Size(96, 24);
+            this.lblIonGas.TabIndex = 4;
+            this.lblIonGas.Text = "이온 가스";
+            // 
+            // textBoxVoltage
+            // 
+            this.textBoxVoltage.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.textBoxVoltage.Location = new System.Drawing.Point(130, 186);
+            this.textBoxVoltage.Name = "textBoxVoltage";
+            this.textBoxVoltage.Size = new System.Drawing.Size(188, 29);
+            this.textBoxVoltage.TabIndex = 3;
+            // 
+            // listBoxGas
+            // 
+            this.listBoxGas.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.listBoxGas.FormattingEnabled = true;
+            this.listBoxGas.ItemHeight = 21;
+            this.listBoxGas.Location = new System.Drawing.Point(130, 89);
+            this.listBoxGas.Name = "listBoxGas";
+            this.listBoxGas.Size = new System.Drawing.Size(188, 25);
+            this.listBoxGas.TabIndex = 2;
+            // 
+            // listBoxIonGas
+            // 
+            this.listBoxIonGas.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.listBoxIonGas.FormattingEnabled = true;
+            this.listBoxIonGas.ItemHeight = 21;
+            this.listBoxIonGas.Location = new System.Drawing.Point(130, 47);
+            this.listBoxIonGas.Name = "listBoxIonGas";
+            this.listBoxIonGas.Size = new System.Drawing.Size(188, 25);
+            this.listBoxIonGas.TabIndex = 1;
+            // 
+            // textBoxDose
+            // 
+            this.textBoxDose.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.textBoxDose.Location = new System.Drawing.Point(130, 133);
+            this.textBoxDose.Name = "textBoxDose";
+            this.textBoxDose.Size = new System.Drawing.Size(188, 29);
+            this.textBoxDose.TabIndex = 0;
             // 
             // panelPm2
             // 
@@ -499,6 +499,22 @@
             this.panelPm3.TabIndex = 11;
             this.panelPm3.Visible = false;
             // 
+            // textBoxVaccum
+            // 
+            this.textBoxVaccum.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.textBoxVaccum.Location = new System.Drawing.Point(129, 43);
+            this.textBoxVaccum.Name = "textBoxVaccum";
+            this.textBoxVaccum.Size = new System.Drawing.Size(188, 29);
+            this.textBoxVaccum.TabIndex = 8;
+            // 
+            // textBoxTemperature
+            // 
+            this.textBoxTemperature.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.textBoxTemperature.Location = new System.Drawing.Point(129, 89);
+            this.textBoxTemperature.Name = "textBoxTemperature";
+            this.textBoxTemperature.Size = new System.Drawing.Size(188, 29);
+            this.textBoxTemperature.TabIndex = 7;
+            // 
             // labelProcesstime
             // 
             this.labelProcesstime.AutoSize = true;
@@ -537,22 +553,6 @@
             this.textBoxProcesstime.Size = new System.Drawing.Size(188, 29);
             this.textBoxProcesstime.TabIndex = 0;
             // 
-            // textBoxTemperature
-            // 
-            this.textBoxTemperature.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBoxTemperature.Location = new System.Drawing.Point(129, 89);
-            this.textBoxTemperature.Name = "textBoxTemperature";
-            this.textBoxTemperature.Size = new System.Drawing.Size(188, 29);
-            this.textBoxTemperature.TabIndex = 7;
-            // 
-            // textBoxVaccum
-            // 
-            this.textBoxVaccum.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBoxVaccum.Location = new System.Drawing.Point(129, 43);
-            this.textBoxVaccum.Name = "textBoxVaccum";
-            this.textBoxVaccum.Size = new System.Drawing.Size(188, 29);
-            this.textBoxVaccum.TabIndex = 8;
-            // 
             // RecipeView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -566,13 +566,13 @@
             this.Controls.Add(this.btnRecipePm2);
             this.Controls.Add(this.btnRecipePm1);
             this.Name = "RecipeView";
-            this.Size = new System.Drawing.Size(1424, 678);
+            this.Size = new System.Drawing.Size(1424, 715);
             this.panelPm1.ResumeLayout(false);
             this.panelPm1.PerformLayout();
-            this.gBoxAnalyzer.ResumeLayout(false);
-            this.gBoxAnalyzer.PerformLayout();
             this.gBoxScanner.ResumeLayout(false);
             this.gBoxScanner.PerformLayout();
+            this.gBoxAnalyzer.ResumeLayout(false);
+            this.gBoxAnalyzer.PerformLayout();
             this.panelPm2.ResumeLayout(false);
             this.panelPm2.PerformLayout();
             this.groupBox1.ResumeLayout(false);

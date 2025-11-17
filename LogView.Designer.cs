@@ -122,7 +122,7 @@
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.dgvAlarms);
             this.Name = "LogView";
-            this.Size = new System.Drawing.Size(1424, 678);
+            this.Size = new System.Drawing.Size(1424, 715);
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlarms)).EndInit();
             this.ResumeLayout(false);
 
