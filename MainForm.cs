@@ -33,22 +33,6 @@ namespace IonImplationEtherCAT
             ShowView(mainView);
         }
 
-        // --- (네가 디자이너에서 추가해야 할 컨트롤들) ---
-        // (헤더)
-        // Panel: panelLoginArea
-        // Button: btnLogin
-        // TextBox: txtUsername, txtPassword
-        // Label: lblUserName
-        // Button: btnLogout
-        // ... (PM1, EtherCAT 등 상태 표시 Label)
-
-        // (푸터)
-        // Button: btnMain, btnAlarmManager, btnRecipe, btnLog
-
-        // (본문)
-        // Panel: panelContent (Dock = Fill)
-        // ---
-
         /// <summary>
         /// panelContent에 원하는 UserControl을 띄우는 헬퍼 메서드
         /// </summary>

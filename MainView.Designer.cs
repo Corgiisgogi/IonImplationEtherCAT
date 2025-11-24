@@ -63,21 +63,14 @@
             this.buttonFoupAUnloadSW = new System.Windows.Forms.Button();
             this.lblFoupA = new System.Windows.Forms.Label();
             this.panelMainControl = new System.Windows.Forms.Panel();
+            this.picBoxTMArmBack = new System.Windows.Forms.PictureBox();
             this.panelRedAlert = new System.Windows.Forms.Panel();
             this.panelYellowAlert = new System.Windows.Forms.Panel();
             this.panelGreenAlert = new System.Windows.Forms.Panel();
             this.btnRecipeC = new System.Windows.Forms.Button();
             this.btnRecipeB = new System.Windows.Forms.Button();
             this.btnRecipeA = new System.Windows.Forms.Button();
-            this.picBoxWafer5 = new System.Windows.Forms.PictureBox();
-            this.picBoxWafer4 = new System.Windows.Forms.PictureBox();
-            this.picBoxWafer3 = new System.Windows.Forms.PictureBox();
-            this.picBoxWafer2 = new System.Windows.Forms.PictureBox();
-            this.picBoxWafer1 = new System.Windows.Forms.PictureBox();
-            this.picBoxTMArmHigh = new System.Windows.Forms.PictureBox();
-            this.picBoxTMArmLow = new System.Windows.Forms.PictureBox();
             this.lblFoupB = new System.Windows.Forms.Label();
-            this.picBoxTMCircle = new System.Windows.Forms.PictureBox();
             this.btnFoupBUnloadSW = new System.Windows.Forms.Button();
             this.btnFoupBLoadSW = new System.Windows.Forms.Button();
             this.panelFoupB = new System.Windows.Forms.Panel();
@@ -116,6 +109,14 @@
             this.lblPM3 = new System.Windows.Forms.Label();
             this.btnAllProcess = new System.Windows.Forms.Button();
             this.btnAllStop = new System.Windows.Forms.Button();
+            this.CpicBoxTMBottom = new IonImplationEtherCAT.CustomPictureBox();
+            this.CpicBoxTMArmLow = new IonImplationEtherCAT.CustomPictureBox();
+            this.CpicBoxTMArmHigh = new IonImplationEtherCAT.CustomPictureBox();
+            this.CpicBoxWafer5 = new IonImplationEtherCAT.CustomPictureBox();
+            this.CpicBoxWafer3 = new IonImplationEtherCAT.CustomPictureBox();
+            this.CpicBoxWafer1 = new IonImplationEtherCAT.CustomPictureBox();
+            this.CpicBoxWafer2 = new IonImplationEtherCAT.CustomPictureBox();
+            this.CpicBoxWafer4 = new IonImplationEtherCAT.CustomPictureBox();
             this.panelPM1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxPM1Lamp)).BeginInit();
             this.panelPM1Status.SuspendLayout();
@@ -128,14 +129,7 @@
             this.panelPM3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxPM3Lamp)).BeginInit();
             this.panelMainControl.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxWafer5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxWafer4)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxWafer3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxWafer2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxWafer1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxTMArmHigh)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxTMArmLow)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxTMCircle)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picBoxTMArmBack)).BeginInit();
             this.panelFoupB.SuspendLayout();
             this.panelPM2Status.SuspendLayout();
             this.tblLayoutPanelPM2Progress.SuspendLayout();
@@ -145,6 +139,14 @@
             this.tblLayoutPanelPM3Progress.SuspendLayout();
             this.tblLayoutPanelPM3Status.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxPM3Status)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxTMBottom)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxTMArmLow)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxTMArmHigh)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer4)).BeginInit();
             this.SuspendLayout();
             // 
             // panelPM1
@@ -171,10 +173,12 @@
             // 
             // picBoxPM1Lamp
             // 
+            this.picBoxPM1Lamp.BackgroundImage = global::IonImplationEtherCAT.Properties.Resources.LampOff;
+            this.picBoxPM1Lamp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.picBoxPM1Lamp.Location = new System.Drawing.Point(154, 4);
             this.picBoxPM1Lamp.Margin = new System.Windows.Forms.Padding(4);
             this.picBoxPM1Lamp.Name = "picBoxPM1Lamp";
-            this.picBoxPM1Lamp.Size = new System.Drawing.Size(50, 52);
+            this.picBoxPM1Lamp.Size = new System.Drawing.Size(50, 50);
             this.picBoxPM1Lamp.TabIndex = 7;
             this.picBoxPM1Lamp.TabStop = false;
             // 
@@ -197,19 +201,20 @@
             // 
             this.lblPM1Status.AutoSize = true;
             this.lblPM1Status.Font = new System.Drawing.Font("나눔고딕", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM1Status.Location = new System.Drawing.Point(133, 327);
+            this.lblPM1Status.Location = new System.Drawing.Point(158, 327);
             this.lblPM1Status.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPM1Status.Name = "lblPM1Status";
-            this.lblPM1Status.Size = new System.Drawing.Size(77, 23);
+            this.lblPM1Status.Size = new System.Drawing.Size(17, 23);
             this.lblPM1Status.TabIndex = 6;
-            this.lblPM1Status.Text = "(status)";
+            this.lblPM1Status.Text = "-";
+            this.lblPM1Status.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tblLayoutPanelPM1Progress
             // 
             this.tblLayoutPanelPM1Progress.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblLayoutPanelPM1Progress.ColumnCount = 2;
             this.tblLayoutPanelPM1Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.8595F));
-            this.tblLayoutPanelPM1Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 245F));
+            this.tblLayoutPanelPM1Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 244F));
             this.tblLayoutPanelPM1Progress.Controls.Add(this.progressBarPM1, 1, 0);
             this.tblLayoutPanelPM1Progress.Controls.Add(this.lblPM1Progress, 0, 0);
             this.tblLayoutPanelPM1Progress.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -223,7 +228,7 @@
             // 
             // progressBarPM1
             // 
-            this.progressBarPM1.Location = new System.Drawing.Point(102, 5);
+            this.progressBarPM1.Location = new System.Drawing.Point(103, 5);
             this.progressBarPM1.Margin = new System.Windows.Forms.Padding(4);
             this.progressBarPM1.Name = "progressBarPM1";
             this.progressBarPM1.Size = new System.Drawing.Size(233, 34);
@@ -237,7 +242,7 @@
             this.lblPM1Progress.Location = new System.Drawing.Point(5, 1);
             this.lblPM1Progress.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPM1Progress.Name = "lblPM1Progress";
-            this.lblPM1Progress.Size = new System.Drawing.Size(88, 46);
+            this.lblPM1Progress.Size = new System.Drawing.Size(89, 46);
             this.lblPM1Progress.TabIndex = 5;
             this.lblPM1Progress.Text = "progress";
             this.lblPM1Progress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -373,10 +378,12 @@
             // 
             // picBoxPM1Status
             // 
+            this.picBoxPM1Status.BackgroundImage = global::IonImplationEtherCAT.Properties.Resources.StatusGray;
+            this.picBoxPM1Status.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.picBoxPM1Status.Location = new System.Drawing.Point(297, 4);
             this.picBoxPM1Status.Margin = new System.Windows.Forms.Padding(4);
             this.picBoxPM1Status.Name = "picBoxPM1Status";
-            this.picBoxPM1Status.Size = new System.Drawing.Size(43, 45);
+            this.picBoxPM1Status.Size = new System.Drawing.Size(45, 45);
             this.picBoxPM1Status.TabIndex = 4;
             this.picBoxPM1Status.TabStop = false;
             // 
@@ -480,10 +487,12 @@
             // 
             // picBoxPM2Lamp
             // 
+            this.picBoxPM2Lamp.BackgroundImage = global::IonImplationEtherCAT.Properties.Resources.LampOff;
+            this.picBoxPM2Lamp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.picBoxPM2Lamp.Location = new System.Drawing.Point(223, 162);
             this.picBoxPM2Lamp.Margin = new System.Windows.Forms.Padding(4);
             this.picBoxPM2Lamp.Name = "picBoxPM2Lamp";
-            this.picBoxPM2Lamp.Size = new System.Drawing.Size(50, 52);
+            this.picBoxPM2Lamp.Size = new System.Drawing.Size(50, 50);
             this.picBoxPM2Lamp.TabIndex = 7;
             this.picBoxPM2Lamp.TabStop = false;
             // 
@@ -511,10 +520,12 @@
             // 
             // picBoxPM3Lamp
             // 
+            this.picBoxPM3Lamp.BackgroundImage = global::IonImplationEtherCAT.Properties.Resources.LampOff;
+            this.picBoxPM3Lamp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.picBoxPM3Lamp.Location = new System.Drawing.Point(4, 4);
             this.picBoxPM3Lamp.Margin = new System.Windows.Forms.Padding(4);
             this.picBoxPM3Lamp.Name = "picBoxPM3Lamp";
-            this.picBoxPM3Lamp.Size = new System.Drawing.Size(50, 52);
+            this.picBoxPM3Lamp.Size = new System.Drawing.Size(50, 50);
             this.picBoxPM3Lamp.TabIndex = 7;
             this.picBoxPM3Lamp.TabStop = false;
             // 
@@ -553,22 +564,23 @@
             // 
             // panelMainControl
             // 
+            this.panelMainControl.Controls.Add(this.CpicBoxWafer4);
+            this.panelMainControl.Controls.Add(this.CpicBoxWafer2);
+            this.panelMainControl.Controls.Add(this.CpicBoxWafer1);
+            this.panelMainControl.Controls.Add(this.CpicBoxWafer3);
+            this.panelMainControl.Controls.Add(this.CpicBoxWafer5);
+            this.panelMainControl.Controls.Add(this.CpicBoxTMArmHigh);
+            this.panelMainControl.Controls.Add(this.picBoxTMArmBack);
+            this.panelMainControl.Controls.Add(this.CpicBoxTMArmLow);
+            this.panelMainControl.Controls.Add(this.CpicBoxTMBottom);
             this.panelMainControl.Controls.Add(this.panelRedAlert);
             this.panelMainControl.Controls.Add(this.panelYellowAlert);
             this.panelMainControl.Controls.Add(this.panelGreenAlert);
             this.panelMainControl.Controls.Add(this.btnRecipeC);
             this.panelMainControl.Controls.Add(this.btnRecipeB);
             this.panelMainControl.Controls.Add(this.btnRecipeA);
-            this.panelMainControl.Controls.Add(this.picBoxWafer5);
-            this.panelMainControl.Controls.Add(this.picBoxWafer4);
-            this.panelMainControl.Controls.Add(this.picBoxWafer3);
-            this.panelMainControl.Controls.Add(this.picBoxWafer2);
-            this.panelMainControl.Controls.Add(this.picBoxWafer1);
-            this.panelMainControl.Controls.Add(this.picBoxTMArmHigh);
-            this.panelMainControl.Controls.Add(this.picBoxTMArmLow);
             this.panelMainControl.Controls.Add(this.lblFoupB);
             this.panelMainControl.Controls.Add(this.lblFoupA);
-            this.panelMainControl.Controls.Add(this.picBoxTMCircle);
             this.panelMainControl.Controls.Add(this.btnFoupBUnloadSW);
             this.panelMainControl.Controls.Add(this.buttonFoupAUnloadSW);
             this.panelMainControl.Controls.Add(this.btnFoupBLoadSW);
@@ -583,6 +595,17 @@
             this.panelMainControl.Name = "panelMainControl";
             this.panelMainControl.Size = new System.Drawing.Size(1041, 1058);
             this.panelMainControl.TabIndex = 4;
+            // 
+            // picBoxTMArmBack
+            // 
+            this.picBoxTMArmBack.BackgroundImage = global::IonImplationEtherCAT.Properties.Resources.TMArmBack;
+            this.picBoxTMArmBack.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.picBoxTMArmBack.Location = new System.Drawing.Point(674, 356);
+            this.picBoxTMArmBack.Margin = new System.Windows.Forms.Padding(4);
+            this.picBoxTMArmBack.Name = "picBoxTMArmBack";
+            this.picBoxTMArmBack.Size = new System.Drawing.Size(36, 142);
+            this.picBoxTMArmBack.TabIndex = 9;
+            this.picBoxTMArmBack.TabStop = false;
             // 
             // panelRedAlert
             // 
@@ -650,74 +673,6 @@
             this.btnRecipeA.Text = "A";
             this.btnRecipeA.UseVisualStyleBackColor = false;
             // 
-            // picBoxWafer5
-            // 
-            this.picBoxWafer5.Location = new System.Drawing.Point(834, 840);
-            this.picBoxWafer5.Margin = new System.Windows.Forms.Padding(4);
-            this.picBoxWafer5.Name = "picBoxWafer5";
-            this.picBoxWafer5.Size = new System.Drawing.Size(121, 128);
-            this.picBoxWafer5.TabIndex = 7;
-            this.picBoxWafer5.TabStop = false;
-            this.picBoxWafer5.Visible = false;
-            // 
-            // picBoxWafer4
-            // 
-            this.picBoxWafer4.Location = new System.Drawing.Point(886, 706);
-            this.picBoxWafer4.Margin = new System.Windows.Forms.Padding(4);
-            this.picBoxWafer4.Name = "picBoxWafer4";
-            this.picBoxWafer4.Size = new System.Drawing.Size(121, 128);
-            this.picBoxWafer4.TabIndex = 7;
-            this.picBoxWafer4.TabStop = false;
-            this.picBoxWafer4.Visible = false;
-            // 
-            // picBoxWafer3
-            // 
-            this.picBoxWafer3.Location = new System.Drawing.Point(834, 706);
-            this.picBoxWafer3.Margin = new System.Windows.Forms.Padding(4);
-            this.picBoxWafer3.Name = "picBoxWafer3";
-            this.picBoxWafer3.Size = new System.Drawing.Size(121, 128);
-            this.picBoxWafer3.TabIndex = 7;
-            this.picBoxWafer3.TabStop = false;
-            this.picBoxWafer3.Visible = false;
-            // 
-            // picBoxWafer2
-            // 
-            this.picBoxWafer2.Location = new System.Drawing.Point(886, 570);
-            this.picBoxWafer2.Margin = new System.Windows.Forms.Padding(4);
-            this.picBoxWafer2.Name = "picBoxWafer2";
-            this.picBoxWafer2.Size = new System.Drawing.Size(121, 128);
-            this.picBoxWafer2.TabIndex = 7;
-            this.picBoxWafer2.TabStop = false;
-            this.picBoxWafer2.Visible = false;
-            // 
-            // picBoxWafer1
-            // 
-            this.picBoxWafer1.Location = new System.Drawing.Point(834, 570);
-            this.picBoxWafer1.Margin = new System.Windows.Forms.Padding(4);
-            this.picBoxWafer1.Name = "picBoxWafer1";
-            this.picBoxWafer1.Size = new System.Drawing.Size(121, 128);
-            this.picBoxWafer1.TabIndex = 7;
-            this.picBoxWafer1.TabStop = false;
-            this.picBoxWafer1.Visible = false;
-            // 
-            // picBoxTMArmHigh
-            // 
-            this.picBoxTMArmHigh.Location = new System.Drawing.Point(350, 249);
-            this.picBoxTMArmHigh.Margin = new System.Windows.Forms.Padding(4);
-            this.picBoxTMArmHigh.Name = "picBoxTMArmHigh";
-            this.picBoxTMArmHigh.Size = new System.Drawing.Size(361, 142);
-            this.picBoxTMArmHigh.TabIndex = 6;
-            this.picBoxTMArmHigh.TabStop = false;
-            // 
-            // picBoxTMArmLow
-            // 
-            this.picBoxTMArmLow.Location = new System.Drawing.Point(350, 404);
-            this.picBoxTMArmLow.Margin = new System.Windows.Forms.Padding(4);
-            this.picBoxTMArmLow.Name = "picBoxTMArmLow";
-            this.picBoxTMArmLow.Size = new System.Drawing.Size(337, 104);
-            this.picBoxTMArmLow.TabIndex = 5;
-            this.picBoxTMArmLow.TabStop = false;
-            // 
             // lblFoupB
             // 
             this.lblFoupB.AutoSize = true;
@@ -728,15 +683,6 @@
             this.lblFoupB.Size = new System.Drawing.Size(168, 49);
             this.lblFoupB.TabIndex = 3;
             this.lblFoupB.Text = "FOUP B";
-            // 
-            // picBoxTMCircle
-            // 
-            this.picBoxTMCircle.Location = new System.Drawing.Point(409, 348);
-            this.picBoxTMCircle.Margin = new System.Windows.Forms.Padding(4);
-            this.picBoxTMCircle.Name = "picBoxTMCircle";
-            this.picBoxTMCircle.Size = new System.Drawing.Size(214, 225);
-            this.picBoxTMCircle.TabIndex = 4;
-            this.picBoxTMCircle.TabStop = false;
             // 
             // btnFoupBUnloadSW
             // 
@@ -844,19 +790,20 @@
             // 
             this.lblPM2Status.AutoSize = true;
             this.lblPM2Status.Font = new System.Drawing.Font("나눔고딕", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM2Status.Location = new System.Drawing.Point(136, 327);
+            this.lblPM2Status.Location = new System.Drawing.Point(160, 327);
             this.lblPM2Status.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPM2Status.Name = "lblPM2Status";
-            this.lblPM2Status.Size = new System.Drawing.Size(77, 23);
+            this.lblPM2Status.Size = new System.Drawing.Size(17, 23);
             this.lblPM2Status.TabIndex = 6;
-            this.lblPM2Status.Text = "(status)";
+            this.lblPM2Status.Text = "-";
+            this.lblPM2Status.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tblLayoutPanelPM2Progress
             // 
             this.tblLayoutPanelPM2Progress.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblLayoutPanelPM2Progress.ColumnCount = 2;
             this.tblLayoutPanelPM2Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.8595F));
-            this.tblLayoutPanelPM2Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 245F));
+            this.tblLayoutPanelPM2Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 247F));
             this.tblLayoutPanelPM2Progress.Controls.Add(this.progressBarPM2, 1, 0);
             this.tblLayoutPanelPM2Progress.Controls.Add(this.lblPM2Progress, 0, 0);
             this.tblLayoutPanelPM2Progress.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -870,7 +817,7 @@
             // 
             // progressBarPM2
             // 
-            this.progressBarPM2.Location = new System.Drawing.Point(102, 5);
+            this.progressBarPM2.Location = new System.Drawing.Point(99, 5);
             this.progressBarPM2.Margin = new System.Windows.Forms.Padding(4);
             this.progressBarPM2.Name = "progressBarPM2";
             this.progressBarPM2.Size = new System.Drawing.Size(233, 34);
@@ -884,7 +831,7 @@
             this.lblPM2Progress.Location = new System.Drawing.Point(5, 1);
             this.lblPM2Progress.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPM2Progress.Name = "lblPM2Progress";
-            this.lblPM2Progress.Size = new System.Drawing.Size(88, 46);
+            this.lblPM2Progress.Size = new System.Drawing.Size(85, 46);
             this.lblPM2Progress.TabIndex = 5;
             this.lblPM2Progress.Text = "progress";
             this.lblPM2Progress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1020,10 +967,12 @@
             // 
             // picBoxPM2Status
             // 
+            this.picBoxPM2Status.BackgroundImage = global::IonImplationEtherCAT.Properties.Resources.StatusGray;
+            this.picBoxPM2Status.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.picBoxPM2Status.Location = new System.Drawing.Point(297, 4);
             this.picBoxPM2Status.Margin = new System.Windows.Forms.Padding(4);
             this.picBoxPM2Status.Name = "picBoxPM2Status";
-            this.picBoxPM2Status.Size = new System.Drawing.Size(43, 45);
+            this.picBoxPM2Status.Size = new System.Drawing.Size(45, 45);
             this.picBoxPM2Status.TabIndex = 4;
             this.picBoxPM2Status.TabStop = false;
             // 
@@ -1057,12 +1006,13 @@
             // 
             this.lblPM3Status.AutoSize = true;
             this.lblPM3Status.Font = new System.Drawing.Font("나눔고딕", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM3Status.Location = new System.Drawing.Point(136, 326);
+            this.lblPM3Status.Location = new System.Drawing.Point(158, 326);
             this.lblPM3Status.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblPM3Status.Name = "lblPM3Status";
-            this.lblPM3Status.Size = new System.Drawing.Size(77, 23);
+            this.lblPM3Status.Size = new System.Drawing.Size(17, 23);
             this.lblPM3Status.TabIndex = 6;
-            this.lblPM3Status.Text = "(status)";
+            this.lblPM3Status.Text = "-";
+            this.lblPM3Status.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tblLayoutPanelPM3Progress
             // 
@@ -1175,10 +1125,12 @@
             // 
             // picBoxPM3Status
             // 
+            this.picBoxPM3Status.BackgroundImage = global::IonImplationEtherCAT.Properties.Resources.StatusGray;
+            this.picBoxPM3Status.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.picBoxPM3Status.Location = new System.Drawing.Point(297, 4);
             this.picBoxPM3Status.Margin = new System.Windows.Forms.Padding(4);
             this.picBoxPM3Status.Name = "picBoxPM3Status";
-            this.picBoxPM3Status.Size = new System.Drawing.Size(43, 45);
+            this.picBoxPM3Status.Size = new System.Drawing.Size(45, 45);
             this.picBoxPM3Status.TabIndex = 4;
             this.picBoxPM3Status.TabStop = false;
             // 
@@ -1219,6 +1171,94 @@
             this.btnAllStop.Text = "STOP";
             this.btnAllStop.UseVisualStyleBackColor = false;
             // 
+            // CpicBoxTMBottom
+            // 
+            this.CpicBoxTMBottom.BackColor = System.Drawing.Color.Transparent;
+            this.CpicBoxTMBottom.BackgroundImage = global::IonImplationEtherCAT.Properties.Resources.TMBottom;
+            this.CpicBoxTMBottom.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.CpicBoxTMBottom.Location = new System.Drawing.Point(410, 317);
+            this.CpicBoxTMBottom.Name = "CpicBoxTMBottom";
+            this.CpicBoxTMBottom.Size = new System.Drawing.Size(214, 225);
+            this.CpicBoxTMBottom.TabIndex = 12;
+            this.CpicBoxTMBottom.TabStop = false;
+            // 
+            // CpicBoxTMArmLow
+            // 
+            this.CpicBoxTMArmLow.BackColor = System.Drawing.Color.Transparent;
+            this.CpicBoxTMArmLow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.CpicBoxTMArmLow.Image = global::IonImplationEtherCAT.Properties.Resources.TMArmLow;
+            this.CpicBoxTMArmLow.Location = new System.Drawing.Point(373, 356);
+            this.CpicBoxTMArmLow.Name = "CpicBoxTMArmLow";
+            this.CpicBoxTMArmLow.Size = new System.Drawing.Size(337, 142);
+            this.CpicBoxTMArmLow.TabIndex = 11;
+            this.CpicBoxTMArmLow.TabStop = false;
+            // 
+            // CpicBoxTMArmHigh
+            // 
+            this.CpicBoxTMArmHigh.BackColor = System.Drawing.Color.Transparent;
+            this.CpicBoxTMArmHigh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.CpicBoxTMArmHigh.Image = global::IonImplationEtherCAT.Properties.Resources.TMArmHigh;
+            this.CpicBoxTMArmHigh.Location = new System.Drawing.Point(335, 356);
+            this.CpicBoxTMArmHigh.Name = "CpicBoxTMArmHigh";
+            this.CpicBoxTMArmHigh.Size = new System.Drawing.Size(332, 142);
+            this.CpicBoxTMArmHigh.TabIndex = 10;
+            this.CpicBoxTMArmHigh.TabStop = false;
+            // 
+            // CpicBoxWafer5
+            // 
+            this.CpicBoxWafer5.BackColor = System.Drawing.Color.Transparent;
+            this.CpicBoxWafer5.Image = global::IonImplationEtherCAT.Properties.Resources.Wafer;
+            this.CpicBoxWafer5.Location = new System.Drawing.Point(830, 845);
+            this.CpicBoxWafer5.Name = "CpicBoxWafer5";
+            this.CpicBoxWafer5.Size = new System.Drawing.Size(121, 121);
+            this.CpicBoxWafer5.TabIndex = 13;
+            this.CpicBoxWafer5.TabStop = false;
+            this.CpicBoxWafer5.Visible = false;
+            // 
+            // CpicBoxWafer3
+            // 
+            this.CpicBoxWafer3.BackColor = System.Drawing.Color.Transparent;
+            this.CpicBoxWafer3.Image = global::IonImplationEtherCAT.Properties.Resources.Wafer;
+            this.CpicBoxWafer3.Location = new System.Drawing.Point(830, 718);
+            this.CpicBoxWafer3.Name = "CpicBoxWafer3";
+            this.CpicBoxWafer3.Size = new System.Drawing.Size(121, 121);
+            this.CpicBoxWafer3.TabIndex = 14;
+            this.CpicBoxWafer3.TabStop = false;
+            this.CpicBoxWafer3.Visible = false;
+            // 
+            // CpicBoxWafer1
+            // 
+            this.CpicBoxWafer1.BackColor = System.Drawing.Color.Transparent;
+            this.CpicBoxWafer1.Image = global::IonImplationEtherCAT.Properties.Resources.Wafer;
+            this.CpicBoxWafer1.Location = new System.Drawing.Point(830, 594);
+            this.CpicBoxWafer1.Name = "CpicBoxWafer1";
+            this.CpicBoxWafer1.Size = new System.Drawing.Size(121, 121);
+            this.CpicBoxWafer1.TabIndex = 15;
+            this.CpicBoxWafer1.TabStop = false;
+            this.CpicBoxWafer1.Visible = false;
+            // 
+            // CpicBoxWafer2
+            // 
+            this.CpicBoxWafer2.BackColor = System.Drawing.Color.Transparent;
+            this.CpicBoxWafer2.Image = global::IonImplationEtherCAT.Properties.Resources.Wafer;
+            this.CpicBoxWafer2.Location = new System.Drawing.Point(920, 594);
+            this.CpicBoxWafer2.Name = "CpicBoxWafer2";
+            this.CpicBoxWafer2.Size = new System.Drawing.Size(121, 121);
+            this.CpicBoxWafer2.TabIndex = 16;
+            this.CpicBoxWafer2.TabStop = false;
+            this.CpicBoxWafer2.Visible = false;
+            // 
+            // CpicBoxWafer4
+            // 
+            this.CpicBoxWafer4.BackColor = System.Drawing.Color.Transparent;
+            this.CpicBoxWafer4.Image = global::IonImplationEtherCAT.Properties.Resources.Wafer;
+            this.CpicBoxWafer4.Location = new System.Drawing.Point(917, 718);
+            this.CpicBoxWafer4.Name = "CpicBoxWafer4";
+            this.CpicBoxWafer4.Size = new System.Drawing.Size(121, 121);
+            this.CpicBoxWafer4.TabIndex = 17;
+            this.CpicBoxWafer4.TabStop = false;
+            this.CpicBoxWafer4.Visible = false;
+            // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
@@ -1248,14 +1288,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.picBoxPM3Lamp)).EndInit();
             this.panelMainControl.ResumeLayout(false);
             this.panelMainControl.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxWafer5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxWafer4)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxWafer3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxWafer2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxWafer1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxTMArmHigh)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxTMArmLow)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.picBoxTMCircle)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.picBoxTMArmBack)).EndInit();
             this.panelFoupB.ResumeLayout(false);
             this.panelPM2Status.ResumeLayout(false);
             this.panelPM2Status.PerformLayout();
@@ -1271,6 +1304,14 @@
             this.tblLayoutPanelPM3Status.ResumeLayout(false);
             this.tblLayoutPanelPM3Status.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxPM3Status)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxTMBottom)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxTMArmLow)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxTMArmHigh)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer4)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1314,7 +1355,6 @@
         private System.Windows.Forms.Label lblPM1PressureValue;
         private System.Windows.Forms.Label lblPM1AVValue;
         private System.Windows.Forms.Label lblPM1DoseValue;
-        private System.Windows.Forms.PictureBox picBoxTMCircle;
         private System.Windows.Forms.Panel panelPM2Status;
         private System.Windows.Forms.TableLayoutPanel tblLayoutPanelPM2Progress;
         private System.Windows.Forms.ProgressBar progressBarPM2;
@@ -1343,14 +1383,7 @@
         private System.Windows.Forms.Label lblPM3;
         private System.Windows.Forms.Button btnAllProcess;
         private System.Windows.Forms.Button btnAllStop;
-        private System.Windows.Forms.PictureBox picBoxTMArmHigh;
-        private System.Windows.Forms.PictureBox picBoxTMArmLow;
         private System.Windows.Forms.PictureBox picBoxPM1Lamp;
-        private System.Windows.Forms.PictureBox picBoxWafer5;
-        private System.Windows.Forms.PictureBox picBoxWafer4;
-        private System.Windows.Forms.PictureBox picBoxWafer3;
-        private System.Windows.Forms.PictureBox picBoxWafer2;
-        private System.Windows.Forms.PictureBox picBoxWafer1;
         private System.Windows.Forms.Panel panelPM1Door;
         private System.Windows.Forms.Panel panelPM2Door;
         private System.Windows.Forms.PictureBox picBoxPM2Lamp;
@@ -1365,5 +1398,14 @@
         private System.Windows.Forms.Panel panelGreenAlert;
         private System.Windows.Forms.Panel panelRedAlert;
         private System.Windows.Forms.Panel panelYellowAlert;
+        private System.Windows.Forms.PictureBox picBoxTMArmBack;
+        private CustomPictureBox CpicBoxTMArmHigh;
+        private CustomPictureBox CpicBoxTMBottom;
+        private CustomPictureBox CpicBoxTMArmLow;
+        private CustomPictureBox CpicBoxWafer4;
+        private CustomPictureBox CpicBoxWafer2;
+        private CustomPictureBox CpicBoxWafer1;
+        private CustomPictureBox CpicBoxWafer3;
+        private CustomPictureBox CpicBoxWafer5;
     }
 }

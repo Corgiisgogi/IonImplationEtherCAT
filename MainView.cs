@@ -15,6 +15,7 @@ namespace IonImplationEtherCAT
         public MainView()
         {
             InitializeComponent();
+
         }
     }
 }

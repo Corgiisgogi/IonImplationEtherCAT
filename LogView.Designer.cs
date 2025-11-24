@@ -66,40 +66,46 @@
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvAlarms.DefaultCellStyle = dataGridViewCellStyle2;
-            this.dgvAlarms.Location = new System.Drawing.Point(62, 32);
+            this.dgvAlarms.Location = new System.Drawing.Point(89, 48);
+            this.dgvAlarms.Margin = new System.Windows.Forms.Padding(4);
             this.dgvAlarms.Name = "dgvAlarms";
             this.dgvAlarms.ReadOnly = true;
-            this.dgvAlarms.RowTemplate.Height = 23;
-            this.dgvAlarms.Size = new System.Drawing.Size(951, 592);
+            this.dgvAlarms.RowHeadersWidth = 62;
+            this.dgvAlarms.RowTemplate.Height = 30;
+            this.dgvAlarms.Size = new System.Drawing.Size(1359, 888);
             this.dgvAlarms.TabIndex = 1;
             // 
             // time
             // 
+            this.time.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.time.HeaderText = "시각";
+            this.time.MinimumWidth = 8;
             this.time.Name = "time";
             this.time.ReadOnly = true;
-            this.time.Width = 150;
             // 
             // job
             // 
+            this.job.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.job.HeaderText = "Job";
+            this.job.MinimumWidth = 8;
             this.job.Name = "job";
             this.job.ReadOnly = true;
-            this.job.Width = 300;
             // 
             // description
             // 
+            this.description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.description.HeaderText = "상세";
+            this.description.MinimumWidth = 8;
             this.description.Name = "description";
             this.description.ReadOnly = true;
-            this.description.Width = 400;
             // 
             // btnLoad
             // 
             this.btnLoad.Font = new System.Drawing.Font("나눔고딕", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnLoad.Location = new System.Drawing.Point(1062, 481);
+            this.btnLoad.Location = new System.Drawing.Point(1517, 722);
+            this.btnLoad.Margin = new System.Windows.Forms.Padding(4);
             this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(221, 143);
+            this.btnLoad.Size = new System.Drawing.Size(316, 214);
             this.btnLoad.TabIndex = 5;
             this.btnLoad.Text = "Load";
             this.btnLoad.UseVisualStyleBackColor = true;
@@ -107,22 +113,24 @@
             // btnSave
             // 
             this.btnSave.Font = new System.Drawing.Font("나눔고딕", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnSave.Location = new System.Drawing.Point(1062, 324);
+            this.btnSave.Location = new System.Drawing.Point(1517, 486);
+            this.btnSave.Margin = new System.Windows.Forms.Padding(4);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(221, 143);
+            this.btnSave.Size = new System.Drawing.Size(316, 214);
             this.btnSave.TabIndex = 4;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
             // 
             // LogView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.dgvAlarms);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "LogView";
-            this.Size = new System.Drawing.Size(1424, 715);
+            this.Size = new System.Drawing.Size(2034, 1072);
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlarms)).EndInit();
             this.ResumeLayout(false);
 
@@ -131,10 +139,10 @@
         #endregion
 
         private System.Windows.Forms.DataGridView dgvAlarms;
+        private System.Windows.Forms.Button btnLoad;
+        private System.Windows.Forms.Button btnSave;
         private System.Windows.Forms.DataGridViewTextBoxColumn time;
         private System.Windows.Forms.DataGridViewTextBoxColumn job;
         private System.Windows.Forms.DataGridViewTextBoxColumn description;
-        private System.Windows.Forms.Button btnLoad;
-        private System.Windows.Forms.Button btnSave;
     }
 }

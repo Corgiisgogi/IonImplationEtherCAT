@@ -31,13 +31,13 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dgvAlarms = new System.Windows.Forms.DataGridView();
+            this.btnRestore = new System.Windows.Forms.Button();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.btnLoad = new System.Windows.Forms.Button();
             this.time = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.location = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.btnRestore = new System.Windows.Forms.Button();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.btnLoad = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlarms)).BeginInit();
             this.SuspendLayout();
             // 
@@ -69,46 +69,22 @@
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvAlarms.DefaultCellStyle = dataGridViewCellStyle2;
-            this.dgvAlarms.Location = new System.Drawing.Point(62, 32);
+            this.dgvAlarms.Location = new System.Drawing.Point(89, 48);
+            this.dgvAlarms.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.dgvAlarms.Name = "dgvAlarms";
             this.dgvAlarms.ReadOnly = true;
-            this.dgvAlarms.RowTemplate.Height = 23;
-            this.dgvAlarms.Size = new System.Drawing.Size(951, 592);
+            this.dgvAlarms.RowHeadersWidth = 62;
+            this.dgvAlarms.RowTemplate.Height = 30;
+            this.dgvAlarms.Size = new System.Drawing.Size(1359, 888);
             this.dgvAlarms.TabIndex = 0;
-            // 
-            // time
-            // 
-            this.time.HeaderText = "시각";
-            this.time.Name = "time";
-            this.time.ReadOnly = true;
-            this.time.Width = 150;
-            // 
-            // location
-            // 
-            this.location.HeaderText = "발생 위치";
-            this.location.Name = "location";
-            this.location.ReadOnly = true;
-            // 
-            // type
-            // 
-            this.type.HeaderText = "종류";
-            this.type.Name = "type";
-            this.type.ReadOnly = true;
-            this.type.Width = 150;
-            // 
-            // description
-            // 
-            this.description.HeaderText = "상세";
-            this.description.Name = "description";
-            this.description.ReadOnly = true;
-            this.description.Width = 400;
             // 
             // btnRestore
             // 
             this.btnRestore.Font = new System.Drawing.Font("나눔고딕", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnRestore.Location = new System.Drawing.Point(1053, 32);
+            this.btnRestore.Location = new System.Drawing.Point(1504, 48);
+            this.btnRestore.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnRestore.Name = "btnRestore";
-            this.btnRestore.Size = new System.Drawing.Size(221, 143);
+            this.btnRestore.Size = new System.Drawing.Size(316, 214);
             this.btnRestore.TabIndex = 1;
             this.btnRestore.Text = "Restore";
             this.btnRestore.UseVisualStyleBackColor = true;
@@ -117,9 +93,10 @@
             // btnSave
             // 
             this.btnSave.Font = new System.Drawing.Font("나눔고딕", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnSave.Location = new System.Drawing.Point(1062, 324);
+            this.btnSave.Location = new System.Drawing.Point(1517, 486);
+            this.btnSave.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(221, 143);
+            this.btnSave.Size = new System.Drawing.Size(316, 214);
             this.btnSave.TabIndex = 2;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -127,23 +104,57 @@
             // btnLoad
             // 
             this.btnLoad.Font = new System.Drawing.Font("나눔고딕", 21.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnLoad.Location = new System.Drawing.Point(1062, 481);
+            this.btnLoad.Location = new System.Drawing.Point(1517, 722);
+            this.btnLoad.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.btnLoad.Name = "btnLoad";
-            this.btnLoad.Size = new System.Drawing.Size(221, 143);
+            this.btnLoad.Size = new System.Drawing.Size(316, 214);
             this.btnLoad.TabIndex = 3;
             this.btnLoad.Text = "Load";
             this.btnLoad.UseVisualStyleBackColor = true;
             // 
+            // time
+            // 
+            this.time.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.time.HeaderText = "시각";
+            this.time.MinimumWidth = 10;
+            this.time.Name = "time";
+            this.time.ReadOnly = true;
+            // 
+            // location
+            // 
+            this.location.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.location.HeaderText = "발생 위치";
+            this.location.MinimumWidth = 8;
+            this.location.Name = "location";
+            this.location.ReadOnly = true;
+            // 
+            // type
+            // 
+            this.type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.type.HeaderText = "종류";
+            this.type.MinimumWidth = 8;
+            this.type.Name = "type";
+            this.type.ReadOnly = true;
+            // 
+            // description
+            // 
+            this.description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.description.HeaderText = "상세";
+            this.description.MinimumWidth = 8;
+            this.description.Name = "description";
+            this.description.ReadOnly = true;
+            // 
             // AlarmView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnRestore);
             this.Controls.Add(this.dgvAlarms);
+            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "AlarmView";
-            this.Size = new System.Drawing.Size(1424, 678);
+            this.Size = new System.Drawing.Size(2034, 1017);
             ((System.ComponentModel.ISupportInitialize)(this.dgvAlarms)).EndInit();
             this.ResumeLayout(false);
 
@@ -153,11 +164,11 @@
 
         private System.Windows.Forms.DataGridView dgvAlarms;
         private System.Windows.Forms.Button btnRestore;
+        private System.Windows.Forms.Button btnSave;
+        private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.DataGridViewTextBoxColumn time;
         private System.Windows.Forms.DataGridViewTextBoxColumn location;
         private System.Windows.Forms.DataGridViewTextBoxColumn type;
         private System.Windows.Forms.DataGridViewTextBoxColumn description;
-        private System.Windows.Forms.Button btnSave;
-        private System.Windows.Forms.Button btnLoad;
     }
 }
