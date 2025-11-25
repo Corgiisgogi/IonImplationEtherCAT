@@ -25,6 +25,9 @@ namespace IonImplationEtherCAT
         // 웨이퍼 보유 여부
         public bool HasWafer { get; set; }
 
+        // 현재 들고 있는 웨이퍼
+        public Wafer CurrentWafer { get; set; }
+
         // 그래픽 구성 요소들의 위치
         public Point ArmHighPosition { get; set; }
         public Point ArmLowPosition { get; set; }
@@ -60,11 +63,12 @@ namespace IonImplationEtherCAT
         {
             State = TMState.Idle;
             HasWafer = false;
+            CurrentWafer = null;
             CurrentRotationAngle = 0f;
             TargetRotationAngle = 0f;
             RotationSpeed = 90f; // 초당 90도 회전
             IsArmExtended = false;
-            
+
             CurrentExtension = 0f;
             TargetExtension = 0f;
             MaxExtension = 150f; // 최대 150픽셀 확장
@@ -287,11 +291,12 @@ namespace IonImplationEtherCAT
         /// <summary>
         /// 웨이퍼 픽업
         /// </summary>
-        public bool PickWafer()
+        public bool PickWafer(Wafer wafer)
         {
-            if (!HasWafer && IsArmExtended)
+            if (!HasWafer && IsArmExtended && wafer != null)
             {
                 HasWafer = true;
+                CurrentWafer = wafer;
                 State = TMState.PickingWafer;
                 return true;
             }
@@ -299,17 +304,19 @@ namespace IonImplationEtherCAT
         }
 
         /// <summary>
-        /// 웨이퍼 배치
+        /// 웨이퍼 배치 및 반환
         /// </summary>
-        public bool PlaceWafer()
+        public Wafer PlaceWafer()
         {
             if (HasWafer && IsArmExtended)
             {
                 HasWafer = false;
                 State = TMState.PlacingWafer;
-                return true;
+                Wafer wafer = CurrentWafer;
+                CurrentWafer = null;
+                return wafer;
             }
-            return false;
+            return null;
         }
     }
 }

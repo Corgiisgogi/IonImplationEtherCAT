@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace IonImplationEtherCAT
 {
-    internal class ProcessModule
+    public class ProcessModule
     {
         // 상태 정의
         public enum State
@@ -25,10 +25,27 @@ namespace IonImplationEtherCAT
             ErrorReport
         };
 
+        // PM 모듈 타입 정의
+        public enum ModuleType
+        {
+            PM1,    // 이온 주입
+            PM2,    // 미사용 (향후 확장)
+            PM3     // 어닐링
+        };
+
         public State ModuleState { get; set; }
         public int processTime { get; set; }
         public int elapsedTime { get; set; }
         public bool isWaferLoaded { get; set; }
+
+        // PM 모듈 타입
+        public ModuleType Type { get; set; }
+
+        // 공정 완료 시 TM의 웨이퍼 언로드 요청 플래그
+        public bool IsUnloadRequested { get; set; }
+
+        // 현재 처리 중인 웨이퍼
+        public Wafer CurrentWafer { get; set; }
 
         public ProcessModule()
         {
@@ -36,6 +53,9 @@ namespace IonImplationEtherCAT
             processTime = 0;
             elapsedTime = 0;
             isWaferLoaded = false;
+            Type = ModuleType.PM1;
+            IsUnloadRequested = false;
+            CurrentWafer = null;
         }
 
         public ProcessModule(int defaultProcessTime)
@@ -44,6 +64,20 @@ namespace IonImplationEtherCAT
             processTime = defaultProcessTime;
             elapsedTime = 0;
             isWaferLoaded = false;
+            Type = ModuleType.PM1;
+            IsUnloadRequested = false;
+            CurrentWafer = null;
+        }
+
+        public ProcessModule(ModuleType moduleType, int defaultProcessTime)
+        {
+            ModuleState = State.Idle;
+            processTime = defaultProcessTime;
+            elapsedTime = 0;
+            isWaferLoaded = false;
+            Type = moduleType;
+            IsUnloadRequested = false;
+            CurrentWafer = null;
         }
 
         public void StartProcess(int time)
@@ -82,6 +116,7 @@ namespace IonImplationEtherCAT
         {
             ModuleState = State.Stoped;
             elapsedTime = 0;
+            IsUnloadRequested = false;
         }
 
         public void UpdateProcess(int timeIncrement)
@@ -93,8 +128,43 @@ namespace IonImplationEtherCAT
                 {
                     ModuleState = State.Idle; // 프로세스 완료 후 대기 상태로 전환
                     elapsedTime = processTime; // 경과 시간을 최대값으로 설정
+                    IsUnloadRequested = true; // 웨이퍼 언로드 요청 플래그 설정
+
+                    // 웨이퍼 상태 업데이트
+                    if (CurrentWafer != null)
+                    {
+                        if (Type == ModuleType.PM1)
+                        {
+                            CurrentWafer.UpdateState(Wafer.WaferState.IonProcessComplete);
+                        }
+                        else if (Type == ModuleType.PM3)
+                        {
+                            CurrentWafer.UpdateState(Wafer.WaferState.AnnealingProcessComplete);
+                        }
+                    }
                 }
             }
+        }
+
+        /// <summary>
+        /// PM에 웨이퍼 로드
+        /// </summary>
+        public void LoadWafer(Wafer wafer)
+        {
+            CurrentWafer = wafer;
+            isWaferLoaded = true;
+        }
+
+        /// <summary>
+        /// PM에서 웨이퍼 언로드
+        /// </summary>
+        public Wafer UnloadWafer()
+        {
+            Wafer wafer = CurrentWafer;
+            CurrentWafer = null;
+            isWaferLoaded = false;
+            IsUnloadRequested = false; // 언로드 요청 플래그 리셋
+            return wafer;
         }
 
         public void SendRequest(List<RequestType> requestlist, RequestType request)

@@ -44,9 +44,19 @@ namespace IonImplationEtherCAT
         }
 
         /// <summary>
-        /// 큐 초기화
+        /// 큐 초기화 및 실행 중단
         /// </summary>
         public void Clear()
+        {
+            commands.Clear();
+            // 실행 중이던 워크플로우도 중단
+            isExecuting = false;
+        }
+
+        /// <summary>
+        /// 실행 중단 플래그 설정
+        /// </summary>
+        public void Stop()
         {
             commands.Clear();
             isExecuting = false;
@@ -61,12 +71,14 @@ namespace IonImplationEtherCAT
                 return;
 
             isExecuting = true;
+            ProcessCommand previousCommand = null;
 
             while (commands.Count > 0)
             {
                 var command = commands.Dequeue();
-                await ExecuteCommandAsync(command);
+                await ExecuteCommandAsync(command, previousCommand);
                 command.IsCompleted = true;
+                previousCommand = command;
             }
 
             isExecuting = false;
@@ -75,7 +87,7 @@ namespace IonImplationEtherCAT
         /// <summary>
         /// 단일 명령 실행
         /// </summary>
-        private async Task ExecuteCommandAsync(ProcessCommand command)
+        private async Task ExecuteCommandAsync(ProcessCommand command, ProcessCommand previousCommand)
         {
             switch (command.Type)
             {
@@ -99,31 +111,62 @@ namespace IonImplationEtherCAT
                     break;
 
                 case CommandType.PickWafer:
-                    mainView.TMPickWafer();
-                    await Task.Delay(100); // 픽업 동작 시간
+                    // 이전 명령의 ResultWafer를 사용 (RemoveWaferFromFoup에서 설정됨)
+                    Wafer waferToPick = previousCommand?.ResultWafer;
+                    if (waferToPick != null)
+                    {
+                        mainView.TMPickWafer(waferToPick);
+                        await Task.Delay(100); // 픽업 동작 시간
+                    }
                     break;
 
                 case CommandType.PlaceWafer:
-                    mainView.TMPlaceWafer();
+                    Wafer placedWafer = mainView.TMPlaceWafer();
+                    // 배치된 웨이퍼를 파라미터로 저장 (다음 명령에서 사용 가능)
+                    if (command.Parameters.Length > 0 && command.Parameters[0] is ProcessModule pm)
+                    {
+                        pm.LoadWafer(placedWafer);
+                    }
                     await Task.Delay(100); // 배치 동작 시간
                     break;
 
                 case CommandType.RemoveWaferFromFoup:
-                    if (command.Parameters.Length > 1 && 
-                        command.Parameters[0] is Foup foup && 
+                    if (command.Parameters.Length > 1 &&
+                        command.Parameters[0] is Foup foup &&
                         command.Parameters[1] is int slotIndex)
                     {
-                        foup.UnloadWafer(slotIndex);
+                        Wafer removedWafer = foup.UnloadWafer(slotIndex);
+                        // 제거된 웨이퍼를 다음 명령에서 사용할 수 있도록 임시 저장
+                        command.ResultWafer = removedWafer;
                         mainView.UpdateFoupDisplays();
                     }
                     break;
 
                 case CommandType.AddWaferToFoup:
-                    if (command.Parameters.Length > 1 && 
-                        command.Parameters[0] is Foup foupAdd && 
+                    if (command.Parameters.Length > 1 &&
+                        command.Parameters[0] is Foup foupAdd &&
                         command.Parameters[1] is int slotIndexAdd)
                     {
-                        foupAdd.LoadWafer(slotIndexAdd);
+                        // TM이 웨이퍼를 들고 있으면 TM에서 가져옴
+                        Wafer waferToAdd = null;
+                        if (mainView.TMHasWafer())
+                        {
+                            waferToAdd = mainView.TMPlaceWafer();
+                        }
+                        else
+                        {
+                            // TM에 웨이퍼가 없으면 이전 명령의 ResultWafer 사용
+                            waferToAdd = previousCommand?.ResultWafer;
+                        }
+
+                        if (waferToAdd != null)
+                        {
+                            foupAdd.LoadWafer(slotIndexAdd, waferToAdd);
+                        }
+                        else
+                        {
+                            foupAdd.LoadWafer(slotIndexAdd);
+                        }
                         mainView.UpdateFoupDisplays();
                     }
                     break;
@@ -145,6 +188,40 @@ namespace IonImplationEtherCAT
 
                 case CommandType.WaitForCompletion:
                     // 추후 구현: 특정 조건 대기
+                    break;
+
+                case CommandType.UnloadWaferFromPM:
+                    if (command.Parameters.Length > 0 && command.Parameters[0] is ProcessModule pmUnload)
+                    {
+                        Wafer unloadedWafer = pmUnload.UnloadWafer();
+                        command.ResultWafer = unloadedWafer;
+                        mainView.UpdateProcessDisplay();
+                        await Task.Delay(100);
+                    }
+                    break;
+
+                case CommandType.WaitForProcessComplete:
+                    if (command.Parameters.Length > 0 && command.Parameters[0] is ProcessModule pmWait)
+                    {
+                        // PM 공정이 완료되고 언로드 요청이 있을 때까지 대기
+                        while (pmWait.ModuleState == ProcessModule.State.Running ||
+                               (pmWait.ModuleState == ProcessModule.State.Idle && !pmWait.IsUnloadRequested))
+                        {
+                            await Task.Delay(500); // 0.5초마다 확인
+                        }
+                    }
+                    break;
+
+                case CommandType.LoadWaferToPM:
+                    if (command.Parameters.Length > 0 && command.Parameters[0] is ProcessModule pmLoad)
+                    {
+                        Wafer waferToLoad = previousCommand?.ResultWafer;
+                        if (waferToLoad != null)
+                        {
+                            pmLoad.LoadWafer(waferToLoad);
+                            mainView.UpdateProcessDisplay();
+                        }
+                    }
                     break;
             }
         }
