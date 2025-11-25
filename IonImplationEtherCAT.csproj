@@ -90,6 +90,7 @@
     <Compile Include="RecipeView.Designer.cs">
       <DependentUpon>RecipeView.cs</DependentUpon>
     </Compile>
+    <Compile Include="Wafer.cs" />
     <EmbeddedResource Include="AlarmView.resx">
       <DependentUpon>AlarmView.cs</DependentUpon>
     </EmbeddedResource>

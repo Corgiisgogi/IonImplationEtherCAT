@@ -109,14 +109,14 @@
             this.lblPM3 = new System.Windows.Forms.Label();
             this.btnAllProcess = new System.Windows.Forms.Button();
             this.btnAllStop = new System.Windows.Forms.Button();
-            this.CpicBoxTMBottom = new IonImplationEtherCAT.CustomPictureBox();
-            this.CpicBoxTMArmLow = new IonImplationEtherCAT.CustomPictureBox();
-            this.CpicBoxTMArmHigh = new IonImplationEtherCAT.CustomPictureBox();
-            this.CpicBoxWafer5 = new IonImplationEtherCAT.CustomPictureBox();
-            this.CpicBoxWafer3 = new IonImplationEtherCAT.CustomPictureBox();
-            this.CpicBoxWafer1 = new IonImplationEtherCAT.CustomPictureBox();
-            this.CpicBoxWafer2 = new IonImplationEtherCAT.CustomPictureBox();
             this.CpicBoxWafer4 = new IonImplationEtherCAT.CustomPictureBox();
+            this.CpicBoxWafer2 = new IonImplationEtherCAT.CustomPictureBox();
+            this.CpicBoxWafer1 = new IonImplationEtherCAT.CustomPictureBox();
+            this.CpicBoxWafer3 = new IonImplationEtherCAT.CustomPictureBox();
+            this.CpicBoxWafer5 = new IonImplationEtherCAT.CustomPictureBox();
+            this.CpicBoxTMArmHigh = new IonImplationEtherCAT.CustomPictureBox();
+            this.CpicBoxTMArmLow = new IonImplationEtherCAT.CustomPictureBox();
+            this.CpicBoxTMBottom = new IonImplationEtherCAT.CustomPictureBox();
             this.panelPM1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxPM1Lamp)).BeginInit();
             this.panelPM1Status.SuspendLayout();
@@ -139,14 +139,14 @@
             this.tblLayoutPanelPM3Progress.SuspendLayout();
             this.tblLayoutPanelPM3Status.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxPM3Status)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxTMBottom)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxTMArmLow)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxTMArmHigh)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer5)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer3)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer4)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer5)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxTMArmHigh)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxTMArmLow)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxTMBottom)).BeginInit();
             this.SuspendLayout();
             // 
             // panelPM1
@@ -155,30 +155,27 @@
             this.panelPM1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelPM1.Controls.Add(this.panelPM1Door);
             this.panelPM1.Controls.Add(this.picBoxPM1Lamp);
-            this.panelPM1.Location = new System.Drawing.Point(104, 250);
-            this.panelPM1.Margin = new System.Windows.Forms.Padding(4);
+            this.panelPM1.Location = new System.Drawing.Point(73, 167);
             this.panelPM1.Name = "panelPM1";
-            this.panelPM1.Size = new System.Drawing.Size(211, 292);
+            this.panelPM1.Size = new System.Drawing.Size(148, 195);
             this.panelPM1.TabIndex = 0;
             // 
             // panelPM1Door
             // 
             this.panelPM1Door.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.panelPM1Door.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelPM1Door.Location = new System.Drawing.Point(159, 82);
-            this.panelPM1Door.Margin = new System.Windows.Forms.Padding(4);
+            this.panelPM1Door.Location = new System.Drawing.Point(111, 55);
             this.panelPM1Door.Name = "panelPM1Door";
-            this.panelPM1Door.Size = new System.Drawing.Size(41, 172);
+            this.panelPM1Door.Size = new System.Drawing.Size(29, 115);
             this.panelPM1Door.TabIndex = 8;
             // 
             // picBoxPM1Lamp
             // 
             this.picBoxPM1Lamp.BackgroundImage = global::IonImplationEtherCAT.Properties.Resources.LampOff;
             this.picBoxPM1Lamp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.picBoxPM1Lamp.Location = new System.Drawing.Point(154, 4);
-            this.picBoxPM1Lamp.Margin = new System.Windows.Forms.Padding(4);
+            this.picBoxPM1Lamp.Location = new System.Drawing.Point(108, 3);
             this.picBoxPM1Lamp.Name = "picBoxPM1Lamp";
-            this.picBoxPM1Lamp.Size = new System.Drawing.Size(50, 50);
+            this.picBoxPM1Lamp.Size = new System.Drawing.Size(35, 33);
             this.picBoxPM1Lamp.TabIndex = 7;
             this.picBoxPM1Lamp.TabStop = false;
             // 
@@ -191,20 +188,18 @@
             this.panelPM1Status.Controls.Add(this.tblLayoutPanelPM1Status);
             this.panelPM1Status.Controls.Add(this.picBoxPM1Status);
             this.panelPM1Status.Controls.Add(this.lblPM1);
-            this.panelPM1Status.Location = new System.Drawing.Point(1153, 28);
-            this.panelPM1Status.Margin = new System.Windows.Forms.Padding(4);
+            this.panelPM1Status.Location = new System.Drawing.Point(807, 19);
             this.panelPM1Status.Name = "panelPM1Status";
-            this.panelPM1Status.Size = new System.Drawing.Size(346, 413);
+            this.panelPM1Status.Size = new System.Drawing.Size(243, 276);
             this.panelPM1Status.TabIndex = 1;
             // 
             // lblPM1Status
             // 
             this.lblPM1Status.AutoSize = true;
-            this.lblPM1Status.Font = new System.Drawing.Font("나눔고딕", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM1Status.Location = new System.Drawing.Point(158, 327);
-            this.lblPM1Status.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM1Status.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPM1Status.Location = new System.Drawing.Point(111, 218);
             this.lblPM1Status.Name = "lblPM1Status";
-            this.lblPM1Status.Size = new System.Drawing.Size(17, 23);
+            this.lblPM1Status.Size = new System.Drawing.Size(13, 17);
             this.lblPM1Status.TabIndex = 6;
             this.lblPM1Status.Text = "-";
             this.lblPM1Status.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -214,35 +209,32 @@
             this.tblLayoutPanelPM1Progress.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblLayoutPanelPM1Progress.ColumnCount = 2;
             this.tblLayoutPanelPM1Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.8595F));
-            this.tblLayoutPanelPM1Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 244F));
+            this.tblLayoutPanelPM1Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 176F));
             this.tblLayoutPanelPM1Progress.Controls.Add(this.progressBarPM1, 1, 0);
             this.tblLayoutPanelPM1Progress.Controls.Add(this.lblPM1Progress, 0, 0);
             this.tblLayoutPanelPM1Progress.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tblLayoutPanelPM1Progress.Location = new System.Drawing.Point(0, 363);
-            this.tblLayoutPanelPM1Progress.Margin = new System.Windows.Forms.Padding(4);
+            this.tblLayoutPanelPM1Progress.Location = new System.Drawing.Point(0, 242);
             this.tblLayoutPanelPM1Progress.Name = "tblLayoutPanelPM1Progress";
             this.tblLayoutPanelPM1Progress.RowCount = 1;
             this.tblLayoutPanelPM1Progress.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tblLayoutPanelPM1Progress.Size = new System.Drawing.Size(344, 48);
+            this.tblLayoutPanelPM1Progress.Size = new System.Drawing.Size(241, 32);
             this.tblLayoutPanelPM1Progress.TabIndex = 5;
             // 
             // progressBarPM1
             // 
-            this.progressBarPM1.Location = new System.Drawing.Point(103, 5);
-            this.progressBarPM1.Margin = new System.Windows.Forms.Padding(4);
+            this.progressBarPM1.Location = new System.Drawing.Point(67, 4);
             this.progressBarPM1.Name = "progressBarPM1";
-            this.progressBarPM1.Size = new System.Drawing.Size(233, 34);
+            this.progressBarPM1.Size = new System.Drawing.Size(163, 23);
             this.progressBarPM1.TabIndex = 5;
             // 
             // lblPM1Progress
             // 
             this.lblPM1Progress.AutoSize = true;
             this.lblPM1Progress.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblPM1Progress.Font = new System.Drawing.Font("나눔고딕", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM1Progress.Location = new System.Drawing.Point(5, 1);
-            this.lblPM1Progress.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM1Progress.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPM1Progress.Location = new System.Drawing.Point(4, 1);
             this.lblPM1Progress.Name = "lblPM1Progress";
-            this.lblPM1Progress.Size = new System.Drawing.Size(89, 46);
+            this.lblPM1Progress.Size = new System.Drawing.Size(56, 30);
             this.lblPM1Progress.TabIndex = 5;
             this.lblPM1Progress.Text = "progress";
             this.lblPM1Progress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -251,8 +243,8 @@
             // 
             this.tblLayoutPanelPM1Status.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblLayoutPanelPM1Status.ColumnCount = 2;
-            this.tblLayoutPanelPM1Status.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.6185F));
-            this.tblLayoutPanelPM1Status.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.3815F));
+            this.tblLayoutPanelPM1Status.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 43.80165F));
+            this.tblLayoutPanelPM1Status.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 56.19835F));
             this.tblLayoutPanelPM1Status.Controls.Add(this.lblPM1Dose, 0, 3);
             this.tblLayoutPanelPM1Status.Controls.Add(this.lblPM1Pressure, 0, 1);
             this.tblLayoutPanelPM1Status.Controls.Add(this.lblPM1AV, 0, 2);
@@ -261,26 +253,24 @@
             this.tblLayoutPanelPM1Status.Controls.Add(this.lblPM1PressureValue, 1, 1);
             this.tblLayoutPanelPM1Status.Controls.Add(this.lblPM1AVValue, 1, 2);
             this.tblLayoutPanelPM1Status.Controls.Add(this.lblPM1DoseValue, 1, 3);
-            this.tblLayoutPanelPM1Status.Location = new System.Drawing.Point(-1, 58);
-            this.tblLayoutPanelPM1Status.Margin = new System.Windows.Forms.Padding(4);
+            this.tblLayoutPanelPM1Status.Location = new System.Drawing.Point(-1, 39);
             this.tblLayoutPanelPM1Status.Name = "tblLayoutPanelPM1Status";
             this.tblLayoutPanelPM1Status.RowCount = 4;
             this.tblLayoutPanelPM1Status.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tblLayoutPanelPM1Status.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tblLayoutPanelPM1Status.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tblLayoutPanelPM1Status.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tblLayoutPanelPM1Status.Size = new System.Drawing.Size(347, 258);
+            this.tblLayoutPanelPM1Status.Size = new System.Drawing.Size(243, 172);
             this.tblLayoutPanelPM1Status.TabIndex = 5;
             // 
             // lblPM1Dose
             // 
             this.lblPM1Dose.AutoSize = true;
             this.lblPM1Dose.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblPM1Dose.Font = new System.Drawing.Font("나눔고딕", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM1Dose.Location = new System.Drawing.Point(5, 193);
-            this.lblPM1Dose.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM1Dose.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPM1Dose.Location = new System.Drawing.Point(4, 127);
             this.lblPM1Dose.Name = "lblPM1Dose";
-            this.lblPM1Dose.Size = new System.Drawing.Size(135, 64);
+            this.lblPM1Dose.Size = new System.Drawing.Size(99, 44);
             this.lblPM1Dose.TabIndex = 6;
             this.lblPM1Dose.Text = "DOSE";
             this.lblPM1Dose.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -289,11 +279,10 @@
             // 
             this.lblPM1Pressure.AutoSize = true;
             this.lblPM1Pressure.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblPM1Pressure.Font = new System.Drawing.Font("나눔고딕", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM1Pressure.Location = new System.Drawing.Point(5, 65);
-            this.lblPM1Pressure.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM1Pressure.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPM1Pressure.Location = new System.Drawing.Point(4, 43);
             this.lblPM1Pressure.Name = "lblPM1Pressure";
-            this.lblPM1Pressure.Size = new System.Drawing.Size(135, 63);
+            this.lblPM1Pressure.Size = new System.Drawing.Size(99, 41);
             this.lblPM1Pressure.TabIndex = 5;
             this.lblPM1Pressure.Text = "PRESSURE";
             this.lblPM1Pressure.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -302,11 +291,10 @@
             // 
             this.lblPM1AV.AutoSize = true;
             this.lblPM1AV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblPM1AV.Font = new System.Drawing.Font("나눔고딕", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM1AV.Location = new System.Drawing.Point(5, 129);
-            this.lblPM1AV.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM1AV.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPM1AV.Location = new System.Drawing.Point(4, 85);
             this.lblPM1AV.Name = "lblPM1AV";
-            this.lblPM1AV.Size = new System.Drawing.Size(135, 63);
+            this.lblPM1AV.Size = new System.Drawing.Size(99, 41);
             this.lblPM1AV.TabIndex = 5;
             this.lblPM1AV.Text = "AV";
             this.lblPM1AV.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -315,11 +303,10 @@
             // 
             this.lblPM1Temperature.AutoSize = true;
             this.lblPM1Temperature.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblPM1Temperature.Font = new System.Drawing.Font("나눔고딕", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM1Temperature.Location = new System.Drawing.Point(5, 1);
-            this.lblPM1Temperature.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM1Temperature.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPM1Temperature.Location = new System.Drawing.Point(4, 1);
             this.lblPM1Temperature.Name = "lblPM1Temperature";
-            this.lblPM1Temperature.Size = new System.Drawing.Size(135, 63);
+            this.lblPM1Temperature.Size = new System.Drawing.Size(99, 41);
             this.lblPM1Temperature.TabIndex = 0;
             this.lblPM1Temperature.Text = "TEMPERATURE";
             this.lblPM1Temperature.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -329,10 +316,9 @@
             this.lblPM1TemperatureValue.AutoSize = true;
             this.lblPM1TemperatureValue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblPM1TemperatureValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblPM1TemperatureValue.Location = new System.Drawing.Point(149, 1);
-            this.lblPM1TemperatureValue.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM1TemperatureValue.Location = new System.Drawing.Point(110, 1);
             this.lblPM1TemperatureValue.Name = "lblPM1TemperatureValue";
-            this.lblPM1TemperatureValue.Size = new System.Drawing.Size(193, 63);
+            this.lblPM1TemperatureValue.Size = new System.Drawing.Size(129, 41);
             this.lblPM1TemperatureValue.TabIndex = 7;
             this.lblPM1TemperatureValue.Text = "-";
             this.lblPM1TemperatureValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -342,10 +328,9 @@
             this.lblPM1PressureValue.AutoSize = true;
             this.lblPM1PressureValue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblPM1PressureValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblPM1PressureValue.Location = new System.Drawing.Point(149, 65);
-            this.lblPM1PressureValue.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM1PressureValue.Location = new System.Drawing.Point(110, 43);
             this.lblPM1PressureValue.Name = "lblPM1PressureValue";
-            this.lblPM1PressureValue.Size = new System.Drawing.Size(193, 63);
+            this.lblPM1PressureValue.Size = new System.Drawing.Size(129, 41);
             this.lblPM1PressureValue.TabIndex = 8;
             this.lblPM1PressureValue.Text = "-";
             this.lblPM1PressureValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -355,10 +340,9 @@
             this.lblPM1AVValue.AutoSize = true;
             this.lblPM1AVValue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblPM1AVValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblPM1AVValue.Location = new System.Drawing.Point(149, 129);
-            this.lblPM1AVValue.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM1AVValue.Location = new System.Drawing.Point(110, 85);
             this.lblPM1AVValue.Name = "lblPM1AVValue";
-            this.lblPM1AVValue.Size = new System.Drawing.Size(193, 63);
+            this.lblPM1AVValue.Size = new System.Drawing.Size(129, 41);
             this.lblPM1AVValue.TabIndex = 9;
             this.lblPM1AVValue.Text = "-";
             this.lblPM1AVValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -368,10 +352,9 @@
             this.lblPM1DoseValue.AutoSize = true;
             this.lblPM1DoseValue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblPM1DoseValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblPM1DoseValue.Location = new System.Drawing.Point(149, 193);
-            this.lblPM1DoseValue.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM1DoseValue.Location = new System.Drawing.Point(110, 127);
             this.lblPM1DoseValue.Name = "lblPM1DoseValue";
-            this.lblPM1DoseValue.Size = new System.Drawing.Size(193, 64);
+            this.lblPM1DoseValue.Size = new System.Drawing.Size(129, 44);
             this.lblPM1DoseValue.TabIndex = 10;
             this.lblPM1DoseValue.Text = "-";
             this.lblPM1DoseValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -380,21 +363,19 @@
             // 
             this.picBoxPM1Status.BackgroundImage = global::IonImplationEtherCAT.Properties.Resources.StatusGray;
             this.picBoxPM1Status.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.picBoxPM1Status.Location = new System.Drawing.Point(297, 4);
-            this.picBoxPM1Status.Margin = new System.Windows.Forms.Padding(4);
+            this.picBoxPM1Status.Location = new System.Drawing.Point(208, 3);
             this.picBoxPM1Status.Name = "picBoxPM1Status";
-            this.picBoxPM1Status.Size = new System.Drawing.Size(45, 45);
+            this.picBoxPM1Status.Size = new System.Drawing.Size(32, 30);
             this.picBoxPM1Status.TabIndex = 4;
             this.picBoxPM1Status.TabStop = false;
             // 
             // lblPM1
             // 
             this.lblPM1.AutoSize = true;
-            this.lblPM1.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM1.Location = new System.Drawing.Point(19, 16);
-            this.lblPM1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPM1.Location = new System.Drawing.Point(13, 11);
             this.lblPM1.Name = "lblPM1";
-            this.lblPM1.Size = new System.Drawing.Size(64, 28);
+            this.lblPM1.Size = new System.Drawing.Size(41, 20);
             this.lblPM1.TabIndex = 3;
             this.lblPM1.Text = "PM1";
             // 
@@ -407,60 +388,54 @@
             this.panelFoupA.Controls.Add(this.panelFoupAWafer3);
             this.panelFoupA.Controls.Add(this.panelFoupAWafer2);
             this.panelFoupA.Controls.Add(this.panelFoupAWafer1);
-            this.panelFoupA.Location = new System.Drawing.Point(233, 597);
-            this.panelFoupA.Margin = new System.Windows.Forms.Padding(4);
+            this.panelFoupA.Location = new System.Drawing.Point(163, 398);
             this.panelFoupA.Name = "panelFoupA";
-            this.panelFoupA.Size = new System.Drawing.Size(248, 222);
+            this.panelFoupA.Size = new System.Drawing.Size(174, 149);
             this.panelFoupA.TabIndex = 1;
             // 
             // panelFoupAWafer5
             // 
             this.panelFoupAWafer5.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.panelFoupAWafer5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelFoupAWafer5.Location = new System.Drawing.Point(26, 164);
-            this.panelFoupAWafer5.Margin = new System.Windows.Forms.Padding(4);
+            this.panelFoupAWafer5.Location = new System.Drawing.Point(18, 109);
             this.panelFoupAWafer5.Name = "panelFoupAWafer5";
-            this.panelFoupAWafer5.Size = new System.Drawing.Size(196, 23);
+            this.panelFoupAWafer5.Size = new System.Drawing.Size(138, 16);
             this.panelFoupAWafer5.TabIndex = 4;
             // 
             // panelFoupAWafer4
             // 
             this.panelFoupAWafer4.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.panelFoupAWafer4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelFoupAWafer4.Location = new System.Drawing.Point(26, 130);
-            this.panelFoupAWafer4.Margin = new System.Windows.Forms.Padding(4);
+            this.panelFoupAWafer4.Location = new System.Drawing.Point(18, 87);
             this.panelFoupAWafer4.Name = "panelFoupAWafer4";
-            this.panelFoupAWafer4.Size = new System.Drawing.Size(196, 23);
+            this.panelFoupAWafer4.Size = new System.Drawing.Size(138, 16);
             this.panelFoupAWafer4.TabIndex = 4;
             // 
             // panelFoupAWafer3
             // 
             this.panelFoupAWafer3.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.panelFoupAWafer3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelFoupAWafer3.Location = new System.Drawing.Point(26, 98);
-            this.panelFoupAWafer3.Margin = new System.Windows.Forms.Padding(4);
+            this.panelFoupAWafer3.Location = new System.Drawing.Point(18, 65);
             this.panelFoupAWafer3.Name = "panelFoupAWafer3";
-            this.panelFoupAWafer3.Size = new System.Drawing.Size(196, 23);
+            this.panelFoupAWafer3.Size = new System.Drawing.Size(138, 16);
             this.panelFoupAWafer3.TabIndex = 4;
             // 
             // panelFoupAWafer2
             // 
             this.panelFoupAWafer2.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.panelFoupAWafer2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelFoupAWafer2.Location = new System.Drawing.Point(26, 64);
-            this.panelFoupAWafer2.Margin = new System.Windows.Forms.Padding(4);
+            this.panelFoupAWafer2.Location = new System.Drawing.Point(18, 43);
             this.panelFoupAWafer2.Name = "panelFoupAWafer2";
-            this.panelFoupAWafer2.Size = new System.Drawing.Size(196, 23);
+            this.panelFoupAWafer2.Size = new System.Drawing.Size(138, 16);
             this.panelFoupAWafer2.TabIndex = 4;
             // 
             // panelFoupAWafer1
             // 
             this.panelFoupAWafer1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.panelFoupAWafer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelFoupAWafer1.Location = new System.Drawing.Point(26, 32);
-            this.panelFoupAWafer1.Margin = new System.Windows.Forms.Padding(4);
+            this.panelFoupAWafer1.Location = new System.Drawing.Point(18, 21);
             this.panelFoupAWafer1.Name = "panelFoupAWafer1";
-            this.panelFoupAWafer1.Size = new System.Drawing.Size(196, 23);
+            this.panelFoupAWafer1.Size = new System.Drawing.Size(138, 16);
             this.panelFoupAWafer1.TabIndex = 4;
             // 
             // panelPM2
@@ -469,30 +444,27 @@
             this.panelPM2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelPM2.Controls.Add(this.panelPM2Door);
             this.panelPM2.Controls.Add(this.picBoxPM2Lamp);
-            this.panelPM2.Location = new System.Drawing.Point(377, 18);
-            this.panelPM2.Margin = new System.Windows.Forms.Padding(4);
+            this.panelPM2.Location = new System.Drawing.Point(264, 12);
             this.panelPM2.Name = "panelPM2";
-            this.panelPM2.Size = new System.Drawing.Size(278, 221);
+            this.panelPM2.Size = new System.Drawing.Size(195, 148);
             this.panelPM2.TabIndex = 1;
             // 
             // panelPM2Door
             // 
             this.panelPM2Door.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.panelPM2Door.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelPM2Door.Location = new System.Drawing.Point(50, 168);
-            this.panelPM2Door.Margin = new System.Windows.Forms.Padding(4);
+            this.panelPM2Door.Location = new System.Drawing.Point(35, 112);
             this.panelPM2Door.Name = "panelPM2Door";
-            this.panelPM2Door.Size = new System.Drawing.Size(163, 42);
+            this.panelPM2Door.Size = new System.Drawing.Size(115, 29);
             this.panelPM2Door.TabIndex = 8;
             // 
             // picBoxPM2Lamp
             // 
             this.picBoxPM2Lamp.BackgroundImage = global::IonImplationEtherCAT.Properties.Resources.LampOff;
             this.picBoxPM2Lamp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.picBoxPM2Lamp.Location = new System.Drawing.Point(223, 162);
-            this.picBoxPM2Lamp.Margin = new System.Windows.Forms.Padding(4);
+            this.picBoxPM2Lamp.Location = new System.Drawing.Point(156, 108);
             this.picBoxPM2Lamp.Name = "picBoxPM2Lamp";
-            this.picBoxPM2Lamp.Size = new System.Drawing.Size(50, 50);
+            this.picBoxPM2Lamp.Size = new System.Drawing.Size(35, 33);
             this.picBoxPM2Lamp.TabIndex = 7;
             this.picBoxPM2Lamp.TabStop = false;
             // 
@@ -502,63 +474,59 @@
             this.panelPM3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelPM3.Controls.Add(this.panelPM3Door);
             this.panelPM3.Controls.Add(this.picBoxPM3Lamp);
-            this.panelPM3.Location = new System.Drawing.Point(719, 250);
-            this.panelPM3.Margin = new System.Windows.Forms.Padding(4);
+            this.panelPM3.Location = new System.Drawing.Point(503, 167);
             this.panelPM3.Name = "panelPM3";
-            this.panelPM3.Size = new System.Drawing.Size(211, 292);
+            this.panelPM3.Size = new System.Drawing.Size(148, 195);
             this.panelPM3.TabIndex = 0;
             // 
             // panelPM3Door
             // 
             this.panelPM3Door.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.panelPM3Door.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelPM3Door.Location = new System.Drawing.Point(6, 82);
-            this.panelPM3Door.Margin = new System.Windows.Forms.Padding(4);
+            this.panelPM3Door.Location = new System.Drawing.Point(4, 55);
             this.panelPM3Door.Name = "panelPM3Door";
-            this.panelPM3Door.Size = new System.Drawing.Size(41, 172);
+            this.panelPM3Door.Size = new System.Drawing.Size(29, 115);
             this.panelPM3Door.TabIndex = 8;
             // 
             // picBoxPM3Lamp
             // 
             this.picBoxPM3Lamp.BackgroundImage = global::IonImplationEtherCAT.Properties.Resources.LampOff;
             this.picBoxPM3Lamp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.picBoxPM3Lamp.Location = new System.Drawing.Point(4, 4);
-            this.picBoxPM3Lamp.Margin = new System.Windows.Forms.Padding(4);
+            this.picBoxPM3Lamp.Location = new System.Drawing.Point(3, 3);
             this.picBoxPM3Lamp.Name = "picBoxPM3Lamp";
-            this.picBoxPM3Lamp.Size = new System.Drawing.Size(50, 50);
+            this.picBoxPM3Lamp.Size = new System.Drawing.Size(35, 33);
             this.picBoxPM3Lamp.TabIndex = 7;
             this.picBoxPM3Lamp.TabStop = false;
             // 
             // btnFoupALoadSW
             // 
-            this.btnFoupALoadSW.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFoupALoadSW.Location = new System.Drawing.Point(233, 830);
-            this.btnFoupALoadSW.Margin = new System.Windows.Forms.Padding(4);
+            this.btnFoupALoadSW.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFoupALoadSW.Location = new System.Drawing.Point(163, 553);
             this.btnFoupALoadSW.Name = "btnFoupALoadSW";
-            this.btnFoupALoadSW.Size = new System.Drawing.Size(109, 74);
+            this.btnFoupALoadSW.Size = new System.Drawing.Size(76, 49);
             this.btnFoupALoadSW.TabIndex = 2;
             this.btnFoupALoadSW.Text = "Load S/W";
             this.btnFoupALoadSW.UseVisualStyleBackColor = true;
+            this.btnFoupALoadSW.Click += new System.EventHandler(this.btnFoupALoadSW_Click);
             // 
             // buttonFoupAUnloadSW
             // 
-            this.buttonFoupAUnloadSW.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.buttonFoupAUnloadSW.Location = new System.Drawing.Point(366, 830);
-            this.buttonFoupAUnloadSW.Margin = new System.Windows.Forms.Padding(4);
+            this.buttonFoupAUnloadSW.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.buttonFoupAUnloadSW.Location = new System.Drawing.Point(256, 553);
             this.buttonFoupAUnloadSW.Name = "buttonFoupAUnloadSW";
-            this.buttonFoupAUnloadSW.Size = new System.Drawing.Size(116, 74);
+            this.buttonFoupAUnloadSW.Size = new System.Drawing.Size(81, 49);
             this.buttonFoupAUnloadSW.TabIndex = 2;
             this.buttonFoupAUnloadSW.Text = "Unload S/W";
             this.buttonFoupAUnloadSW.UseVisualStyleBackColor = true;
+            this.buttonFoupAUnloadSW.Click += new System.EventHandler(this.buttonFoupAUnloadSW_Click);
             // 
             // lblFoupA
             // 
             this.lblFoupA.AutoSize = true;
-            this.lblFoupA.Font = new System.Drawing.Font("나눔고딕", 21F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblFoupA.Location = new System.Drawing.Point(279, 908);
-            this.lblFoupA.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblFoupA.Font = new System.Drawing.Font("Microsoft Sans Serif", 21F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFoupA.Location = new System.Drawing.Point(195, 605);
             this.lblFoupA.Name = "lblFoupA";
-            this.lblFoupA.Size = new System.Drawing.Size(174, 49);
+            this.lblFoupA.Size = new System.Drawing.Size(118, 32);
             this.lblFoupA.TabIndex = 3;
             this.lblFoupA.Text = "FOUP A";
             // 
@@ -590,20 +558,18 @@
             this.panelMainControl.Controls.Add(this.panelFoupA);
             this.panelMainControl.Controls.Add(this.panelPM3);
             this.panelMainControl.Controls.Add(this.panelPM1);
-            this.panelMainControl.Location = new System.Drawing.Point(47, 10);
-            this.panelMainControl.Margin = new System.Windows.Forms.Padding(4);
+            this.panelMainControl.Location = new System.Drawing.Point(33, 7);
             this.panelMainControl.Name = "panelMainControl";
-            this.panelMainControl.Size = new System.Drawing.Size(1041, 1058);
+            this.panelMainControl.Size = new System.Drawing.Size(729, 705);
             this.panelMainControl.TabIndex = 4;
             // 
             // picBoxTMArmBack
             // 
             this.picBoxTMArmBack.BackgroundImage = global::IonImplationEtherCAT.Properties.Resources.TMArmBack;
             this.picBoxTMArmBack.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.picBoxTMArmBack.Location = new System.Drawing.Point(674, 356);
-            this.picBoxTMArmBack.Margin = new System.Windows.Forms.Padding(4);
+            this.picBoxTMArmBack.Location = new System.Drawing.Point(472, 237);
             this.picBoxTMArmBack.Name = "picBoxTMArmBack";
-            this.picBoxTMArmBack.Size = new System.Drawing.Size(36, 142);
+            this.picBoxTMArmBack.Size = new System.Drawing.Size(25, 95);
             this.picBoxTMArmBack.TabIndex = 9;
             this.picBoxTMArmBack.TabStop = false;
             // 
@@ -611,100 +577,96 @@
             // 
             this.panelRedAlert.BackColor = System.Drawing.Color.RosyBrown;
             this.panelRedAlert.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelRedAlert.Location = new System.Drawing.Point(949, 136);
-            this.panelRedAlert.Margin = new System.Windows.Forms.Padding(4);
+            this.panelRedAlert.Location = new System.Drawing.Point(664, 91);
             this.panelRedAlert.Name = "panelRedAlert";
-            this.panelRedAlert.Size = new System.Drawing.Size(71, 59);
+            this.panelRedAlert.Size = new System.Drawing.Size(50, 40);
             this.panelRedAlert.TabIndex = 8;
             // 
             // panelYellowAlert
             // 
             this.panelYellowAlert.BackColor = System.Drawing.Color.Khaki;
             this.panelYellowAlert.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelYellowAlert.Location = new System.Drawing.Point(949, 78);
-            this.panelYellowAlert.Margin = new System.Windows.Forms.Padding(4);
+            this.panelYellowAlert.Location = new System.Drawing.Point(664, 52);
             this.panelYellowAlert.Name = "panelYellowAlert";
-            this.panelYellowAlert.Size = new System.Drawing.Size(71, 59);
+            this.panelYellowAlert.Size = new System.Drawing.Size(50, 40);
             this.panelYellowAlert.TabIndex = 8;
             // 
             // panelGreenAlert
             // 
             this.panelGreenAlert.BackColor = System.Drawing.Color.DarkSeaGreen;
             this.panelGreenAlert.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelGreenAlert.Location = new System.Drawing.Point(949, 20);
-            this.panelGreenAlert.Margin = new System.Windows.Forms.Padding(4);
+            this.panelGreenAlert.Location = new System.Drawing.Point(664, 13);
             this.panelGreenAlert.Name = "panelGreenAlert";
-            this.panelGreenAlert.Size = new System.Drawing.Size(71, 59);
+            this.panelGreenAlert.Size = new System.Drawing.Size(50, 40);
             this.panelGreenAlert.TabIndex = 8;
             // 
             // btnRecipeC
             // 
             this.btnRecipeC.BackColor = System.Drawing.Color.Gold;
-            this.btnRecipeC.Font = new System.Drawing.Font("나눔고딕", 8.999999F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRecipeC.Location = new System.Drawing.Point(553, 964);
-            this.btnRecipeC.Margin = new System.Windows.Forms.Padding(4);
+            this.btnRecipeC.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRecipeC.Location = new System.Drawing.Point(387, 643);
             this.btnRecipeC.Name = "btnRecipeC";
-            this.btnRecipeC.Size = new System.Drawing.Size(71, 75);
+            this.btnRecipeC.Size = new System.Drawing.Size(50, 50);
             this.btnRecipeC.TabIndex = 6;
             this.btnRecipeC.Text = "C";
             this.btnRecipeC.UseVisualStyleBackColor = false;
+            this.btnRecipeC.Click += new System.EventHandler(this.btnRecipeC_Click);
             // 
             // btnRecipeB
             // 
             this.btnRecipeB.BackColor = System.Drawing.Color.Gold;
-            this.btnRecipeB.Font = new System.Drawing.Font("나눔고딕", 8.999999F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRecipeB.Location = new System.Drawing.Point(471, 964);
-            this.btnRecipeB.Margin = new System.Windows.Forms.Padding(4);
+            this.btnRecipeB.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRecipeB.Location = new System.Drawing.Point(330, 643);
             this.btnRecipeB.Name = "btnRecipeB";
-            this.btnRecipeB.Size = new System.Drawing.Size(71, 75);
+            this.btnRecipeB.Size = new System.Drawing.Size(50, 50);
             this.btnRecipeB.TabIndex = 6;
             this.btnRecipeB.Text = "B";
             this.btnRecipeB.UseVisualStyleBackColor = false;
+            this.btnRecipeB.Click += new System.EventHandler(this.btnRecipeB_Click);
             // 
             // btnRecipeA
             // 
             this.btnRecipeA.BackColor = System.Drawing.Color.Gold;
-            this.btnRecipeA.Font = new System.Drawing.Font("나눔고딕", 8.999999F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRecipeA.Location = new System.Drawing.Point(391, 964);
-            this.btnRecipeA.Margin = new System.Windows.Forms.Padding(4);
+            this.btnRecipeA.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRecipeA.Location = new System.Drawing.Point(274, 643);
             this.btnRecipeA.Name = "btnRecipeA";
-            this.btnRecipeA.Size = new System.Drawing.Size(71, 75);
+            this.btnRecipeA.Size = new System.Drawing.Size(50, 50);
             this.btnRecipeA.TabIndex = 6;
             this.btnRecipeA.Text = "A";
             this.btnRecipeA.UseVisualStyleBackColor = false;
+            this.btnRecipeA.Click += new System.EventHandler(this.btnRecipeA_Click);
             // 
             // lblFoupB
             // 
             this.lblFoupB.AutoSize = true;
-            this.lblFoupB.Font = new System.Drawing.Font("나눔고딕", 21F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblFoupB.Location = new System.Drawing.Point(589, 908);
-            this.lblFoupB.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblFoupB.Font = new System.Drawing.Font("Microsoft Sans Serif", 21F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblFoupB.Location = new System.Drawing.Point(412, 605);
             this.lblFoupB.Name = "lblFoupB";
-            this.lblFoupB.Size = new System.Drawing.Size(168, 49);
+            this.lblFoupB.Size = new System.Drawing.Size(118, 32);
             this.lblFoupB.TabIndex = 3;
             this.lblFoupB.Text = "FOUP B";
             // 
             // btnFoupBUnloadSW
             // 
-            this.btnFoupBUnloadSW.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFoupBUnloadSW.Location = new System.Drawing.Point(676, 830);
-            this.btnFoupBUnloadSW.Margin = new System.Windows.Forms.Padding(4);
+            this.btnFoupBUnloadSW.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFoupBUnloadSW.Location = new System.Drawing.Point(473, 553);
             this.btnFoupBUnloadSW.Name = "btnFoupBUnloadSW";
-            this.btnFoupBUnloadSW.Size = new System.Drawing.Size(116, 74);
+            this.btnFoupBUnloadSW.Size = new System.Drawing.Size(81, 49);
             this.btnFoupBUnloadSW.TabIndex = 2;
             this.btnFoupBUnloadSW.Text = "Unload S/W";
             this.btnFoupBUnloadSW.UseVisualStyleBackColor = true;
+            this.btnFoupBUnloadSW.Click += new System.EventHandler(this.btnFoupBUnloadSW_Click);
             // 
             // btnFoupBLoadSW
             // 
-            this.btnFoupBLoadSW.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnFoupBLoadSW.Location = new System.Drawing.Point(543, 830);
-            this.btnFoupBLoadSW.Margin = new System.Windows.Forms.Padding(4);
+            this.btnFoupBLoadSW.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFoupBLoadSW.Location = new System.Drawing.Point(380, 553);
             this.btnFoupBLoadSW.Name = "btnFoupBLoadSW";
-            this.btnFoupBLoadSW.Size = new System.Drawing.Size(109, 74);
+            this.btnFoupBLoadSW.Size = new System.Drawing.Size(76, 49);
             this.btnFoupBLoadSW.TabIndex = 2;
             this.btnFoupBLoadSW.Text = "Load S/W";
             this.btnFoupBLoadSW.UseVisualStyleBackColor = true;
+            this.btnFoupBLoadSW.Click += new System.EventHandler(this.btnFoupBLoadSW_Click);
             // 
             // panelFoupB
             // 
@@ -715,60 +677,54 @@
             this.panelFoupB.Controls.Add(this.panelFoupBWafer3);
             this.panelFoupB.Controls.Add(this.panelFoupBWafer2);
             this.panelFoupB.Controls.Add(this.panelFoupBWafer1);
-            this.panelFoupB.Location = new System.Drawing.Point(543, 597);
-            this.panelFoupB.Margin = new System.Windows.Forms.Padding(4);
+            this.panelFoupB.Location = new System.Drawing.Point(380, 398);
             this.panelFoupB.Name = "panelFoupB";
-            this.panelFoupB.Size = new System.Drawing.Size(248, 222);
+            this.panelFoupB.Size = new System.Drawing.Size(174, 149);
             this.panelFoupB.TabIndex = 1;
             // 
             // panelFoupBWafer5
             // 
             this.panelFoupBWafer5.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.panelFoupBWafer5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelFoupBWafer5.Location = new System.Drawing.Point(26, 164);
-            this.panelFoupBWafer5.Margin = new System.Windows.Forms.Padding(4);
+            this.panelFoupBWafer5.Location = new System.Drawing.Point(18, 109);
             this.panelFoupBWafer5.Name = "panelFoupBWafer5";
-            this.panelFoupBWafer5.Size = new System.Drawing.Size(196, 23);
+            this.panelFoupBWafer5.Size = new System.Drawing.Size(138, 16);
             this.panelFoupBWafer5.TabIndex = 4;
             // 
             // panelFoupBWafer4
             // 
             this.panelFoupBWafer4.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.panelFoupBWafer4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelFoupBWafer4.Location = new System.Drawing.Point(26, 130);
-            this.panelFoupBWafer4.Margin = new System.Windows.Forms.Padding(4);
+            this.panelFoupBWafer4.Location = new System.Drawing.Point(18, 87);
             this.panelFoupBWafer4.Name = "panelFoupBWafer4";
-            this.panelFoupBWafer4.Size = new System.Drawing.Size(196, 23);
+            this.panelFoupBWafer4.Size = new System.Drawing.Size(138, 16);
             this.panelFoupBWafer4.TabIndex = 4;
             // 
             // panelFoupBWafer3
             // 
             this.panelFoupBWafer3.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.panelFoupBWafer3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelFoupBWafer3.Location = new System.Drawing.Point(26, 98);
-            this.panelFoupBWafer3.Margin = new System.Windows.Forms.Padding(4);
+            this.panelFoupBWafer3.Location = new System.Drawing.Point(18, 65);
             this.panelFoupBWafer3.Name = "panelFoupBWafer3";
-            this.panelFoupBWafer3.Size = new System.Drawing.Size(196, 23);
+            this.panelFoupBWafer3.Size = new System.Drawing.Size(138, 16);
             this.panelFoupBWafer3.TabIndex = 4;
             // 
             // panelFoupBWafer2
             // 
             this.panelFoupBWafer2.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.panelFoupBWafer2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelFoupBWafer2.Location = new System.Drawing.Point(26, 64);
-            this.panelFoupBWafer2.Margin = new System.Windows.Forms.Padding(4);
+            this.panelFoupBWafer2.Location = new System.Drawing.Point(18, 43);
             this.panelFoupBWafer2.Name = "panelFoupBWafer2";
-            this.panelFoupBWafer2.Size = new System.Drawing.Size(196, 23);
+            this.panelFoupBWafer2.Size = new System.Drawing.Size(138, 16);
             this.panelFoupBWafer2.TabIndex = 4;
             // 
             // panelFoupBWafer1
             // 
             this.panelFoupBWafer1.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.panelFoupBWafer1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelFoupBWafer1.Location = new System.Drawing.Point(26, 32);
-            this.panelFoupBWafer1.Margin = new System.Windows.Forms.Padding(4);
+            this.panelFoupBWafer1.Location = new System.Drawing.Point(18, 21);
             this.panelFoupBWafer1.Name = "panelFoupBWafer1";
-            this.panelFoupBWafer1.Size = new System.Drawing.Size(196, 23);
+            this.panelFoupBWafer1.Size = new System.Drawing.Size(138, 16);
             this.panelFoupBWafer1.TabIndex = 4;
             // 
             // panelPM2Status
@@ -780,20 +736,18 @@
             this.panelPM2Status.Controls.Add(this.tblLayoutPanelPM2Status);
             this.panelPM2Status.Controls.Add(this.picBoxPM2Status);
             this.panelPM2Status.Controls.Add(this.lblPM2);
-            this.panelPM2Status.Location = new System.Drawing.Point(1591, 28);
-            this.panelPM2Status.Margin = new System.Windows.Forms.Padding(4);
+            this.panelPM2Status.Location = new System.Drawing.Point(1114, 19);
             this.panelPM2Status.Name = "panelPM2Status";
-            this.panelPM2Status.Size = new System.Drawing.Size(346, 413);
+            this.panelPM2Status.Size = new System.Drawing.Size(243, 276);
             this.panelPM2Status.TabIndex = 1;
             // 
             // lblPM2Status
             // 
             this.lblPM2Status.AutoSize = true;
-            this.lblPM2Status.Font = new System.Drawing.Font("나눔고딕", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM2Status.Location = new System.Drawing.Point(160, 327);
-            this.lblPM2Status.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM2Status.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPM2Status.Location = new System.Drawing.Point(112, 218);
             this.lblPM2Status.Name = "lblPM2Status";
-            this.lblPM2Status.Size = new System.Drawing.Size(17, 23);
+            this.lblPM2Status.Size = new System.Drawing.Size(13, 17);
             this.lblPM2Status.TabIndex = 6;
             this.lblPM2Status.Text = "-";
             this.lblPM2Status.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -803,35 +757,32 @@
             this.tblLayoutPanelPM2Progress.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblLayoutPanelPM2Progress.ColumnCount = 2;
             this.tblLayoutPanelPM2Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.8595F));
-            this.tblLayoutPanelPM2Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 247F));
+            this.tblLayoutPanelPM2Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 175F));
             this.tblLayoutPanelPM2Progress.Controls.Add(this.progressBarPM2, 1, 0);
             this.tblLayoutPanelPM2Progress.Controls.Add(this.lblPM2Progress, 0, 0);
             this.tblLayoutPanelPM2Progress.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tblLayoutPanelPM2Progress.Location = new System.Drawing.Point(0, 363);
-            this.tblLayoutPanelPM2Progress.Margin = new System.Windows.Forms.Padding(4);
+            this.tblLayoutPanelPM2Progress.Location = new System.Drawing.Point(0, 242);
             this.tblLayoutPanelPM2Progress.Name = "tblLayoutPanelPM2Progress";
             this.tblLayoutPanelPM2Progress.RowCount = 1;
             this.tblLayoutPanelPM2Progress.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tblLayoutPanelPM2Progress.Size = new System.Drawing.Size(344, 48);
+            this.tblLayoutPanelPM2Progress.Size = new System.Drawing.Size(241, 32);
             this.tblLayoutPanelPM2Progress.TabIndex = 5;
             // 
             // progressBarPM2
             // 
-            this.progressBarPM2.Location = new System.Drawing.Point(99, 5);
-            this.progressBarPM2.Margin = new System.Windows.Forms.Padding(4);
+            this.progressBarPM2.Location = new System.Drawing.Point(68, 4);
             this.progressBarPM2.Name = "progressBarPM2";
-            this.progressBarPM2.Size = new System.Drawing.Size(233, 34);
+            this.progressBarPM2.Size = new System.Drawing.Size(163, 23);
             this.progressBarPM2.TabIndex = 5;
             // 
             // lblPM2Progress
             // 
             this.lblPM2Progress.AutoSize = true;
             this.lblPM2Progress.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblPM2Progress.Font = new System.Drawing.Font("나눔고딕", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM2Progress.Location = new System.Drawing.Point(5, 1);
-            this.lblPM2Progress.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM2Progress.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPM2Progress.Location = new System.Drawing.Point(4, 1);
             this.lblPM2Progress.Name = "lblPM2Progress";
-            this.lblPM2Progress.Size = new System.Drawing.Size(85, 46);
+            this.lblPM2Progress.Size = new System.Drawing.Size(57, 30);
             this.lblPM2Progress.TabIndex = 5;
             this.lblPM2Progress.Text = "progress";
             this.lblPM2Progress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -840,8 +791,8 @@
             // 
             this.tblLayoutPanelPM2Status.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblLayoutPanelPM2Status.ColumnCount = 2;
-            this.tblLayoutPanelPM2Status.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.90751F));
-            this.tblLayoutPanelPM2Status.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.09249F));
+            this.tblLayoutPanelPM2Status.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 44.21487F));
+            this.tblLayoutPanelPM2Status.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 55.78513F));
             this.tblLayoutPanelPM2Status.Controls.Add(this.lblPM2Dose, 0, 3);
             this.tblLayoutPanelPM2Status.Controls.Add(this.lblPM2Pressure, 0, 1);
             this.tblLayoutPanelPM2Status.Controls.Add(this.lblPM2AV, 0, 2);
@@ -850,26 +801,24 @@
             this.tblLayoutPanelPM2Status.Controls.Add(this.lblPM2PressureValue, 1, 1);
             this.tblLayoutPanelPM2Status.Controls.Add(this.lblPM2AVValue, 1, 2);
             this.tblLayoutPanelPM2Status.Controls.Add(this.lblPM2DoseValue, 1, 3);
-            this.tblLayoutPanelPM2Status.Location = new System.Drawing.Point(-1, 58);
-            this.tblLayoutPanelPM2Status.Margin = new System.Windows.Forms.Padding(4);
+            this.tblLayoutPanelPM2Status.Location = new System.Drawing.Point(-1, 39);
             this.tblLayoutPanelPM2Status.Name = "tblLayoutPanelPM2Status";
             this.tblLayoutPanelPM2Status.RowCount = 4;
             this.tblLayoutPanelPM2Status.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tblLayoutPanelPM2Status.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tblLayoutPanelPM2Status.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tblLayoutPanelPM2Status.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tblLayoutPanelPM2Status.Size = new System.Drawing.Size(347, 258);
+            this.tblLayoutPanelPM2Status.Size = new System.Drawing.Size(243, 172);
             this.tblLayoutPanelPM2Status.TabIndex = 5;
             // 
             // lblPM2Dose
             // 
             this.lblPM2Dose.AutoSize = true;
             this.lblPM2Dose.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblPM2Dose.Font = new System.Drawing.Font("나눔고딕", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM2Dose.Location = new System.Drawing.Point(5, 193);
-            this.lblPM2Dose.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM2Dose.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPM2Dose.Location = new System.Drawing.Point(4, 127);
             this.lblPM2Dose.Name = "lblPM2Dose";
-            this.lblPM2Dose.Size = new System.Drawing.Size(136, 64);
+            this.lblPM2Dose.Size = new System.Drawing.Size(100, 44);
             this.lblPM2Dose.TabIndex = 6;
             this.lblPM2Dose.Text = "DOSE";
             this.lblPM2Dose.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -878,11 +827,10 @@
             // 
             this.lblPM2Pressure.AutoSize = true;
             this.lblPM2Pressure.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblPM2Pressure.Font = new System.Drawing.Font("나눔고딕", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM2Pressure.Location = new System.Drawing.Point(5, 65);
-            this.lblPM2Pressure.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM2Pressure.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPM2Pressure.Location = new System.Drawing.Point(4, 43);
             this.lblPM2Pressure.Name = "lblPM2Pressure";
-            this.lblPM2Pressure.Size = new System.Drawing.Size(136, 63);
+            this.lblPM2Pressure.Size = new System.Drawing.Size(100, 41);
             this.lblPM2Pressure.TabIndex = 5;
             this.lblPM2Pressure.Text = "PRESSURE";
             this.lblPM2Pressure.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -891,11 +839,10 @@
             // 
             this.lblPM2AV.AutoSize = true;
             this.lblPM2AV.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblPM2AV.Font = new System.Drawing.Font("나눔고딕", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM2AV.Location = new System.Drawing.Point(5, 129);
-            this.lblPM2AV.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM2AV.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPM2AV.Location = new System.Drawing.Point(4, 85);
             this.lblPM2AV.Name = "lblPM2AV";
-            this.lblPM2AV.Size = new System.Drawing.Size(136, 63);
+            this.lblPM2AV.Size = new System.Drawing.Size(100, 41);
             this.lblPM2AV.TabIndex = 5;
             this.lblPM2AV.Text = "AV";
             this.lblPM2AV.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -904,11 +851,10 @@
             // 
             this.lblPM2Temperature.AutoSize = true;
             this.lblPM2Temperature.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblPM2Temperature.Font = new System.Drawing.Font("나눔고딕", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM2Temperature.Location = new System.Drawing.Point(5, 1);
-            this.lblPM2Temperature.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM2Temperature.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPM2Temperature.Location = new System.Drawing.Point(4, 1);
             this.lblPM2Temperature.Name = "lblPM2Temperature";
-            this.lblPM2Temperature.Size = new System.Drawing.Size(136, 63);
+            this.lblPM2Temperature.Size = new System.Drawing.Size(100, 41);
             this.lblPM2Temperature.TabIndex = 0;
             this.lblPM2Temperature.Text = "TEMPERATURE";
             this.lblPM2Temperature.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -918,10 +864,9 @@
             this.lblPM2TemperatureValue.AutoSize = true;
             this.lblPM2TemperatureValue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblPM2TemperatureValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblPM2TemperatureValue.Location = new System.Drawing.Point(150, 1);
-            this.lblPM2TemperatureValue.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM2TemperatureValue.Location = new System.Drawing.Point(111, 1);
             this.lblPM2TemperatureValue.Name = "lblPM2TemperatureValue";
-            this.lblPM2TemperatureValue.Size = new System.Drawing.Size(192, 63);
+            this.lblPM2TemperatureValue.Size = new System.Drawing.Size(128, 41);
             this.lblPM2TemperatureValue.TabIndex = 7;
             this.lblPM2TemperatureValue.Text = "-";
             this.lblPM2TemperatureValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -931,10 +876,9 @@
             this.lblPM2PressureValue.AutoSize = true;
             this.lblPM2PressureValue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblPM2PressureValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblPM2PressureValue.Location = new System.Drawing.Point(150, 65);
-            this.lblPM2PressureValue.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM2PressureValue.Location = new System.Drawing.Point(111, 43);
             this.lblPM2PressureValue.Name = "lblPM2PressureValue";
-            this.lblPM2PressureValue.Size = new System.Drawing.Size(192, 63);
+            this.lblPM2PressureValue.Size = new System.Drawing.Size(128, 41);
             this.lblPM2PressureValue.TabIndex = 8;
             this.lblPM2PressureValue.Text = "-";
             this.lblPM2PressureValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -944,10 +888,9 @@
             this.lblPM2AVValue.AutoSize = true;
             this.lblPM2AVValue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblPM2AVValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblPM2AVValue.Location = new System.Drawing.Point(150, 129);
-            this.lblPM2AVValue.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM2AVValue.Location = new System.Drawing.Point(111, 85);
             this.lblPM2AVValue.Name = "lblPM2AVValue";
-            this.lblPM2AVValue.Size = new System.Drawing.Size(192, 63);
+            this.lblPM2AVValue.Size = new System.Drawing.Size(128, 41);
             this.lblPM2AVValue.TabIndex = 9;
             this.lblPM2AVValue.Text = "-";
             this.lblPM2AVValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -957,10 +900,9 @@
             this.lblPM2DoseValue.AutoSize = true;
             this.lblPM2DoseValue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblPM2DoseValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblPM2DoseValue.Location = new System.Drawing.Point(150, 193);
-            this.lblPM2DoseValue.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM2DoseValue.Location = new System.Drawing.Point(111, 127);
             this.lblPM2DoseValue.Name = "lblPM2DoseValue";
-            this.lblPM2DoseValue.Size = new System.Drawing.Size(192, 64);
+            this.lblPM2DoseValue.Size = new System.Drawing.Size(128, 44);
             this.lblPM2DoseValue.TabIndex = 10;
             this.lblPM2DoseValue.Text = "-";
             this.lblPM2DoseValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -969,21 +911,19 @@
             // 
             this.picBoxPM2Status.BackgroundImage = global::IonImplationEtherCAT.Properties.Resources.StatusGray;
             this.picBoxPM2Status.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.picBoxPM2Status.Location = new System.Drawing.Point(297, 4);
-            this.picBoxPM2Status.Margin = new System.Windows.Forms.Padding(4);
+            this.picBoxPM2Status.Location = new System.Drawing.Point(208, 3);
             this.picBoxPM2Status.Name = "picBoxPM2Status";
-            this.picBoxPM2Status.Size = new System.Drawing.Size(45, 45);
+            this.picBoxPM2Status.Size = new System.Drawing.Size(32, 30);
             this.picBoxPM2Status.TabIndex = 4;
             this.picBoxPM2Status.TabStop = false;
             // 
             // lblPM2
             // 
             this.lblPM2.AutoSize = true;
-            this.lblPM2.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM2.Location = new System.Drawing.Point(19, 16);
-            this.lblPM2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPM2.Location = new System.Drawing.Point(13, 11);
             this.lblPM2.Name = "lblPM2";
-            this.lblPM2.Size = new System.Drawing.Size(64, 28);
+            this.lblPM2.Size = new System.Drawing.Size(41, 20);
             this.lblPM2.TabIndex = 3;
             this.lblPM2.Text = "PM2";
             // 
@@ -996,20 +936,18 @@
             this.panelPM3Status.Controls.Add(this.tblLayoutPanelPM3Status);
             this.panelPM3Status.Controls.Add(this.picBoxPM3Status);
             this.panelPM3Status.Controls.Add(this.lblPM3);
-            this.panelPM3Status.Location = new System.Drawing.Point(1153, 528);
-            this.panelPM3Status.Margin = new System.Windows.Forms.Padding(4);
+            this.panelPM3Status.Location = new System.Drawing.Point(807, 352);
             this.panelPM3Status.Name = "panelPM3Status";
-            this.panelPM3Status.Size = new System.Drawing.Size(346, 413);
+            this.panelPM3Status.Size = new System.Drawing.Size(243, 276);
             this.panelPM3Status.TabIndex = 1;
             // 
             // lblPM3Status
             // 
             this.lblPM3Status.AutoSize = true;
-            this.lblPM3Status.Font = new System.Drawing.Font("나눔고딕", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM3Status.Location = new System.Drawing.Point(158, 326);
-            this.lblPM3Status.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM3Status.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPM3Status.Location = new System.Drawing.Point(111, 217);
             this.lblPM3Status.Name = "lblPM3Status";
-            this.lblPM3Status.Size = new System.Drawing.Size(17, 23);
+            this.lblPM3Status.Size = new System.Drawing.Size(13, 17);
             this.lblPM3Status.TabIndex = 6;
             this.lblPM3Status.Text = "-";
             this.lblPM3Status.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1019,35 +957,32 @@
             this.tblLayoutPanelPM3Progress.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblLayoutPanelPM3Progress.ColumnCount = 2;
             this.tblLayoutPanelPM3Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.8595F));
-            this.tblLayoutPanelPM3Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 245F));
+            this.tblLayoutPanelPM3Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 170F));
             this.tblLayoutPanelPM3Progress.Controls.Add(this.progressBarPM3, 1, 0);
             this.tblLayoutPanelPM3Progress.Controls.Add(this.lblPM3Progress, 0, 0);
             this.tblLayoutPanelPM3Progress.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.tblLayoutPanelPM3Progress.Location = new System.Drawing.Point(0, 363);
-            this.tblLayoutPanelPM3Progress.Margin = new System.Windows.Forms.Padding(4);
+            this.tblLayoutPanelPM3Progress.Location = new System.Drawing.Point(0, 242);
             this.tblLayoutPanelPM3Progress.Name = "tblLayoutPanelPM3Progress";
             this.tblLayoutPanelPM3Progress.RowCount = 1;
             this.tblLayoutPanelPM3Progress.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tblLayoutPanelPM3Progress.Size = new System.Drawing.Size(344, 48);
+            this.tblLayoutPanelPM3Progress.Size = new System.Drawing.Size(241, 32);
             this.tblLayoutPanelPM3Progress.TabIndex = 5;
             // 
             // progressBarPM3
             // 
-            this.progressBarPM3.Location = new System.Drawing.Point(102, 5);
-            this.progressBarPM3.Margin = new System.Windows.Forms.Padding(4);
+            this.progressBarPM3.Location = new System.Drawing.Point(73, 4);
             this.progressBarPM3.Name = "progressBarPM3";
-            this.progressBarPM3.Size = new System.Drawing.Size(233, 34);
+            this.progressBarPM3.Size = new System.Drawing.Size(160, 23);
             this.progressBarPM3.TabIndex = 5;
             // 
             // lblPM3Progress
             // 
             this.lblPM3Progress.AutoSize = true;
             this.lblPM3Progress.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblPM3Progress.Font = new System.Drawing.Font("나눔고딕", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM3Progress.Location = new System.Drawing.Point(5, 1);
-            this.lblPM3Progress.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM3Progress.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPM3Progress.Location = new System.Drawing.Point(4, 1);
             this.lblPM3Progress.Name = "lblPM3Progress";
-            this.lblPM3Progress.Size = new System.Drawing.Size(88, 46);
+            this.lblPM3Progress.Size = new System.Drawing.Size(62, 30);
             this.lblPM3Progress.TabIndex = 5;
             this.lblPM3Progress.Text = "progress";
             this.lblPM3Progress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1056,30 +991,28 @@
             // 
             this.tblLayoutPanelPM3Status.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblLayoutPanelPM3Status.ColumnCount = 2;
-            this.tblLayoutPanelPM3Status.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 41.90751F));
-            this.tblLayoutPanelPM3Status.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 58.09249F));
+            this.tblLayoutPanelPM3Status.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 43.38843F));
+            this.tblLayoutPanelPM3Status.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 56.61157F));
             this.tblLayoutPanelPM3Status.Controls.Add(this.lblPressure, 0, 1);
             this.tblLayoutPanelPM3Status.Controls.Add(this.lblTemperature, 0, 0);
             this.tblLayoutPanelPM3Status.Controls.Add(this.lblTemperatureValue, 1, 0);
             this.tblLayoutPanelPM3Status.Controls.Add(this.lblPressureValue, 1, 1);
-            this.tblLayoutPanelPM3Status.Location = new System.Drawing.Point(-1, 58);
-            this.tblLayoutPanelPM3Status.Margin = new System.Windows.Forms.Padding(4);
+            this.tblLayoutPanelPM3Status.Location = new System.Drawing.Point(-1, 39);
             this.tblLayoutPanelPM3Status.Name = "tblLayoutPanelPM3Status";
             this.tblLayoutPanelPM3Status.RowCount = 2;
             this.tblLayoutPanelPM3Status.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
             this.tblLayoutPanelPM3Status.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tblLayoutPanelPM3Status.Size = new System.Drawing.Size(347, 138);
+            this.tblLayoutPanelPM3Status.Size = new System.Drawing.Size(243, 92);
             this.tblLayoutPanelPM3Status.TabIndex = 5;
             // 
             // lblPressure
             // 
             this.lblPressure.AutoSize = true;
             this.lblPressure.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblPressure.Font = new System.Drawing.Font("나눔고딕", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPressure.Location = new System.Drawing.Point(5, 69);
-            this.lblPressure.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPressure.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPressure.Location = new System.Drawing.Point(4, 46);
             this.lblPressure.Name = "lblPressure";
-            this.lblPressure.Size = new System.Drawing.Size(136, 68);
+            this.lblPressure.Size = new System.Drawing.Size(98, 45);
             this.lblPressure.TabIndex = 5;
             this.lblPressure.Text = "PRESSURE";
             this.lblPressure.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1088,11 +1021,10 @@
             // 
             this.lblTemperature.AutoSize = true;
             this.lblTemperature.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lblTemperature.Font = new System.Drawing.Font("나눔고딕", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblTemperature.Location = new System.Drawing.Point(5, 1);
-            this.lblTemperature.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblTemperature.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTemperature.Location = new System.Drawing.Point(4, 1);
             this.lblTemperature.Name = "lblTemperature";
-            this.lblTemperature.Size = new System.Drawing.Size(136, 67);
+            this.lblTemperature.Size = new System.Drawing.Size(98, 44);
             this.lblTemperature.TabIndex = 0;
             this.lblTemperature.Text = "TEMPERATURE";
             this.lblTemperature.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1102,10 +1034,9 @@
             this.lblTemperatureValue.AutoSize = true;
             this.lblTemperatureValue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblTemperatureValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblTemperatureValue.Location = new System.Drawing.Point(150, 1);
-            this.lblTemperatureValue.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblTemperatureValue.Location = new System.Drawing.Point(109, 1);
             this.lblTemperatureValue.Name = "lblTemperatureValue";
-            this.lblTemperatureValue.Size = new System.Drawing.Size(192, 67);
+            this.lblTemperatureValue.Size = new System.Drawing.Size(130, 44);
             this.lblTemperatureValue.TabIndex = 7;
             this.lblTemperatureValue.Text = "-";
             this.lblTemperatureValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1115,10 +1046,9 @@
             this.lblPressureValue.AutoSize = true;
             this.lblPressureValue.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lblPressureValue.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblPressureValue.Location = new System.Drawing.Point(150, 69);
-            this.lblPressureValue.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPressureValue.Location = new System.Drawing.Point(109, 46);
             this.lblPressureValue.Name = "lblPressureValue";
-            this.lblPressureValue.Size = new System.Drawing.Size(192, 68);
+            this.lblPressureValue.Size = new System.Drawing.Size(130, 45);
             this.lblPressureValue.TabIndex = 8;
             this.lblPressureValue.Text = "-";
             this.lblPressureValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1127,21 +1057,19 @@
             // 
             this.picBoxPM3Status.BackgroundImage = global::IonImplationEtherCAT.Properties.Resources.StatusGray;
             this.picBoxPM3Status.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.picBoxPM3Status.Location = new System.Drawing.Point(297, 4);
-            this.picBoxPM3Status.Margin = new System.Windows.Forms.Padding(4);
+            this.picBoxPM3Status.Location = new System.Drawing.Point(208, 3);
             this.picBoxPM3Status.Name = "picBoxPM3Status";
-            this.picBoxPM3Status.Size = new System.Drawing.Size(45, 45);
+            this.picBoxPM3Status.Size = new System.Drawing.Size(32, 30);
             this.picBoxPM3Status.TabIndex = 4;
             this.picBoxPM3Status.TabStop = false;
             // 
             // lblPM3
             // 
             this.lblPM3.AutoSize = true;
-            this.lblPM3.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblPM3.Location = new System.Drawing.Point(19, 16);
-            this.lblPM3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPM3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblPM3.Location = new System.Drawing.Point(13, 11);
             this.lblPM3.Name = "lblPM3";
-            this.lblPM3.Size = new System.Drawing.Size(64, 28);
+            this.lblPM3.Size = new System.Drawing.Size(41, 20);
             this.lblPM3.TabIndex = 3;
             this.lblPM3.Text = "PM3";
             // 
@@ -1149,119 +1077,135 @@
             // 
             this.btnAllProcess.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.btnAllProcess.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAllProcess.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnAllProcess.Location = new System.Drawing.Point(1633, 795);
-            this.btnAllProcess.Margin = new System.Windows.Forms.Padding(4);
+            this.btnAllProcess.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnAllProcess.Location = new System.Drawing.Point(1143, 530);
             this.btnAllProcess.Name = "btnAllProcess";
-            this.btnAllProcess.Size = new System.Drawing.Size(306, 64);
+            this.btnAllProcess.Size = new System.Drawing.Size(214, 43);
             this.btnAllProcess.TabIndex = 5;
             this.btnAllProcess.Text = "PROCESS";
             this.btnAllProcess.UseVisualStyleBackColor = false;
+            this.btnAllProcess.Click += new System.EventHandler(this.btnAllProcess_Click);
             // 
             // btnAllStop
             // 
             this.btnAllStop.BackColor = System.Drawing.SystemColors.ActiveBorder;
             this.btnAllStop.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAllStop.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnAllStop.Location = new System.Drawing.Point(1633, 874);
-            this.btnAllStop.Margin = new System.Windows.Forms.Padding(4);
+            this.btnAllStop.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnAllStop.Location = new System.Drawing.Point(1143, 583);
             this.btnAllStop.Name = "btnAllStop";
-            this.btnAllStop.Size = new System.Drawing.Size(306, 64);
+            this.btnAllStop.Size = new System.Drawing.Size(214, 43);
             this.btnAllStop.TabIndex = 5;
             this.btnAllStop.Text = "STOP";
             this.btnAllStop.UseVisualStyleBackColor = false;
+            this.btnAllStop.Click += new System.EventHandler(this.btnAllStop_Click);
             // 
-            // CpicBoxTMBottom
+            // CpicBoxWafer4
             // 
-            this.CpicBoxTMBottom.BackColor = System.Drawing.Color.Transparent;
-            this.CpicBoxTMBottom.BackgroundImage = global::IonImplationEtherCAT.Properties.Resources.TMBottom;
-            this.CpicBoxTMBottom.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.CpicBoxTMBottom.Location = new System.Drawing.Point(410, 317);
-            this.CpicBoxTMBottom.Name = "CpicBoxTMBottom";
-            this.CpicBoxTMBottom.Size = new System.Drawing.Size(214, 225);
-            this.CpicBoxTMBottom.TabIndex = 12;
-            this.CpicBoxTMBottom.TabStop = false;
+            this.CpicBoxWafer4.BackColor = System.Drawing.Color.Transparent;
+            this.CpicBoxWafer4.Image = global::IonImplationEtherCAT.Properties.Resources.Wafer;
+            this.CpicBoxWafer4.Location = new System.Drawing.Point(642, 479);
+            this.CpicBoxWafer4.Margin = new System.Windows.Forms.Padding(2);
+            this.CpicBoxWafer4.Name = "CpicBoxWafer4";
+            this.CpicBoxWafer4.Size = new System.Drawing.Size(85, 81);
+            this.CpicBoxWafer4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.CpicBoxWafer4.TabIndex = 17;
+            this.CpicBoxWafer4.TabStop = false;
+            this.CpicBoxWafer4.Visible = false;
             // 
-            // CpicBoxTMArmLow
+            // CpicBoxWafer2
             // 
-            this.CpicBoxTMArmLow.BackColor = System.Drawing.Color.Transparent;
-            this.CpicBoxTMArmLow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.CpicBoxTMArmLow.Image = global::IonImplationEtherCAT.Properties.Resources.TMArmLow;
-            this.CpicBoxTMArmLow.Location = new System.Drawing.Point(373, 356);
-            this.CpicBoxTMArmLow.Name = "CpicBoxTMArmLow";
-            this.CpicBoxTMArmLow.Size = new System.Drawing.Size(337, 142);
-            this.CpicBoxTMArmLow.TabIndex = 11;
-            this.CpicBoxTMArmLow.TabStop = false;
+            this.CpicBoxWafer2.BackColor = System.Drawing.Color.Transparent;
+            this.CpicBoxWafer2.Image = global::IonImplationEtherCAT.Properties.Resources.Wafer;
+            this.CpicBoxWafer2.Location = new System.Drawing.Point(644, 396);
+            this.CpicBoxWafer2.Margin = new System.Windows.Forms.Padding(2);
+            this.CpicBoxWafer2.Name = "CpicBoxWafer2";
+            this.CpicBoxWafer2.Size = new System.Drawing.Size(85, 81);
+            this.CpicBoxWafer2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.CpicBoxWafer2.TabIndex = 16;
+            this.CpicBoxWafer2.TabStop = false;
+            this.CpicBoxWafer2.Visible = false;
+            // 
+            // CpicBoxWafer1
+            // 
+            this.CpicBoxWafer1.BackColor = System.Drawing.Color.Transparent;
+            this.CpicBoxWafer1.Image = global::IonImplationEtherCAT.Properties.Resources.Wafer;
+            this.CpicBoxWafer1.Location = new System.Drawing.Point(581, 396);
+            this.CpicBoxWafer1.Margin = new System.Windows.Forms.Padding(2);
+            this.CpicBoxWafer1.Name = "CpicBoxWafer1";
+            this.CpicBoxWafer1.Size = new System.Drawing.Size(85, 81);
+            this.CpicBoxWafer1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.CpicBoxWafer1.TabIndex = 15;
+            this.CpicBoxWafer1.TabStop = false;
+            this.CpicBoxWafer1.Visible = false;
+            // 
+            // CpicBoxWafer3
+            // 
+            this.CpicBoxWafer3.BackColor = System.Drawing.Color.Transparent;
+            this.CpicBoxWafer3.Image = global::IonImplationEtherCAT.Properties.Resources.Wafer;
+            this.CpicBoxWafer3.Location = new System.Drawing.Point(581, 479);
+            this.CpicBoxWafer3.Margin = new System.Windows.Forms.Padding(2);
+            this.CpicBoxWafer3.Name = "CpicBoxWafer3";
+            this.CpicBoxWafer3.Size = new System.Drawing.Size(85, 81);
+            this.CpicBoxWafer3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.CpicBoxWafer3.TabIndex = 14;
+            this.CpicBoxWafer3.TabStop = false;
+            this.CpicBoxWafer3.Visible = false;
+            // 
+            // CpicBoxWafer5
+            // 
+            this.CpicBoxWafer5.BackColor = System.Drawing.Color.Transparent;
+            this.CpicBoxWafer5.Image = global::IonImplationEtherCAT.Properties.Resources.Wafer;
+            this.CpicBoxWafer5.Location = new System.Drawing.Point(581, 563);
+            this.CpicBoxWafer5.Margin = new System.Windows.Forms.Padding(2);
+            this.CpicBoxWafer5.Name = "CpicBoxWafer5";
+            this.CpicBoxWafer5.Size = new System.Drawing.Size(85, 81);
+            this.CpicBoxWafer5.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.CpicBoxWafer5.TabIndex = 13;
+            this.CpicBoxWafer5.TabStop = false;
+            this.CpicBoxWafer5.Visible = false;
             // 
             // CpicBoxTMArmHigh
             // 
             this.CpicBoxTMArmHigh.BackColor = System.Drawing.Color.Transparent;
             this.CpicBoxTMArmHigh.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.CpicBoxTMArmHigh.Image = global::IonImplationEtherCAT.Properties.Resources.TMArmHigh;
-            this.CpicBoxTMArmHigh.Location = new System.Drawing.Point(335, 356);
+            this.CpicBoxTMArmHigh.Location = new System.Drawing.Point(234, 237);
+            this.CpicBoxTMArmHigh.Margin = new System.Windows.Forms.Padding(2);
             this.CpicBoxTMArmHigh.Name = "CpicBoxTMArmHigh";
-            this.CpicBoxTMArmHigh.Size = new System.Drawing.Size(332, 142);
+            this.CpicBoxTMArmHigh.Size = new System.Drawing.Size(232, 95);
+            this.CpicBoxTMArmHigh.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.CpicBoxTMArmHigh.TabIndex = 10;
             this.CpicBoxTMArmHigh.TabStop = false;
             // 
-            // CpicBoxWafer5
+            // CpicBoxTMArmLow
             // 
-            this.CpicBoxWafer5.BackColor = System.Drawing.Color.Transparent;
-            this.CpicBoxWafer5.Image = global::IonImplationEtherCAT.Properties.Resources.Wafer;
-            this.CpicBoxWafer5.Location = new System.Drawing.Point(830, 845);
-            this.CpicBoxWafer5.Name = "CpicBoxWafer5";
-            this.CpicBoxWafer5.Size = new System.Drawing.Size(121, 121);
-            this.CpicBoxWafer5.TabIndex = 13;
-            this.CpicBoxWafer5.TabStop = false;
-            this.CpicBoxWafer5.Visible = false;
+            this.CpicBoxTMArmLow.BackColor = System.Drawing.Color.Transparent;
+            this.CpicBoxTMArmLow.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            this.CpicBoxTMArmLow.Image = global::IonImplationEtherCAT.Properties.Resources.TMArmLow;
+            this.CpicBoxTMArmLow.Location = new System.Drawing.Point(261, 237);
+            this.CpicBoxTMArmLow.Margin = new System.Windows.Forms.Padding(2);
+            this.CpicBoxTMArmLow.Name = "CpicBoxTMArmLow";
+            this.CpicBoxTMArmLow.Size = new System.Drawing.Size(236, 95);
+            this.CpicBoxTMArmLow.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.CpicBoxTMArmLow.TabIndex = 11;
+            this.CpicBoxTMArmLow.TabStop = false;
             // 
-            // CpicBoxWafer3
+            // CpicBoxTMBottom
             // 
-            this.CpicBoxWafer3.BackColor = System.Drawing.Color.Transparent;
-            this.CpicBoxWafer3.Image = global::IonImplationEtherCAT.Properties.Resources.Wafer;
-            this.CpicBoxWafer3.Location = new System.Drawing.Point(830, 718);
-            this.CpicBoxWafer3.Name = "CpicBoxWafer3";
-            this.CpicBoxWafer3.Size = new System.Drawing.Size(121, 121);
-            this.CpicBoxWafer3.TabIndex = 14;
-            this.CpicBoxWafer3.TabStop = false;
-            this.CpicBoxWafer3.Visible = false;
-            // 
-            // CpicBoxWafer1
-            // 
-            this.CpicBoxWafer1.BackColor = System.Drawing.Color.Transparent;
-            this.CpicBoxWafer1.Image = global::IonImplationEtherCAT.Properties.Resources.Wafer;
-            this.CpicBoxWafer1.Location = new System.Drawing.Point(830, 594);
-            this.CpicBoxWafer1.Name = "CpicBoxWafer1";
-            this.CpicBoxWafer1.Size = new System.Drawing.Size(121, 121);
-            this.CpicBoxWafer1.TabIndex = 15;
-            this.CpicBoxWafer1.TabStop = false;
-            this.CpicBoxWafer1.Visible = false;
-            // 
-            // CpicBoxWafer2
-            // 
-            this.CpicBoxWafer2.BackColor = System.Drawing.Color.Transparent;
-            this.CpicBoxWafer2.Image = global::IonImplationEtherCAT.Properties.Resources.Wafer;
-            this.CpicBoxWafer2.Location = new System.Drawing.Point(920, 594);
-            this.CpicBoxWafer2.Name = "CpicBoxWafer2";
-            this.CpicBoxWafer2.Size = new System.Drawing.Size(121, 121);
-            this.CpicBoxWafer2.TabIndex = 16;
-            this.CpicBoxWafer2.TabStop = false;
-            this.CpicBoxWafer2.Visible = false;
-            // 
-            // CpicBoxWafer4
-            // 
-            this.CpicBoxWafer4.BackColor = System.Drawing.Color.Transparent;
-            this.CpicBoxWafer4.Image = global::IonImplationEtherCAT.Properties.Resources.Wafer;
-            this.CpicBoxWafer4.Location = new System.Drawing.Point(917, 718);
-            this.CpicBoxWafer4.Name = "CpicBoxWafer4";
-            this.CpicBoxWafer4.Size = new System.Drawing.Size(121, 121);
-            this.CpicBoxWafer4.TabIndex = 17;
-            this.CpicBoxWafer4.TabStop = false;
-            this.CpicBoxWafer4.Visible = false;
+            this.CpicBoxTMBottom.BackColor = System.Drawing.Color.Transparent;
+            this.CpicBoxTMBottom.BackgroundImage = global::IonImplationEtherCAT.Properties.Resources.TMBottom;
+            this.CpicBoxTMBottom.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.CpicBoxTMBottom.Location = new System.Drawing.Point(287, 211);
+            this.CpicBoxTMBottom.Margin = new System.Windows.Forms.Padding(2);
+            this.CpicBoxTMBottom.Name = "CpicBoxTMBottom";
+            this.CpicBoxTMBottom.Size = new System.Drawing.Size(150, 150);
+            this.CpicBoxTMBottom.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.CpicBoxTMBottom.TabIndex = 12;
+            this.CpicBoxTMBottom.TabStop = false;
             // 
             // MainView
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnAllStop);
             this.Controls.Add(this.btnAllProcess);
@@ -1269,9 +1213,8 @@
             this.Controls.Add(this.panelPM3Status);
             this.Controls.Add(this.panelPM2Status);
             this.Controls.Add(this.panelPM1Status);
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "MainView";
-            this.Size = new System.Drawing.Size(2034, 1072);
+            this.Size = new System.Drawing.Size(1424, 715);
             this.panelPM1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.picBoxPM1Lamp)).EndInit();
             this.panelPM1Status.ResumeLayout(false);
@@ -1304,14 +1247,14 @@
             this.tblLayoutPanelPM3Status.ResumeLayout(false);
             this.tblLayoutPanelPM3Status.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxPM3Status)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxTMBottom)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxTMArmLow)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxTMArmHigh)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer5)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer3)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer4)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxWafer5)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxTMArmHigh)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxTMArmLow)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CpicBoxTMBottom)).EndInit();
             this.ResumeLayout(false);
 
         }

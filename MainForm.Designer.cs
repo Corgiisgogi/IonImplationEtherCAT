@@ -84,19 +84,17 @@
             this.panelFooter.Controls.Add(this.btnAlarmManager);
             this.panelFooter.Controls.Add(this.btnLog);
             this.panelFooter.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panelFooter.Location = new System.Drawing.Point(0, 1298);
-            this.panelFooter.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelFooter.Location = new System.Drawing.Point(0, 890);
             this.panelFooter.Name = "panelFooter";
-            this.panelFooter.Size = new System.Drawing.Size(2034, 180);
+            this.panelFooter.Size = new System.Drawing.Size(1424, 121);
             this.panelFooter.TabIndex = 1;
             // 
             // btnMain
             // 
-            this.btnMain.Font = new System.Drawing.Font("나눔고딕", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnMain.Location = new System.Drawing.Point(16, 8);
-            this.btnMain.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnMain.Font = new System.Drawing.Font("Microsoft Sans Serif", 27.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnMain.Location = new System.Drawing.Point(11, 5);
             this.btnMain.Name = "btnMain";
-            this.btnMain.Size = new System.Drawing.Size(496, 166);
+            this.btnMain.Size = new System.Drawing.Size(347, 111);
             this.btnMain.TabIndex = 5;
             this.btnMain.Text = "Main";
             this.btnMain.UseVisualStyleBackColor = true;
@@ -104,11 +102,10 @@
             // 
             // btnRecipe
             // 
-            this.btnRecipe.Font = new System.Drawing.Font("나눔고딕", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnRecipe.Location = new System.Drawing.Point(1024, 2);
-            this.btnRecipe.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnRecipe.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnRecipe.Location = new System.Drawing.Point(717, 1);
             this.btnRecipe.Name = "btnRecipe";
-            this.btnRecipe.Size = new System.Drawing.Size(496, 166);
+            this.btnRecipe.Size = new System.Drawing.Size(347, 111);
             this.btnRecipe.TabIndex = 4;
             this.btnRecipe.Text = "Recipe Management";
             this.btnRecipe.UseVisualStyleBackColor = true;
@@ -116,11 +113,10 @@
             // 
             // btnAlarmManager
             // 
-            this.btnAlarmManager.Font = new System.Drawing.Font("나눔고딕", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnAlarmManager.Location = new System.Drawing.Point(520, 4);
-            this.btnAlarmManager.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnAlarmManager.Font = new System.Drawing.Font("Microsoft Sans Serif", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnAlarmManager.Location = new System.Drawing.Point(364, 3);
             this.btnAlarmManager.Name = "btnAlarmManager";
-            this.btnAlarmManager.Size = new System.Drawing.Size(496, 166);
+            this.btnAlarmManager.Size = new System.Drawing.Size(347, 111);
             this.btnAlarmManager.TabIndex = 3;
             this.btnAlarmManager.Text = "Alarm Manager";
             this.btnAlarmManager.UseVisualStyleBackColor = true;
@@ -128,11 +124,10 @@
             // 
             // btnLog
             // 
-            this.btnLog.Font = new System.Drawing.Font("나눔고딕", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnLog.Location = new System.Drawing.Point(1531, 2);
-            this.btnLog.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnLog.Font = new System.Drawing.Font("Microsoft Sans Serif", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnLog.Location = new System.Drawing.Point(1072, 1);
             this.btnLog.Name = "btnLog";
-            this.btnLog.Size = new System.Drawing.Size(496, 166);
+            this.btnLog.Size = new System.Drawing.Size(347, 111);
             this.btnLog.TabIndex = 2;
             this.btnLog.Text = "Log";
             this.btnLog.UseVisualStyleBackColor = true;
@@ -141,10 +136,9 @@
             // panelContent
             // 
             this.panelContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelContent.Location = new System.Drawing.Point(0, 222);
-            this.panelContent.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelContent.Location = new System.Drawing.Point(0, 149);
             this.panelContent.Name = "panelContent";
-            this.panelContent.Size = new System.Drawing.Size(2034, 1076);
+            this.panelContent.Size = new System.Drawing.Size(1424, 741);
             this.panelContent.TabIndex = 2;
             // 
             // panelHeader
@@ -155,9 +149,8 @@
             this.panelHeader.Controls.Add(this.panelNetworkAlartView);
             this.panelHeader.Dock = System.Windows.Forms.DockStyle.Top;
             this.panelHeader.Location = new System.Drawing.Point(0, 0);
-            this.panelHeader.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panelHeader.Name = "panelHeader";
-            this.panelHeader.Size = new System.Drawing.Size(2034, 222);
+            this.panelHeader.Size = new System.Drawing.Size(1424, 149);
             this.panelHeader.TabIndex = 7;
             // 
             // panelLoginContainer
@@ -165,9 +158,8 @@
             this.panelLoginContainer.Controls.Add(this.panelUserInfoView);
             this.panelLoginContainer.Controls.Add(this.panelLoginView);
             this.panelLoginContainer.Location = new System.Drawing.Point(0, 0);
-            this.panelLoginContainer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panelLoginContainer.Name = "panelLoginContainer";
-            this.panelLoginContainer.Size = new System.Drawing.Size(461, 224);
+            this.panelLoginContainer.Size = new System.Drawing.Size(323, 149);
             this.panelLoginContainer.TabIndex = 1;
             // 
             // panelUserInfoView
@@ -176,42 +168,38 @@
             this.panelUserInfoView.Controls.Add(this.lblCurrentUserName);
             this.panelUserInfoView.Controls.Add(this.label2);
             this.panelUserInfoView.Controls.Add(this.btnLogout);
-            this.panelUserInfoView.Location = new System.Drawing.Point(-1, -2);
-            this.panelUserInfoView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelUserInfoView.Location = new System.Drawing.Point(-1, -1);
             this.panelUserInfoView.Name = "panelUserInfoView";
-            this.panelUserInfoView.Size = new System.Drawing.Size(461, 222);
+            this.panelUserInfoView.Size = new System.Drawing.Size(323, 149);
             this.panelUserInfoView.TabIndex = 0;
             this.panelUserInfoView.Visible = false;
             // 
             // lblCurrentUserName
             // 
             this.lblCurrentUserName.AutoSize = true;
-            this.lblCurrentUserName.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblCurrentUserName.Location = new System.Drawing.Point(77, 118);
-            this.lblCurrentUserName.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblCurrentUserName.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblCurrentUserName.Location = new System.Drawing.Point(54, 79);
             this.lblCurrentUserName.Name = "lblCurrentUserName";
-            this.lblCurrentUserName.Size = new System.Drawing.Size(61, 28);
+            this.lblCurrentUserName.Size = new System.Drawing.Size(47, 20);
             this.lblCurrentUserName.TabIndex = 4;
             this.lblCurrentUserName.Text = "User";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Font = new System.Drawing.Font("나눔고딕", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.label2.Location = new System.Drawing.Point(100, 76);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.label2.Location = new System.Drawing.Point(70, 51);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(107, 28);
+            this.label2.Size = new System.Drawing.Size(68, 20);
             this.label2.TabIndex = 4;
             this.label2.Text = "Account";
             // 
             // btnLogout
             // 
-            this.btnLogout.Font = new System.Drawing.Font("나눔고딕", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnLogout.Location = new System.Drawing.Point(283, 57);
-            this.btnLogout.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnLogout.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnLogout.Location = new System.Drawing.Point(198, 38);
             this.btnLogout.Name = "btnLogout";
-            this.btnLogout.Size = new System.Drawing.Size(151, 111);
+            this.btnLogout.Size = new System.Drawing.Size(106, 74);
             this.btnLogout.TabIndex = 4;
             this.btnLogout.Text = "Logout";
             this.btnLogout.UseVisualStyleBackColor = true;
@@ -226,58 +214,52 @@
             this.panelLoginView.Controls.Add(this.textBoxId);
             this.panelLoginView.Controls.Add(this.btnLogin);
             this.panelLoginView.Location = new System.Drawing.Point(-1, 0);
-            this.panelLoginView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.panelLoginView.Name = "panelLoginView";
-            this.panelLoginView.Size = new System.Drawing.Size(461, 222);
+            this.panelLoginView.Size = new System.Drawing.Size(323, 149);
             this.panelLoginView.TabIndex = 0;
             // 
             // labelpw
             // 
             this.labelpw.AutoSize = true;
-            this.labelpw.Font = new System.Drawing.Font("나눔고딕", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.labelpw.Location = new System.Drawing.Point(31, 124);
-            this.labelpw.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelpw.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.labelpw.Location = new System.Drawing.Point(22, 83);
             this.labelpw.Name = "labelpw";
-            this.labelpw.Size = new System.Drawing.Size(39, 21);
+            this.labelpw.Size = new System.Drawing.Size(26, 15);
             this.labelpw.TabIndex = 4;
             this.labelpw.Text = "PW";
             // 
             // labelId
             // 
             this.labelId.AutoSize = true;
-            this.labelId.Font = new System.Drawing.Font("나눔고딕", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.labelId.Location = new System.Drawing.Point(41, 80);
-            this.labelId.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelId.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.labelId.Location = new System.Drawing.Point(29, 53);
             this.labelId.Name = "labelId";
-            this.labelId.Size = new System.Drawing.Size(27, 21);
+            this.labelId.Size = new System.Drawing.Size(19, 15);
             this.labelId.TabIndex = 4;
             this.labelId.Text = "ID";
             // 
             // textBoxPw
             // 
             this.textBoxPw.Font = new System.Drawing.Font("굴림", 11F);
-            this.textBoxPw.Location = new System.Drawing.Point(73, 116);
-            this.textBoxPw.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBoxPw.Location = new System.Drawing.Point(51, 77);
             this.textBoxPw.Name = "textBoxPw";
-            this.textBoxPw.Size = new System.Drawing.Size(181, 33);
+            this.textBoxPw.Size = new System.Drawing.Size(128, 24);
             this.textBoxPw.TabIndex = 5;
             // 
             // textBoxId
             // 
             this.textBoxId.Font = new System.Drawing.Font("굴림", 11F);
-            this.textBoxId.Location = new System.Drawing.Point(73, 70);
-            this.textBoxId.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.textBoxId.Location = new System.Drawing.Point(51, 47);
             this.textBoxId.Name = "textBoxId";
-            this.textBoxId.Size = new System.Drawing.Size(181, 33);
+            this.textBoxId.Size = new System.Drawing.Size(128, 24);
             this.textBoxId.TabIndex = 5;
             // 
             // btnLogin
             // 
-            this.btnLogin.Font = new System.Drawing.Font("나눔고딕", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnLogin.Location = new System.Drawing.Point(283, 57);
-            this.btnLogin.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnLogin.Location = new System.Drawing.Point(198, 38);
             this.btnLogin.Name = "btnLogin";
-            this.btnLogin.Size = new System.Drawing.Size(151, 111);
+            this.btnLogin.Size = new System.Drawing.Size(106, 74);
             this.btnLogin.TabIndex = 4;
             this.btnLogin.Text = "Login";
             this.btnLogin.UseVisualStyleBackColor = true;
@@ -294,30 +276,27 @@
             this.panelStatusView.Controls.Add(this.lblPm1);
             this.panelStatusView.Controls.Add(this.panelTmStatusView);
             this.panelStatusView.Controls.Add(this.lblTm);
-            this.panelStatusView.Location = new System.Drawing.Point(450, 0);
-            this.panelStatusView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelStatusView.Location = new System.Drawing.Point(315, 0);
             this.panelStatusView.Name = "panelStatusView";
-            this.panelStatusView.Size = new System.Drawing.Size(506, 222);
+            this.panelStatusView.Size = new System.Drawing.Size(355, 149);
             this.panelStatusView.TabIndex = 3;
             // 
             // panelPm3StatusView
             // 
             this.panelPm3StatusView.BackColor = System.Drawing.Color.DarkGray;
             this.panelPm3StatusView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelPm3StatusView.Location = new System.Drawing.Point(371, 90);
-            this.panelPm3StatusView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelPm3StatusView.Location = new System.Drawing.Point(260, 60);
             this.panelPm3StatusView.Name = "panelPm3StatusView";
-            this.panelPm3StatusView.Size = new System.Drawing.Size(56, 59);
+            this.panelPm3StatusView.Size = new System.Drawing.Size(40, 40);
             this.panelPm3StatusView.TabIndex = 3;
             // 
             // lblPm3
             // 
             this.lblPm3.AutoSize = true;
-            this.lblPm3.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblPm3.Location = new System.Drawing.Point(364, 48);
-            this.lblPm3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPm3.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblPm3.Location = new System.Drawing.Point(255, 32);
             this.lblPm3.Name = "lblPm3";
-            this.lblPm3.Size = new System.Drawing.Size(78, 34);
+            this.lblPm3.Size = new System.Drawing.Size(48, 24);
             this.lblPm3.TabIndex = 4;
             this.lblPm3.Text = "PM3";
             // 
@@ -325,20 +304,18 @@
             // 
             this.panelPm2StatusView.BackColor = System.Drawing.Color.DarkGray;
             this.panelPm2StatusView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelPm2StatusView.Location = new System.Drawing.Point(271, 90);
-            this.panelPm2StatusView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelPm2StatusView.Location = new System.Drawing.Point(190, 60);
             this.panelPm2StatusView.Name = "panelPm2StatusView";
-            this.panelPm2StatusView.Size = new System.Drawing.Size(56, 59);
+            this.panelPm2StatusView.Size = new System.Drawing.Size(40, 40);
             this.panelPm2StatusView.TabIndex = 3;
             // 
             // lblPm2
             // 
             this.lblPm2.AutoSize = true;
-            this.lblPm2.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblPm2.Location = new System.Drawing.Point(264, 48);
-            this.lblPm2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPm2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblPm2.Location = new System.Drawing.Point(185, 32);
             this.lblPm2.Name = "lblPm2";
-            this.lblPm2.Size = new System.Drawing.Size(78, 34);
+            this.lblPm2.Size = new System.Drawing.Size(48, 24);
             this.lblPm2.TabIndex = 4;
             this.lblPm2.Text = "PM2";
             // 
@@ -346,20 +323,18 @@
             // 
             this.panelPm1StatusView.BackColor = System.Drawing.Color.DarkGray;
             this.panelPm1StatusView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelPm1StatusView.Location = new System.Drawing.Point(171, 90);
-            this.panelPm1StatusView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelPm1StatusView.Location = new System.Drawing.Point(120, 60);
             this.panelPm1StatusView.Name = "panelPm1StatusView";
-            this.panelPm1StatusView.Size = new System.Drawing.Size(56, 59);
+            this.panelPm1StatusView.Size = new System.Drawing.Size(40, 40);
             this.panelPm1StatusView.TabIndex = 1;
             // 
             // lblPm1
             // 
             this.lblPm1.AutoSize = true;
-            this.lblPm1.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblPm1.Location = new System.Drawing.Point(164, 48);
-            this.lblPm1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPm1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblPm1.Location = new System.Drawing.Point(115, 32);
             this.lblPm1.Name = "lblPm1";
-            this.lblPm1.Size = new System.Drawing.Size(78, 34);
+            this.lblPm1.Size = new System.Drawing.Size(48, 24);
             this.lblPm1.TabIndex = 2;
             this.lblPm1.Text = "PM1";
             // 
@@ -367,20 +342,18 @@
             // 
             this.panelTmStatusView.BackColor = System.Drawing.Color.DarkGray;
             this.panelTmStatusView.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelTmStatusView.Location = new System.Drawing.Point(74, 90);
-            this.panelTmStatusView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelTmStatusView.Location = new System.Drawing.Point(52, 60);
             this.panelTmStatusView.Name = "panelTmStatusView";
-            this.panelTmStatusView.Size = new System.Drawing.Size(56, 59);
+            this.panelTmStatusView.Size = new System.Drawing.Size(40, 40);
             this.panelTmStatusView.TabIndex = 0;
             // 
             // lblTm
             // 
             this.lblTm.AutoSize = true;
-            this.lblTm.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblTm.Location = new System.Drawing.Point(74, 48);
-            this.lblTm.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblTm.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblTm.Location = new System.Drawing.Point(52, 32);
             this.lblTm.Name = "lblTm";
-            this.lblTm.Size = new System.Drawing.Size(59, 34);
+            this.lblTm.Size = new System.Drawing.Size(38, 24);
             this.lblTm.TabIndex = 0;
             this.lblTm.Text = "TM";
             // 
@@ -390,19 +363,17 @@
             this.panelNetworkAlartView.Controls.Add(this.btnConnect);
             this.panelNetworkAlartView.Controls.Add(this.groupBox1);
             this.panelNetworkAlartView.Controls.Add(this.panelAlartContainer);
-            this.panelNetworkAlartView.Location = new System.Drawing.Point(956, -2);
-            this.panelNetworkAlartView.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelNetworkAlartView.Location = new System.Drawing.Point(669, -1);
             this.panelNetworkAlartView.Name = "panelNetworkAlartView";
-            this.panelNetworkAlartView.Size = new System.Drawing.Size(1083, 222);
+            this.panelNetworkAlartView.Size = new System.Drawing.Size(759, 149);
             this.panelNetworkAlartView.TabIndex = 4;
             // 
             // btnConnect
             // 
-            this.btnConnect.Font = new System.Drawing.Font("나눔고딕", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnConnect.Location = new System.Drawing.Point(533, 45);
-            this.btnConnect.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnConnect.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnConnect.Location = new System.Drawing.Point(373, 30);
             this.btnConnect.Name = "btnConnect";
-            this.btnConnect.Size = new System.Drawing.Size(206, 135);
+            this.btnConnect.Size = new System.Drawing.Size(144, 90);
             this.btnConnect.TabIndex = 0;
             this.btnConnect.Text = "Connect";
             this.btnConnect.UseVisualStyleBackColor = true;
@@ -415,55 +386,49 @@
             this.groupBox1.Controls.Add(this.lblEtherCatStatus);
             this.groupBox1.Controls.Add(this.lblSlave);
             this.groupBox1.Controls.Add(this.lblEthercat);
-            this.groupBox1.Location = new System.Drawing.Point(34, 21);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.groupBox1.Location = new System.Drawing.Point(24, 14);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.groupBox1.Size = new System.Drawing.Size(466, 176);
+            this.groupBox1.Size = new System.Drawing.Size(326, 117);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             // 
             // lblSlaveStatus
             // 
             this.lblSlaveStatus.AutoSize = true;
-            this.lblSlaveStatus.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblSlaveStatus.Location = new System.Drawing.Point(201, 105);
-            this.lblSlaveStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblSlaveStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblSlaveStatus.Location = new System.Drawing.Point(141, 70);
             this.lblSlaveStatus.Name = "lblSlaveStatus";
-            this.lblSlaveStatus.Size = new System.Drawing.Size(26, 34);
+            this.lblSlaveStatus.Size = new System.Drawing.Size(16, 24);
             this.lblSlaveStatus.TabIndex = 2;
             this.lblSlaveStatus.Text = "-";
             // 
             // lblEtherCatStatus
             // 
             this.lblEtherCatStatus.AutoSize = true;
-            this.lblEtherCatStatus.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblEtherCatStatus.Location = new System.Drawing.Point(201, 38);
-            this.lblEtherCatStatus.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblEtherCatStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblEtherCatStatus.Location = new System.Drawing.Point(141, 25);
             this.lblEtherCatStatus.Name = "lblEtherCatStatus";
-            this.lblEtherCatStatus.Size = new System.Drawing.Size(26, 34);
+            this.lblEtherCatStatus.Size = new System.Drawing.Size(16, 24);
             this.lblEtherCatStatus.TabIndex = 0;
             this.lblEtherCatStatus.Text = "-";
             // 
             // lblSlave
             // 
             this.lblSlave.AutoSize = true;
-            this.lblSlave.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblSlave.Location = new System.Drawing.Point(30, 104);
-            this.lblSlave.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblSlave.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblSlave.Location = new System.Drawing.Point(21, 69);
             this.lblSlave.Name = "lblSlave";
-            this.lblSlave.Size = new System.Drawing.Size(102, 34);
+            this.lblSlave.Size = new System.Drawing.Size(71, 24);
             this.lblSlave.TabIndex = 1;
             this.lblSlave.Text = "SLAVE";
             // 
             // lblEthercat
             // 
             this.lblEthercat.AutoSize = true;
-            this.lblEthercat.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblEthercat.Location = new System.Drawing.Point(27, 36);
-            this.lblEthercat.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblEthercat.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblEthercat.Location = new System.Drawing.Point(19, 24);
             this.lblEthercat.Name = "lblEthercat";
-            this.lblEthercat.Size = new System.Drawing.Size(160, 34);
+            this.lblEthercat.Size = new System.Drawing.Size(113, 24);
             this.lblEthercat.TabIndex = 0;
             this.lblEthercat.Text = "ETHERCAT";
             // 
@@ -473,46 +438,42 @@
             this.panelAlartContainer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelAlartContainer.Controls.Add(this.lblAlartContent);
             this.panelAlartContainer.Controls.Add(this.lblAlart);
-            this.panelAlartContainer.Location = new System.Drawing.Point(779, 14);
-            this.panelAlartContainer.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.panelAlartContainer.Location = new System.Drawing.Point(545, 9);
             this.panelAlartContainer.Name = "panelAlartContainer";
-            this.panelAlartContainer.Size = new System.Drawing.Size(285, 196);
+            this.panelAlartContainer.Size = new System.Drawing.Size(200, 131);
             this.panelAlartContainer.TabIndex = 2;
             // 
             // lblAlartContent
             // 
             this.lblAlartContent.AutoSize = true;
-            this.lblAlartContent.Font = new System.Drawing.Font("나눔고딕", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblAlartContent.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.lblAlartContent.ForeColor = System.Drawing.SystemColors.ButtonShadow;
-            this.lblAlartContent.Location = new System.Drawing.Point(100, 78);
-            this.lblAlartContent.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblAlartContent.Location = new System.Drawing.Point(70, 52);
             this.lblAlartContent.Name = "lblAlartContent";
-            this.lblAlartContent.Size = new System.Drawing.Size(93, 36);
+            this.lblAlartContent.Size = new System.Drawing.Size(63, 25);
             this.lblAlartContent.TabIndex = 1;
             this.lblAlartContent.Text = "None";
             // 
             // lblAlart
             // 
             this.lblAlart.AutoSize = true;
-            this.lblAlart.Font = new System.Drawing.Font("나눔고딕", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblAlart.Location = new System.Drawing.Point(93, 6);
-            this.lblAlart.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblAlart.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblAlart.Location = new System.Drawing.Point(65, 4);
             this.lblAlart.Name = "lblAlart";
-            this.lblAlart.Size = new System.Drawing.Size(113, 36);
+            this.lblAlart.Size = new System.Drawing.Size(85, 25);
             this.lblAlart.TabIndex = 0;
             this.lblAlart.Text = "ALART";
             // 
             // MainForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.ClientSize = new System.Drawing.Size(2034, 1478);
+            this.ClientSize = new System.Drawing.Size(1424, 1011);
             this.Controls.Add(this.panelContent);
             this.Controls.Add(this.panelFooter);
             this.Controls.Add(this.panelHeader);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Form1";
