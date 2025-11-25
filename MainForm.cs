@@ -18,6 +18,7 @@ namespace IonImplationEtherCAT
         private LogView logView;
 
         public static bool IsLogined {  get; set; }
+        public static bool IsConnected { get; set; }
 
         public MainForm()
         {
@@ -31,6 +32,9 @@ namespace IonImplationEtherCAT
 
             // 처음 보여줄 화면 설정
             ShowView(mainView);
+            
+            // 초기에는 Connect 버튼 비활성화 (로그인 필요)
+            btnConnect.Enabled = false;
         }
 
         /// <summary>
@@ -43,9 +47,95 @@ namespace IonImplationEtherCAT
             panelContent.Controls.Add(viewToShow); // 패널에 추가
         }
 
+        /// <summary>
+        /// 로그인과 연결이 모두 완료되었을 때 모든 버튼 활성화
+        /// </summary>
+        private void ActivateAllButtons()
+        {
+            if (IsLogined && IsConnected)
+            {
+                recipeView.ActivateToggle(true);
+                mainView.ActivateButtons(true);
+            }
+            else
+            {
+                recipeView.ActivateToggle(false);
+                mainView.ActivateButtons(false);
+            }
+        }
+
+        /// <summary>
+        /// 연결 상태에 따라 상태 표시 패널의 색상 변경
+        /// </summary>
+        private void UpdateStatusPanelColors(bool connected)
+        {
+            if (connected)
+            {
+                // 연결됨 - 초록색으로 변경
+                panelTmStatusView.BackColor = Color.LimeGreen;
+                panelPm1StatusView.BackColor = Color.LimeGreen;
+                panelPm2StatusView.BackColor = Color.LimeGreen;
+                panelPm3StatusView.BackColor = Color.LimeGreen;
+            }
+            else
+            {
+                // 연결 해제 - 회색으로 변경
+                panelTmStatusView.BackColor = Color.DarkGray;
+                panelPm1StatusView.BackColor = Color.DarkGray;
+                panelPm2StatusView.BackColor = Color.DarkGray;
+                panelPm3StatusView.BackColor = Color.DarkGray;
+            }
+        }
+
         private void btnConnect_Click(object sender, EventArgs e)
         {
+            if (!IsConnected)
+            {
+                // Connect 동작
+                // TODO: 실제 연결 로직은 여기에 구현
+                // 현재는 바로 연결 성공으로 처리
+                IsConnected = true;
+                btnConnect.Text = "Disconnect";
+                lblEtherCatStatus.Text = "Connected";
+                lblSlaveStatus.Text = "Connected";
+                
+                // 상태 패널 색상 변경 (초록색 - 정상 작동)
+                UpdateStatusPanelColors(true);
+                
+                MessageBox.Show("연결되었습니다!", "연결 성공", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
+                // 로그인과 연결이 모두 완료되었는지 확인 후 버튼 활성화
+                ActivateAllButtons();
+            }
+            else
+            {
+                // Disconnect 동작
+                // 공정이 진행 중인지 확인
+                if (mainView.IsProcessRunning())
+                {
+                    MessageBox.Show(
+                        "공정이 진행 중입니다.\n연결을 해제하려면 먼저 공정을 중지해주세요.",
+                        "연결 해제 불가",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+                    return;
+                }
 
+                // TODO: 실제 연결 해제 로직은 여기에 구현
+                IsConnected = false;
+                btnConnect.Text = "Connect";
+                lblEtherCatStatus.Text = "-";
+                lblSlaveStatus.Text = "-";
+                
+                // 상태 패널 색상 변경 (회색 - 연결 해제)
+                UpdateStatusPanelColors(false);
+                
+                MessageBox.Show("연결이 해제되었습니다.", "연결 해제", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                
+                // 연결 해제 시 버튼 비활성화
+                ActivateAllButtons();
+            }
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -68,8 +158,11 @@ namespace IonImplationEtherCAT
                 panelLoginView.Visible = false;     // 로그인 뷰 숨기기
                 panelUserInfoView.Visible = true;   // 사용자 정보 뷰 보여주기
 
-                //기타 버튼 전부 활성화
-                recipeView.ActivateToggle(true);
+                // 로그인 성공 시 Connect 버튼 활성화
+                btnConnect.Enabled = true;
+
+                // 로그인과 연결이 모두 완료되었는지 확인 후 버튼 활성화
+                ActivateAllButtons();
             }
             else
             {
@@ -79,12 +172,30 @@ namespace IonImplationEtherCAT
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
+            // 연결 상태 확인
+            if (IsConnected)
+            {
+                MessageBox.Show(
+                    "연결된 상태입니다.\n로그아웃하려면 먼저 연결을 해제해주세요.",
+                    "로그아웃 불가",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+                return;
+            }
+
             // 로그아웃 시
             textBoxId.Text = "";
             textBoxPw.Text = "";
+            IsLogined = false;
             panelLoginView.Visible = true;      // 로그인 뷰 보여주기
             panelUserInfoView.Visible = false; // 사용자 정보 뷰 숨기기
-            recipeView.ActivateToggle(false);
+            
+            // Connect 버튼 비활성화 (로그인 필요)
+            btnConnect.Enabled = false;
+            
+            // 버튼 비활성화
+            ActivateAllButtons();
         }
 
         // --- 푸터 버튼 클릭 이벤트 핸들러 ---

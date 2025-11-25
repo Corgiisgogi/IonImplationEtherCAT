@@ -38,9 +38,26 @@ namespace IonImplationEtherCAT
             isWaferLoaded = false;
         }
 
+        public ProcessModule(int defaultProcessTime)
+        {
+            ModuleState = State.Idle;
+            processTime = defaultProcessTime;
+            elapsedTime = 0;
+            isWaferLoaded = false;
+        }
+
         public void StartProcess(int time)
         {
             processTime = time;
+            elapsedTime = 0;
+            ModuleState = State.Running;
+        }
+
+        /// <summary>
+        /// 설정된 공정 시간으로 공정 시작
+        /// </summary>
+        public void StartProcess()
+        {
             elapsedTime = 0;
             ModuleState = State.Running;
         }
