@@ -51,6 +51,9 @@ namespace IonImplationEtherCAT
         // 워크플로우 취소 플래그
         private bool isWorkflowCancelled;
 
+        // EtherCAT 컨트롤러 참조
+        private IEtherCATController etherCATController;
+
         public MainView()
         {
             InitializeComponent();
@@ -578,23 +581,98 @@ namespace IonImplationEtherCAT
 
             commandQueue.Clear();
 
-            // 1. FOUP A로 이동
-            commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, "FOUP A로 회전", ANGLE_FOUP_A));
-            commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendArm, "암 확장"));
+            if (IsRealMode())
+            {
+                // === 실제 하드웨어 시퀀스 ===
 
-            // 2. FOUP A에서 웨이퍼 제거 및 픽업
-            commandQueue.Enqueue(new ProcessCommand(CommandType.RemoveWaferFromFoup, "FOUP A 웨이퍼 제거", foupA, waferSlot));
-            commandQueue.Enqueue(new ProcessCommand(CommandType.PickWafer, "웨이퍼 픽업"));
-            commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축"));
+                // 1. UD 원점복귀 (안전)
+                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
 
-            // 3. 선택된 이온 주입 PM으로 이동 및 배치
-            commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, $"{pmName}로 회전", targetAngle));
-            commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendArm, "암 확장"));
-            commandQueue.Enqueue(new ProcessCommand(CommandType.PlaceWafer, "웨이퍼 배치", targetPM));
-            commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축"));
+                // 2. LR을 FOUP A 위치로 이동
+                commandQueue.Enqueue(new ProcessCommand(CommandType.MoveLRAxis, "FOUP A로 LR 이동", HardwarePositionMap.LR_FOUP_A));
 
-            // 4. 공정 시작
-            commandQueue.Enqueue(new ProcessCommand(CommandType.StartProcess, $"{pmName} 공정 시작", targetPM));
+                // 3. UD를 FOUP 안착 위치로 이동
+                long foupSeating = HardwarePositionMap.GetFoupSeatingPosition(waferSlot, true);
+                commandQueue.Enqueue(new ProcessCommand(CommandType.MoveUDAxis, "UD 안착 위치 이동", foupSeating));
+
+                // 4. 실린더 전진
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendCylinder, "실린더 전진"));
+
+                // 5. 흡착 ON
+                commandQueue.Enqueue(new ProcessCommand(CommandType.EnableSuction, "흡착 ON"));
+
+                // 6. FOUP 데이터에서 웨이퍼 제거 및 TM에 픽업
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RemoveWaferFromFoup, "FOUP A 웨이퍼 제거", foupA, waferSlot));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.PickWafer, "웨이퍼 픽업"));
+
+                // 7. UD를 FOUP 상승 위치로 이동 (웨이퍼 들어올림)
+                long foupLifted = HardwarePositionMap.GetFoupLiftedPosition(waferSlot, true);
+                commandQueue.Enqueue(new ProcessCommand(CommandType.MoveUDAxis, "UD 상승 위치 이동", foupLifted));
+
+                // 8. 실린더 후진
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
+
+                // 9. UD 원점복귀
+                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
+
+                // 10. LR을 PM 위치로 이동
+                long pmLR = HardwarePositionMap.GetPMLRPosition(targetPM.Type);
+                commandQueue.Enqueue(new ProcessCommand(CommandType.MoveLRAxis, $"{pmName}로 LR 이동", pmLR));
+
+                // 11. PM 문 열기
+                commandQueue.Enqueue(new ProcessCommand(CommandType.OpenPMDoor, "PM 문 열기", targetPM));
+
+                // 12. UD를 PM 상승 위치로 이동
+                commandQueue.Enqueue(new ProcessCommand(CommandType.MoveUDAxis, "UD 상승 위치 이동", HardwarePositionMap.PM_UD_LIFTED));
+
+                // 13. 실린더 전진
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendCylinder, "실린더 전진"));
+
+                // 14. UD를 PM 안착 위치로 이동 (웨이퍼 내려놓음)
+                commandQueue.Enqueue(new ProcessCommand(CommandType.MoveUDAxis, "UD 안착 위치 이동", HardwarePositionMap.PM_UD_SEATING));
+
+                // 15. 흡착 OFF 및 배기
+                commandQueue.Enqueue(new ProcessCommand(CommandType.DisableSuction, "흡착 OFF"));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.EnableExhaust, "배기 ON"));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.DisableExhaust, "배기 OFF"));
+
+                // 16. PM에 웨이퍼 배치 (데이터 처리)
+                commandQueue.Enqueue(new ProcessCommand(CommandType.PlaceWafer, "웨이퍼 배치", targetPM));
+
+                // 17. 실린더 후진
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
+
+                // 18. UD 원점복귀
+                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
+
+                // 19. PM 문 닫기
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ClosePMDoor, "PM 문 닫기", targetPM));
+
+                // 20. 공정 시작
+                commandQueue.Enqueue(new ProcessCommand(CommandType.StartProcess, $"{pmName} 공정 시작", targetPM));
+            }
+            else
+            {
+                // === 기존 시뮬레이션 시퀀스 ===
+
+                // 1. FOUP A로 이동
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, "FOUP A로 회전", ANGLE_FOUP_A));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendArm, "암 확장"));
+
+                // 2. FOUP A에서 웨이퍼 제거 및 픽업
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RemoveWaferFromFoup, "FOUP A 웨이퍼 제거", foupA, waferSlot));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.PickWafer, "웨이퍼 픽업"));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축"));
+
+                // 3. 선택된 이온 주입 PM으로 이동 및 배치
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, $"{pmName}로 회전", targetAngle));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendArm, "암 확장"));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.PlaceWafer, "웨이퍼 배치", targetPM));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축"));
+
+                // 4. 공정 시작
+                commandQueue.Enqueue(new ProcessCommand(CommandType.StartProcess, $"{pmName} 공정 시작", targetPM));
+            }
 
             await commandQueue.ExecuteAsync();
         }
@@ -617,23 +695,102 @@ namespace IonImplationEtherCAT
 
             commandQueue.Clear();
 
-            // 1. 소스 PM으로 이동
-            commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, $"{pmName}로 회전", sourceAngle));
-            commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendArm, "암 확장"));
+            if (IsRealMode())
+            {
+                // === 실제 하드웨어 시퀀스 ===
 
-            // 2. 소스 PM에서 웨이퍼 언로드 및 픽업
-            commandQueue.Enqueue(new ProcessCommand(CommandType.UnloadWaferFromPM, $"{pmName} 웨이퍼 언로드", sourcePM));
-            commandQueue.Enqueue(new ProcessCommand(CommandType.PickWafer, "웨이퍼 픽업"));
-            commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축"));
+                // 1. UD 원점복귀 (안전)
+                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
 
-            // 3. PM3로 이동 및 배치
-            commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, "PM3로 회전", ANGLE_PM3));
-            commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendArm, "암 확장"));
-            commandQueue.Enqueue(new ProcessCommand(CommandType.PlaceWafer, "웨이퍼 배치", processModuleC));
-            commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축"));
+                // 2. LR을 소스 PM 위치로 이동
+                long sourcePMLR = HardwarePositionMap.GetPMLRPosition(sourcePM.Type);
+                commandQueue.Enqueue(new ProcessCommand(CommandType.MoveLRAxis, $"{pmName}로 LR 이동", sourcePMLR));
 
-            // 4. PM3 공정 시작
-            commandQueue.Enqueue(new ProcessCommand(CommandType.StartProcess, "PM3 공정 시작", processModuleC));
+                // 3. 소스 PM 문 열기
+                commandQueue.Enqueue(new ProcessCommand(CommandType.OpenPMDoor, $"{pmName} 문 열기", sourcePM));
+
+                // 4. UD를 PM 안착 위치로 이동
+                commandQueue.Enqueue(new ProcessCommand(CommandType.MoveUDAxis, "UD 안착 위치 이동", HardwarePositionMap.PM_UD_SEATING));
+
+                // 5. 실린더 전진
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendCylinder, "실린더 전진"));
+
+                // 6. 흡착 ON
+                commandQueue.Enqueue(new ProcessCommand(CommandType.EnableSuction, "흡착 ON"));
+
+                // 7. 웨이퍼 언로드 및 픽업 (데이터 처리)
+                commandQueue.Enqueue(new ProcessCommand(CommandType.UnloadWaferFromPM, $"{pmName} 웨이퍼 언로드", sourcePM));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.PickWafer, "웨이퍼 픽업"));
+
+                // 8. UD를 PM 상승 위치로 이동 (웨이퍼 들어올림)
+                commandQueue.Enqueue(new ProcessCommand(CommandType.MoveUDAxis, "UD 상승 위치 이동", HardwarePositionMap.PM_UD_LIFTED));
+
+                // 9. 실린더 후진
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
+
+                // 10. UD 원점복귀
+                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
+
+                // 11. 소스 PM 문 닫기
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ClosePMDoor, $"{pmName} 문 닫기", sourcePM));
+
+                // 12. LR을 PM3 위치로 이동
+                commandQueue.Enqueue(new ProcessCommand(CommandType.MoveLRAxis, "PM3로 LR 이동", HardwarePositionMap.LR_PM3));
+
+                // 13. PM3 문 열기
+                commandQueue.Enqueue(new ProcessCommand(CommandType.OpenPMDoor, "PM3 문 열기", processModuleC));
+
+                // 14. UD를 PM3 상승 위치로 이동
+                commandQueue.Enqueue(new ProcessCommand(CommandType.MoveUDAxis, "UD 상승 위치 이동", HardwarePositionMap.PM_UD_LIFTED));
+
+                // 15. 실린더 전진
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendCylinder, "실린더 전진"));
+
+                // 16. UD를 PM3 안착 위치로 이동 (웨이퍼 내려놓음)
+                commandQueue.Enqueue(new ProcessCommand(CommandType.MoveUDAxis, "UD 안착 위치 이동", HardwarePositionMap.PM_UD_SEATING));
+
+                // 17. 흡착 OFF 및 배기
+                commandQueue.Enqueue(new ProcessCommand(CommandType.DisableSuction, "흡착 OFF"));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.EnableExhaust, "배기 ON"));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.DisableExhaust, "배기 OFF"));
+
+                // 18. PM3에 웨이퍼 배치 (데이터 처리)
+                commandQueue.Enqueue(new ProcessCommand(CommandType.PlaceWafer, "웨이퍼 배치", processModuleC));
+
+                // 19. 실린더 후진
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
+
+                // 20. UD 원점복귀
+                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
+
+                // 21. PM3 문 닫기
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ClosePMDoor, "PM3 문 닫기", processModuleC));
+
+                // 22. PM3 공정 시작
+                commandQueue.Enqueue(new ProcessCommand(CommandType.StartProcess, "PM3 공정 시작", processModuleC));
+            }
+            else
+            {
+                // === 기존 시뮬레이션 시퀀스 ===
+
+                // 1. 소스 PM으로 이동
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, $"{pmName}로 회전", sourceAngle));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendArm, "암 확장"));
+
+                // 2. 소스 PM에서 웨이퍼 언로드 및 픽업
+                commandQueue.Enqueue(new ProcessCommand(CommandType.UnloadWaferFromPM, $"{pmName} 웨이퍼 언로드", sourcePM));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.PickWafer, "웨이퍼 픽업"));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축"));
+
+                // 3. PM3로 이동 및 배치
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, "PM3로 회전", ANGLE_PM3));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendArm, "암 확장"));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.PlaceWafer, "웨이퍼 배치", processModuleC));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축"));
+
+                // 4. PM3 공정 시작
+                commandQueue.Enqueue(new ProcessCommand(CommandType.StartProcess, "PM3 공정 시작", processModuleC));
+            }
 
             await commandQueue.ExecuteAsync();
         }
@@ -660,20 +817,91 @@ namespace IonImplationEtherCAT
 
             commandQueue.Clear();
 
-            // 1. PM3로 이동
-            commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, "PM3로 회전", ANGLE_PM3));
-            commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendArm, "암 확장"));
+            if (IsRealMode())
+            {
+                // === 실제 하드웨어 시퀀스 ===
 
-            // 2. PM3에서 웨이퍼 언로드 및 픽업
-            commandQueue.Enqueue(new ProcessCommand(CommandType.UnloadWaferFromPM, "PM3 웨이퍼 언로드", processModuleC));
-            commandQueue.Enqueue(new ProcessCommand(CommandType.PickWafer, "웨이퍼 픽업"));
-            commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축"));
+                // 1. UD 원점복귀 (안전)
+                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
 
-            // 3. FOUP B로 이동 및 배치
-            commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, "FOUP B로 회전", ANGLE_FOUP_B));
-            commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendArm, "암 확장"));
-            commandQueue.Enqueue(new ProcessCommand(CommandType.AddWaferToFoup, "FOUP B에 웨이퍼 추가", foupB, emptySlot));
-            commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축"));
+                // 2. LR을 PM3 위치로 이동
+                commandQueue.Enqueue(new ProcessCommand(CommandType.MoveLRAxis, "PM3로 LR 이동", HardwarePositionMap.LR_PM3));
+
+                // 3. PM3 문 열기
+                commandQueue.Enqueue(new ProcessCommand(CommandType.OpenPMDoor, "PM3 문 열기", processModuleC));
+
+                // 4. UD를 PM3 안착 위치로 이동
+                commandQueue.Enqueue(new ProcessCommand(CommandType.MoveUDAxis, "UD 안착 위치 이동", HardwarePositionMap.PM_UD_SEATING));
+
+                // 5. 실린더 전진
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendCylinder, "실린더 전진"));
+
+                // 6. 흡착 ON
+                commandQueue.Enqueue(new ProcessCommand(CommandType.EnableSuction, "흡착 ON"));
+
+                // 7. 웨이퍼 언로드 및 픽업 (데이터 처리)
+                commandQueue.Enqueue(new ProcessCommand(CommandType.UnloadWaferFromPM, "PM3 웨이퍼 언로드", processModuleC));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.PickWafer, "웨이퍼 픽업"));
+
+                // 8. UD를 PM3 상승 위치로 이동 (웨이퍼 들어올림)
+                commandQueue.Enqueue(new ProcessCommand(CommandType.MoveUDAxis, "UD 상승 위치 이동", HardwarePositionMap.PM_UD_LIFTED));
+
+                // 9. 실린더 후진
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
+
+                // 10. UD 원점복귀
+                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
+
+                // 11. PM3 문 닫기
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ClosePMDoor, "PM3 문 닫기", processModuleC));
+
+                // 12. LR을 FOUP B 위치로 이동
+                commandQueue.Enqueue(new ProcessCommand(CommandType.MoveLRAxis, "FOUP B로 LR 이동", HardwarePositionMap.LR_FOUP_B));
+
+                // 13. UD를 FOUP B 상승 위치로 이동
+                long foupLifted = HardwarePositionMap.GetFoupLiftedPosition(emptySlot, false);
+                commandQueue.Enqueue(new ProcessCommand(CommandType.MoveUDAxis, "UD 상승 위치 이동", foupLifted));
+
+                // 14. 실린더 전진
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendCylinder, "실린더 전진"));
+
+                // 15. UD를 FOUP B 안착 위치로 이동 (웨이퍼 내려놓음)
+                long foupSeating = HardwarePositionMap.GetFoupSeatingPosition(emptySlot, false);
+                commandQueue.Enqueue(new ProcessCommand(CommandType.MoveUDAxis, "UD 안착 위치 이동", foupSeating));
+
+                // 16. 흡착 OFF 및 배기
+                commandQueue.Enqueue(new ProcessCommand(CommandType.DisableSuction, "흡착 OFF"));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.EnableExhaust, "배기 ON"));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.DisableExhaust, "배기 OFF"));
+
+                // 17. FOUP B에 웨이퍼 추가 (데이터 처리)
+                commandQueue.Enqueue(new ProcessCommand(CommandType.AddWaferToFoup, "FOUP B에 웨이퍼 추가", foupB, emptySlot));
+
+                // 18. 실린더 후진
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
+
+                // 19. UD 원점복귀
+                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
+            }
+            else
+            {
+                // === 기존 시뮬레이션 시퀀스 ===
+
+                // 1. PM3로 이동
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, "PM3로 회전", ANGLE_PM3));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendArm, "암 확장"));
+
+                // 2. PM3에서 웨이퍼 언로드 및 픽업
+                commandQueue.Enqueue(new ProcessCommand(CommandType.UnloadWaferFromPM, "PM3 웨이퍼 언로드", processModuleC));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.PickWafer, "웨이퍼 픽업"));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축"));
+
+                // 3. FOUP B로 이동 및 배치
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, "FOUP B로 회전", ANGLE_FOUP_B));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendArm, "암 확장"));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.AddWaferToFoup, "FOUP B에 웨이퍼 추가", foupB, emptySlot));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축"));
+            }
 
             await commandQueue.ExecuteAsync();
         }
@@ -1188,6 +1416,41 @@ namespace IonImplationEtherCAT
         public Foup GetFoupB()
         {
             return foupB;
+        }
+
+        #endregion
+
+        #region EtherCAT 컨트롤러 관련
+
+        /// <summary>
+        /// EtherCAT 컨트롤러 설정 (MainForm에서 호출)
+        /// </summary>
+        public void SetEtherCATController(IEtherCATController controller)
+        {
+            this.etherCATController = controller;
+
+            // 각 모듈에 컨트롤러 전달
+            transferModule.SetEtherCATController(controller);
+            processModuleA.SetEtherCATController(controller);
+            processModuleB.SetEtherCATController(controller);
+            processModuleC.SetEtherCATController(controller);
+        }
+
+        /// <summary>
+        /// EtherCAT 컨트롤러 반환 (CommandQueue에서 호출)
+        /// </summary>
+        public IEtherCATController GetEtherCATController()
+        {
+            return etherCATController;
+        }
+
+        /// <summary>
+        /// 실제 하드웨어 모드 여부
+        /// </summary>
+        public bool IsRealMode()
+        {
+            return etherCATController != null &&
+                   !(etherCATController is SimulationEtherCATController);
         }
 
         #endregion

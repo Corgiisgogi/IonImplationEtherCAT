@@ -223,6 +223,130 @@ namespace IonImplationEtherCAT
                         }
                     }
                     break;
+
+                // === 실제 하드웨어 명령 처리 ===
+
+                case CommandType.HomeUDAxis:
+                    {
+                        var controller = mainView.GetEtherCATController();
+                        if (controller != null)
+                        {
+                            await controller.HomeUDAxis();
+                        }
+                    }
+                    break;
+
+                case CommandType.HomeLRAxis:
+                    {
+                        var controller = mainView.GetEtherCATController();
+                        if (controller != null)
+                        {
+                            await controller.HomeLRAxis();
+                        }
+                    }
+                    break;
+
+                case CommandType.MoveUDAxis:
+                    if (command.Parameters.Length > 0 && command.Parameters[0] is long udPos)
+                    {
+                        var controller = mainView.GetEtherCATController();
+                        if (controller != null)
+                        {
+                            await controller.MoveUDAxis(udPos);
+                        }
+                    }
+                    break;
+
+                case CommandType.MoveLRAxis:
+                    if (command.Parameters.Length > 0 && command.Parameters[0] is long lrPos)
+                    {
+                        var controller = mainView.GetEtherCATController();
+                        if (controller != null)
+                        {
+                            await controller.MoveLRAxis(lrPos);
+                        }
+                    }
+                    break;
+
+                case CommandType.OpenPMDoor:
+                    if (command.Parameters.Length > 0 && command.Parameters[0] is ProcessModule pmOpenDoor)
+                    {
+                        var controller = mainView.GetEtherCATController();
+                        controller?.OpenPMDoor(pmOpenDoor.Type);
+                        await Task.Delay(1500); // 문 열림 대기
+                    }
+                    break;
+
+                case CommandType.ClosePMDoor:
+                    if (command.Parameters.Length > 0 && command.Parameters[0] is ProcessModule pmCloseDoor)
+                    {
+                        var controller = mainView.GetEtherCATController();
+                        controller?.ClosePMDoor(pmCloseDoor.Type);
+                        await Task.Delay(1500); // 문 닫힘 대기
+                    }
+                    break;
+
+                case CommandType.SetPMLampOn:
+                    if (command.Parameters.Length > 0 && command.Parameters[0] is ProcessModule pmLampOn)
+                    {
+                        var controller = mainView.GetEtherCATController();
+                        controller?.SetPMLamp(pmLampOn.Type, true);
+                    }
+                    break;
+
+                case CommandType.SetPMLampOff:
+                    if (command.Parameters.Length > 0 && command.Parameters[0] is ProcessModule pmLampOff)
+                    {
+                        var controller = mainView.GetEtherCATController();
+                        controller?.SetPMLamp(pmLampOff.Type, false);
+                    }
+                    break;
+
+                case CommandType.ExtendCylinder:
+                    {
+                        var controller = mainView.GetEtherCATController();
+                        controller?.ExtendCylinder();
+                        await Task.Delay(500); // 실린더 전진 대기
+                    }
+                    break;
+
+                case CommandType.RetractCylinder:
+                    {
+                        var controller = mainView.GetEtherCATController();
+                        controller?.RetractCylinder();
+                        await Task.Delay(500); // 실린더 후진 대기
+                    }
+                    break;
+
+                case CommandType.EnableSuction:
+                    {
+                        var controller = mainView.GetEtherCATController();
+                        controller?.EnableSuction();
+                        await Task.Delay(500); // 흡착 안정화 대기
+                    }
+                    break;
+
+                case CommandType.DisableSuction:
+                    {
+                        var controller = mainView.GetEtherCATController();
+                        controller?.DisableSuction();
+                    }
+                    break;
+
+                case CommandType.EnableExhaust:
+                    {
+                        var controller = mainView.GetEtherCATController();
+                        controller?.EnableExhaust();
+                        await Task.Delay(300); // 배기 대기
+                    }
+                    break;
+
+                case CommandType.DisableExhaust:
+                    {
+                        var controller = mainView.GetEtherCATController();
+                        controller?.DisableExhaust();
+                    }
+                    break;
             }
         }
 

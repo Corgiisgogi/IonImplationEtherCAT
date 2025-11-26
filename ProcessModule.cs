@@ -33,6 +33,9 @@ namespace IonImplationEtherCAT
             PM3     // 어닐링
         };
 
+        // EtherCAT 컨트롤러 참조
+        private IEtherCATController etherCATController;
+
         public State ModuleState { get; set; }
         public int processTime { get; set; }
         public int elapsedTime { get; set; }
@@ -40,6 +43,9 @@ namespace IonImplationEtherCAT
 
         // PM 모듈 타입
         public ModuleType Type { get; set; }
+
+        // 문 상태 (UI 표시용)
+        public bool IsDoorOpen { get; private set; }
 
         // 공정 완료 시 TM의 웨이퍼 언로드 요청 플래그
         public bool IsUnloadRequested { get; set; }
@@ -56,6 +62,7 @@ namespace IonImplationEtherCAT
             Type = ModuleType.PM1;
             IsUnloadRequested = false;
             CurrentWafer = null;
+            IsDoorOpen = false;
         }
 
         public ProcessModule(int defaultProcessTime)
@@ -67,6 +74,7 @@ namespace IonImplationEtherCAT
             Type = ModuleType.PM1;
             IsUnloadRequested = false;
             CurrentWafer = null;
+            IsDoorOpen = false;
         }
 
         public ProcessModule(ModuleType moduleType, int defaultProcessTime)
@@ -78,6 +86,7 @@ namespace IonImplationEtherCAT
             Type = moduleType;
             IsUnloadRequested = false;
             CurrentWafer = null;
+            IsDoorOpen = false;
         }
 
         public void StartProcess(int time)
@@ -176,5 +185,44 @@ namespace IonImplationEtherCAT
             requestlist.Add(request);
         }
 
+        #region EtherCAT 컨트롤러 관련
+
+        /// <summary>
+        /// EtherCAT 컨트롤러 설정
+        /// </summary>
+        public void SetEtherCATController(IEtherCATController controller)
+        {
+            this.etherCATController = controller;
+        }
+
+        /// <summary>
+        /// PM 문 열기 (실제 하드웨어)
+        /// </summary>
+        public async Task OpenDoorAsync()
+        {
+            etherCATController?.OpenPMDoor(this.Type);
+            IsDoorOpen = true;
+            await Task.Delay(1500); // 문 열림 대기
+        }
+
+        /// <summary>
+        /// PM 문 닫기 (실제 하드웨어)
+        /// </summary>
+        public async Task CloseDoorAsync()
+        {
+            etherCATController?.ClosePMDoor(this.Type);
+            IsDoorOpen = false;
+            await Task.Delay(1500); // 문 닫힘 대기
+        }
+
+        /// <summary>
+        /// PM 램프 제어 (실제 하드웨어)
+        /// </summary>
+        public void SetLamp(bool on)
+        {
+            etherCATController?.SetPMLamp(this.Type, on);
+        }
+
+        #endregion
     }
 }

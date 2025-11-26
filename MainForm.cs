@@ -1,4 +1,5 @@
-﻿using System;
+﻿using IEG3268_Dll;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -12,13 +13,22 @@ namespace IonImplationEtherCAT
 {
     public partial class MainForm : Form
     {
+        IEG3268 EtherCAT_M = new IEG3268();
         private MainView mainView;
         private AlarmView alarmView;
         private RecipeView recipeView;
         private LogView logView;
 
+        // EtherCAT 컨트롤러 (실제 하드웨어 또는 시뮬레이션)
+        private IEtherCATController etherCATController;
+
         public static bool IsLogined {  get; set; }
         public static bool IsConnected { get; set; }
+
+        /// <summary>
+        /// 시뮬레이션 모드 여부 (true: 시뮬레이션, false: 실제 하드웨어)
+        /// </summary>
+        public static bool IsSimulationMode { get; private set; } = true;
 
         public MainForm()
         {
@@ -92,18 +102,52 @@ namespace IonImplationEtherCAT
             if (!IsConnected)
             {
                 // Connect 동작
-                // TODO: 실제 연결 로직은 여기에 구현
-                // 현재는 바로 연결 성공으로 처리
-                IsConnected = true;
-                btnConnect.Text = "Disconnect";
-                lblEtherCatStatus.Text = "Connected";
-                lblSlaveStatus.Text = "Connected";
-                
-                // 상태 패널 색상 변경 (초록색 - 정상 작동)
-                UpdateStatusPanelColors(true);
-                
-                MessageBox.Show("연결되었습니다!", "연결 성공", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                
+                if (EtherCAT_M.CIFX_50RE_Connect() == true)
+                {
+                    lblEtherCatStatus.Text = "Connected";
+                    IsConnected = true;
+                    EtherCAT_M.ReadData_Send_Start(300);//Timer interval Set
+                    EtherCAT_M.ReadData_Timer_Start();//Timer Start
+                    EtherCAT_M.Axis1_UD_Config_Update(1000000, 1000000, 1000000000, 1000000);
+                    EtherCAT_M.Axis2_LR_Config_Update(1000000, 1000000, 1000000000, 1000000);
+
+                    // 실제 하드웨어 컨트롤러 생성
+                    etherCATController = new RealEtherCATController(EtherCAT_M);
+                    IsSimulationMode = false;
+
+                    btnConnect.Text = "Disconnect";
+                    lblSlaveStatus.Text = "Connected";
+
+                    // 상태 패널 색상 변경 (초록색 - 정상 작동)
+                    UpdateStatusPanelColors(true);
+
+                    // MainView에 컨트롤러 전달
+                    mainView.SetEtherCATController(etherCATController);
+
+                    MessageBox.Show("실제 장비에 연결되었습니다!", "연결 성공", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    // 연결 실패 시 시뮬레이션 모드로 전환
+                    lblEtherCatStatus.Text = "Simulation";
+                    IsConnected = true;
+
+                    // 시뮬레이션 컨트롤러 생성
+                    etherCATController = new SimulationEtherCATController();
+                    IsSimulationMode = true;
+
+                    btnConnect.Text = "Disconnect";
+                    lblSlaveStatus.Text = "Simulation";
+
+                    // 상태 패널 색상 변경 (노란색 - 시뮬레이션)
+                    UpdateStatusPanelColors(true);
+
+                    // MainView에 컨트롤러 전달
+                    mainView.SetEtherCATController(etherCATController);
+
+                    MessageBox.Show("실제 장비 연결 실패.\n시뮬레이션 모드로 동작합니다.", "시뮬레이션 모드", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+
                 // 로그인과 연결이 모두 완료되었는지 확인 후 버튼 활성화
                 ActivateAllButtons();
             }
@@ -122,17 +166,28 @@ namespace IonImplationEtherCAT
                     return;
                 }
 
-                // TODO: 실제 연결 해제 로직은 여기에 구현
+                // 실제 연결 해제 로직 구현
                 IsConnected = false;
+
+                // 실제 하드웨어 연결이었으면 해제
+                if (!IsSimulationMode)
+                {
+                    EtherCAT_M.CIFX_50RE_Disconnect();
+                }
+
+                // 컨트롤러 해제
+                etherCATController = null;
+                mainView.SetEtherCATController(null);
+
                 btnConnect.Text = "Connect";
                 lblEtherCatStatus.Text = "-";
                 lblSlaveStatus.Text = "-";
-                
+
                 // 상태 패널 색상 변경 (회색 - 연결 해제)
                 UpdateStatusPanelColors(false);
-                
+
                 MessageBox.Show("연결이 해제되었습니다.", "연결 해제", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                
+
                 // 연결 해제 시 버튼 비활성화
                 ActivateAllButtons();
             }

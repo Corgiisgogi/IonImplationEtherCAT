@@ -8,11 +8,12 @@ namespace IonImplationEtherCAT
     /// </summary>
     public enum CommandType
     {
-        RotateTM,           // TM 회전
-        ExtendArm,          // 암 확장
-        RetractArm,         // 암 수축
-        PickWafer,          // 웨이퍼 픽업
-        PlaceWafer,         // 웨이퍼 배치
+        // === 기존 시뮬레이션 명령 ===
+        RotateTM,           // TM 회전 (시뮬레이션)
+        ExtendArm,          // 암 확장 (시뮬레이션)
+        RetractArm,         // 암 수축 (시뮬레이션)
+        PickWafer,          // 웨이퍼 픽업 (데이터 처리)
+        PlaceWafer,         // 웨이퍼 배치 (데이터 처리)
         StartProcess,       // 공정 시작
         WaitForCompletion,  // 완료 대기
         RemoveWaferFromFoup, // FOUP에서 웨이퍼 제거
@@ -20,7 +21,28 @@ namespace IonImplationEtherCAT
         Delay,              // 지연
         UnloadWaferFromPM,  // PM에서 웨이퍼 언로드
         WaitForProcessComplete, // PM 공정 완료 대기
-        LoadWaferToPM       // PM에 웨이퍼 로드
+        LoadWaferToPM,      // PM에 웨이퍼 로드
+
+        // === 실제 하드웨어 명령 ===
+        // 축 제어
+        HomeUDAxis,         // UD축 원점복귀
+        HomeLRAxis,         // LR축 원점복귀
+        MoveUDAxis,         // UD축 이동 (파라미터: long position)
+        MoveLRAxis,         // LR축 이동 (파라미터: long position)
+
+        // PM 문/램프 제어
+        OpenPMDoor,         // PM 문 열기 (파라미터: ProcessModule)
+        ClosePMDoor,        // PM 문 닫기 (파라미터: ProcessModule)
+        SetPMLampOn,        // PM 램프 ON (파라미터: ProcessModule)
+        SetPMLampOff,       // PM 램프 OFF (파라미터: ProcessModule)
+
+        // TM 실린더/흡착 제어
+        ExtendCylinder,     // 실린더 전진
+        RetractCylinder,    // 실린더 후진
+        EnableSuction,      // 흡착 ON
+        DisableSuction,     // 흡착 OFF
+        EnableExhaust,      // 배기 ON
+        DisableExhaust      // 배기 OFF
     }
 
     /// <summary>

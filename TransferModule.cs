@@ -19,6 +19,9 @@ namespace IonImplationEtherCAT
             PlacingWafer    // 웨이퍼 배치 중
         }
 
+        // EtherCAT 컨트롤러 참조
+        private IEtherCATController etherCATController;
+
         // 현재 상태
         public TMState State { get; set; }
 
@@ -318,6 +321,32 @@ namespace IonImplationEtherCAT
             }
             return null;
         }
+
+        #region EtherCAT 컨트롤러 관련
+
+        /// <summary>
+        /// EtherCAT 컨트롤러 설정
+        /// </summary>
+        public void SetEtherCATController(IEtherCATController controller)
+        {
+            this.etherCATController = controller;
+        }
+
+        /// <summary>
+        /// 실제 하드웨어 모드 여부
+        /// </summary>
+        public bool IsRealMode => etherCATController != null &&
+                                  !(etherCATController is SimulationEtherCATController);
+
+        /// <summary>
+        /// EtherCAT 컨트롤러 반환
+        /// </summary>
+        public IEtherCATController GetEtherCATController()
+        {
+            return etherCATController;
+        }
+
+        #endregion
     }
 }
 
