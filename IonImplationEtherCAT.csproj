@@ -61,6 +61,8 @@
     <Compile Include="CustomPictureBox.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="HardwarePositionMap.cs" />
+    <Compile Include="IEtherCATController.cs" />
     <Compile Include="LogView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -84,9 +86,11 @@
     <Compile Include="ProcessCommand.cs" />
     <Compile Include="ProcessModule.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="RealEtherCATController.cs" />
     <Compile Include="RotatableImagePanel.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SimulationEtherCATController.cs" />
     <Compile Include="TMGraphicsPanel.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -6,12 +6,12 @@ namespace IonImplationEtherCAT
     /// </summary>
     public static class HardwarePositionMap
     {
-        #region FOUP A 좌표 (LR: 12726)
+        #region FOUP A 좌표 (LR: 12911)
 
         /// <summary>
         /// FOUP A의 LR(좌우) 좌표
         /// </summary>
-        public const long LR_FOUP_A = 12726;
+        public const long LR_FOUP_A = 12911;
 
         /// <summary>
         /// FOUP A 각 슬롯의 UD 안착 위치 (웨이퍼 아래)
@@ -39,12 +39,12 @@ namespace IonImplationEtherCAT
 
         #endregion
 
-        #region FOUP B 좌표 (LR: -394293)
+        #region FOUP B 좌표 (LR: -395519)
 
         /// <summary>
         /// FOUP B의 LR(좌우) 좌표
         /// </summary>
-        public const long LR_FOUP_B = -394293;
+        public const long LR_FOUP_B = -395519;
 
         /// <summary>
         /// FOUP B 각 슬롯의 UD 안착 위치 (FOUP A와 동일)
@@ -58,7 +58,7 @@ namespace IonImplationEtherCAT
 
         #endregion
 
-        #region PM 좌표 (안착: 806931, 상승: 1156931)
+        #region PM 좌표 (안착: 706500, 상승: 1156931)
 
         /// <summary>
         /// PM1의 LR(좌우) 좌표
@@ -78,7 +78,7 @@ namespace IonImplationEtherCAT
         /// <summary>
         /// PM 공통 UD 안착 위치 (웨이퍼 아래)
         /// </summary>
-        public const long PM_UD_SEATING = 806931;
+        public const long PM_UD_SEATING = 706500;
 
         /// <summary>
         /// PM 공통 UD 상승 위치 (웨이퍼 들어올림)

@@ -41,16 +41,6 @@ namespace IonImplationEtherCAT
         /// <returns>원점복귀 완료 여부</returns>
         Task<bool> HomeLRAxis();
 
-        /// <summary>
-        /// 현재 UD축 위치 읽기
-        /// </summary>
-        long GetUDPosition();
-
-        /// <summary>
-        /// 현재 LR축 위치 읽기
-        /// </summary>
-        long GetLRPosition();
-
         #endregion
 
         #region 서보 제어 (Servo Control)

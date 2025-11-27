@@ -33,6 +33,7 @@ namespace IonImplationEtherCAT
         // PM 문/램프 제어
         OpenPMDoor,         // PM 문 열기 (파라미터: ProcessModule)
         ClosePMDoor,        // PM 문 닫기 (파라미터: ProcessModule)
+        ForceClosePMDoor,   // PM 문 강제 닫기 (초기화용, 파라미터: ProcessModule)
         SetPMLampOn,        // PM 램프 ON (파라미터: ProcessModule)
         SetPMLampOff,       // PM 램프 OFF (파라미터: ProcessModule)
 
@@ -42,7 +43,11 @@ namespace IonImplationEtherCAT
         EnableSuction,      // 흡착 ON
         DisableSuction,     // 흡착 OFF
         EnableExhaust,      // 배기 ON
-        DisableExhaust      // 배기 OFF
+        DisableExhaust,     // 배기 OFF
+
+        // 서보 제어
+        ServoOn,            // 모든 서보 ON (UD + LR)
+        ServoOff            // 모든 서보 OFF (UD + LR)
     }
 
     /// <summary>

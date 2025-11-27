@@ -62,6 +62,10 @@ namespace IonImplationEtherCAT
         // Arm 확장/수축 속도 (픽셀/초)
         public float ExtensionSpeed { get; set; }
 
+        // 완료 이벤트 (이벤트 기반 대기용)
+        public event Action OnRotationComplete;
+        public event Action OnArmMovementComplete;
+
         public TransferModule()
         {
             State = TMState.Idle;
@@ -128,6 +132,10 @@ namespace IonImplationEtherCAT
             {
                 float angleDiff = TargetRotationAngle - CurrentRotationAngle;
 
+                // 최단 경로 계산: -180 ~ 180 범위로 정규화
+                while (angleDiff > 180f) angleDiff -= 360f;
+                while (angleDiff < -180f) angleDiff += 360f;
+
                 if (Math.Abs(angleDiff) > 0.1f)
                 {
                     float step = RotationSpeed * deltaTime;
@@ -135,6 +143,7 @@ namespace IonImplationEtherCAT
                     {
                         CurrentRotationAngle = TargetRotationAngle;
                         State = TMState.Idle;
+                        OnRotationComplete?.Invoke(); // 회전 완료 이벤트
                     }
                     else
                     {
@@ -148,6 +157,7 @@ namespace IonImplationEtherCAT
                 {
                     CurrentRotationAngle = TargetRotationAngle;
                     State = TMState.Idle;
+                    OnRotationComplete?.Invoke(); // 회전 완료 이벤트
                 }
             }
 
@@ -164,6 +174,7 @@ namespace IonImplationEtherCAT
                         CurrentExtension = TargetExtension;
                         State = TMState.Idle;
                         IsArmExtended = (CurrentExtension > 0);
+                        OnArmMovementComplete?.Invoke(); // 암 이동 완료 이벤트
                     }
                     else
                     {
@@ -177,6 +188,7 @@ namespace IonImplationEtherCAT
                     CurrentExtension = TargetExtension;
                     State = TMState.Idle;
                     IsArmExtended = (CurrentExtension > 0);
+                    OnArmMovementComplete?.Invoke(); // 암 이동 완료 이벤트
                 }
             }
 

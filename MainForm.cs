@@ -97,7 +97,7 @@ namespace IonImplationEtherCAT
             }
         }
 
-        private void btnConnect_Click(object sender, EventArgs e)
+        private async void btnConnect_Click(object sender, EventArgs e)
         {
             if (!IsConnected)
             {
@@ -125,6 +125,9 @@ namespace IonImplationEtherCAT
                     mainView.SetEtherCATController(etherCATController);
 
                     MessageBox.Show("실제 장비에 연결되었습니다!", "연결 성공", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // 실제 장비 초기화 시퀀스 실행
+                    await mainView.InitializeHardwareAsync();
                 }
                 else
                 {
@@ -169,6 +172,9 @@ namespace IonImplationEtherCAT
                 // 실제 연결 해제 로직 구현
                 IsConnected = false;
 
+                // 모든 상태 초기화 (FOUP, PM, TM 등)
+                mainView.ResetAllState();
+
                 // 실제 하드웨어 연결이었으면 해제
                 if (!IsSimulationMode)
                 {
@@ -186,7 +192,7 @@ namespace IonImplationEtherCAT
                 // 상태 패널 색상 변경 (회색 - 연결 해제)
                 UpdateStatusPanelColors(false);
 
-                MessageBox.Show("연결이 해제되었습니다.", "연결 해제", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("연결이 해제되었습니다.\n모든 장비 상태가 초기화되었습니다.", "연결 해제", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 // 연결 해제 시 버튼 비활성화
                 ActivateAllButtons();

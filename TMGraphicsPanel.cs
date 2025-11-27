@@ -106,20 +106,21 @@ namespace IonImplationEtherCAT
             int centerX = this.Width / 2;
             int centerY = this.Height / 2;
 
-            // 확장 오프셋 계산 (회전 방향으로의 이동량)
-            Point extensionOffset = transferModule.GetExtensionOffset();
-
             // 회전 변환 저장
             GraphicsState state = g.Save();
 
-            // 확장 오프셋만큼 회전 중심 이동
-            int newCenterX = centerX - extensionOffset.X;
-            int newCenterY = centerY - extensionOffset.Y;
-
-            // 새로운 중심점 기준으로 회전
-            g.TranslateTransform(newCenterX, newCenterY);
+            // 1. 먼저 중심점 기준으로 회전만 적용
+            g.TranslateTransform(centerX, centerY);
             g.RotateTransform(transferModule.CurrentRotationAngle);
             g.TranslateTransform(-centerX, -centerY);
+
+            // 2. 확장 오프셋 계산 (회전 변환 후에 별도로 적용)
+            // 회전된 좌표계에서 암이 확장되는 방향으로 이동
+            float extensionAmount = transferModule.CurrentExtension;
+
+            // 회전된 좌표계에서 왼쪽(암 방향) = 원래 좌표계에서 회전 각도에 따른 방향
+            // 확장 오프셋은 회전된 좌표계에서 왼쪽으로 이동
+            g.TranslateTransform(-extensionAmount, 0);
 
             // Back Arm (뒷부분)
             DrawBack(g, centerX, centerY);

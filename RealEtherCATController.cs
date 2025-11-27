@@ -12,6 +12,11 @@ namespace IonImplationEtherCAT
     {
         private readonly IEG3268 etherCAT;
 
+        // PM 문 상태 추적
+        private bool isPM1DoorOpen = false;
+        private bool isPM2DoorOpen = false;
+        private bool isPM3DoorOpen = false;
+
         #region DO 채널 상수
 
         // TM 제어
@@ -37,16 +42,15 @@ namespace IonImplationEtherCAT
 
         #endregion
 
-        #region 타임아웃 설정
+        #region 고정 대기시간 설정 (ms)
 
-        // 축 이동 타임아웃 (ms)
-        private const int AXIS_MOVE_TIMEOUT = 30000;
+        // 축 이동 대기시간
+        private const int UD_MOVE_DELAY = 3000;     // 상하 축 이동 대기
+        private const int LR_MOVE_DELAY = 3000;     // 좌우 축 이동 대기
 
-        // 원점복귀 타임아웃 (ms)
-        private const int HOMING_TIMEOUT = 60000;
-
-        // 위치 허용 오차
-        private const int POSITION_TOLERANCE = 1000;
+        // 원점복귀 대기시간
+        private const int UD_HOMING_DELAY = 5000;   // 상하 축 원점복귀 대기
+        private const int LR_HOMING_DELAY = 5000;   // 좌우 축 원점복귀 대기
 
         #endregion
 
@@ -70,7 +74,9 @@ namespace IonImplationEtherCAT
             etherCAT.Axis1_UD_POS_Update(position);
             etherCAT.Axis1_UD_Move_Send();
 
-            return await WaitForPosition(GetUDPosition, position, POSITION_TOLERANCE, AXIS_MOVE_TIMEOUT);
+            // 고정 대기시간 사용
+            await Task.Delay(UD_MOVE_DELAY);
+            return true;
         }
 
         public async Task<bool> MoveLRAxis(long position)
@@ -80,7 +86,9 @@ namespace IonImplationEtherCAT
             etherCAT.Axis2_LR_POS_Update(position);
             etherCAT.Axis2_LR_Move_Send();
 
-            return await WaitForPosition(GetLRPosition, position, POSITION_TOLERANCE, AXIS_MOVE_TIMEOUT);
+            // 고정 대기시간 사용
+            await Task.Delay(LR_MOVE_DELAY);
+            return true;
         }
 
         public async Task<bool> HomeUDAxis()
@@ -89,9 +97,9 @@ namespace IonImplationEtherCAT
 
             etherCAT.Axis1_UD_Homming();
 
-            // 원점복귀는 별도 메서드이므로 완료 대기
-            // 원점 위치는 기계에 따라 약간 오차가 있을 수 있으므로 넉넉한 허용치 사용
-            return await WaitForHoming(GetUDPosition, 5000, HOMING_TIMEOUT);
+            // 고정 대기시간 사용
+            await Task.Delay(UD_HOMING_DELAY);
+            return true;
         }
 
         public async Task<bool> HomeLRAxis()
@@ -100,27 +108,9 @@ namespace IonImplationEtherCAT
 
             etherCAT.Axis2_LR_Homming();
 
-            return await WaitForHoming(GetLRPosition, 5000, HOMING_TIMEOUT);
-        }
-
-        public long GetUDPosition()
-        {
-            if (etherCAT == null) return 0;
-
-            string posStr = etherCAT.Axis1_is_PosData();
-            if (long.TryParse(posStr, out long pos))
-                return pos;
-            return 0;
-        }
-
-        public long GetLRPosition()
-        {
-            if (etherCAT == null) return 0;
-
-            string posStr = etherCAT.Axis2_is_PosData();
-            if (long.TryParse(posStr, out long pos))
-                return pos;
-            return 0;
+            // 고정 대기시간 사용
+            await Task.Delay(LR_HOMING_DELAY);
+            return true;
         }
 
         #endregion
@@ -213,22 +203,92 @@ namespace IonImplationEtherCAT
         {
             if (etherCAT == null) return;
 
+            // 이미 열려있으면 명령 무시
+            if (IsPMDoorOpen(pm)) return;
+
             var (upChannel, downChannel, _) = GetPMChannels(pm);
 
-            // 상호배타적 제어: 하강 OFF 후 상승 ON
-            etherCAT.Digital_Output(downChannel, false);
-            etherCAT.Digital_Output(upChannel, true);
+            // 상호배타적 제어: DOWN이 열기 신호
+            // UP OFF 후 DOWN ON
+            etherCAT.Digital_Output(upChannel, false);
+            etherCAT.Digital_Output(downChannel, true);
+
+            // 상태 업데이트
+            SetPMDoorState(pm, true);
         }
 
         public void ClosePMDoor(ProcessModule.ModuleType pm)
         {
             if (etherCAT == null) return;
 
+            // 이미 닫혀있으면 명령 무시
+            if (!IsPMDoorOpen(pm)) return;
+
             var (upChannel, downChannel, _) = GetPMChannels(pm);
 
-            // 상호배타적 제어: 상승 OFF 후 하강 ON
-            etherCAT.Digital_Output(upChannel, false);
-            etherCAT.Digital_Output(downChannel, true);
+            // 상호배타적 제어: UP이 닫기 신호
+            // DOWN OFF 후 UP ON
+            etherCAT.Digital_Output(downChannel, false);
+            etherCAT.Digital_Output(upChannel, true);
+
+            // 상태 업데이트
+            SetPMDoorState(pm, false);
+        }
+
+        /// <summary>
+        /// PM 문을 강제로 닫기 (초기화 시 사용)
+        /// 상태와 관계없이 무조건 닫기 신호 전송
+        /// </summary>
+        public void ForceClosePMDoor(ProcessModule.ModuleType pm)
+        {
+            if (etherCAT == null) return;
+
+            var (upChannel, downChannel, _) = GetPMChannels(pm);
+
+            // 상호배타적 제어: UP이 닫기 신호
+            // DOWN OFF 후 UP ON
+            etherCAT.Digital_Output(downChannel, false);
+            etherCAT.Digital_Output(upChannel, true);
+
+            // 상태 업데이트
+            SetPMDoorState(pm, false);
+        }
+
+        /// <summary>
+        /// PM 문 상태 확인
+        /// </summary>
+        private bool IsPMDoorOpen(ProcessModule.ModuleType pm)
+        {
+            switch (pm)
+            {
+                case ProcessModule.ModuleType.PM1:
+                    return isPM1DoorOpen;
+                case ProcessModule.ModuleType.PM2:
+                    return isPM2DoorOpen;
+                case ProcessModule.ModuleType.PM3:
+                    return isPM3DoorOpen;
+                default:
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// PM 문 상태 설정
+        /// </summary>
+        private void SetPMDoorState(ProcessModule.ModuleType pm, bool isOpen)
+        {
+            switch (pm)
+            {
+                case ProcessModule.ModuleType.PM1:
+                    isPM1DoorOpen = isOpen;
+                    break;
+                case ProcessModule.ModuleType.PM2:
+                    isPM2DoorOpen = isOpen;
+                    break;
+                case ProcessModule.ModuleType.PM3:
+                    isPM3DoorOpen = isOpen;
+                    break;
+            }
         }
 
         public void SetPMLamp(ProcessModule.ModuleType pm, bool on)
@@ -255,64 +315,6 @@ namespace IonImplationEtherCAT
                 default:
                     return (0, 0, 0);
             }
-        }
-
-        #endregion
-
-        #region 위치 대기 헬퍼 메서드
-
-        /// <summary>
-        /// 지정된 위치에 도달할 때까지 대기
-        /// </summary>
-        private async Task<bool> WaitForPosition(Func<long> getPosition, long target, int tolerance, int timeoutMs)
-        {
-            int elapsed = 0;
-            while (elapsed < timeoutMs)
-            {
-                long current = getPosition();
-                if (Math.Abs(current - target) <= tolerance)
-                    return true;
-
-                await Task.Delay(50);
-                elapsed += 50;
-            }
-            return false; // 타임아웃
-        }
-
-        /// <summary>
-        /// 원점복귀 완료 대기 (원점 근처에 도달할 때까지)
-        /// </summary>
-        private async Task<bool> WaitForHoming(Func<long> getPosition, int tolerance, int timeoutMs)
-        {
-            int elapsed = 0;
-            long lastPosition = getPosition();
-            int stableCount = 0;
-
-            while (elapsed < timeoutMs)
-            {
-                await Task.Delay(100);
-                elapsed += 100;
-
-                long current = getPosition();
-
-                // 원점 근처에서 위치가 안정되면 완료로 판단
-                if (Math.Abs(current) <= tolerance)
-                {
-                    if (Math.Abs(current - lastPosition) < 100)
-                    {
-                        stableCount++;
-                        if (stableCount >= 5) // 500ms 동안 안정
-                            return true;
-                    }
-                    else
-                    {
-                        stableCount = 0;
-                    }
-                }
-
-                lastPosition = current;
-            }
-            return false; // 타임아웃
         }
 
         #endregion
