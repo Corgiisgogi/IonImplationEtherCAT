@@ -117,5 +117,16 @@ namespace IonImplationEtherCAT
         void SetPMLamp(ProcessModule.ModuleType pm, bool on);
 
         #endregion
+
+        #region 타워 램프 제어 (Tower Lamp Control)
+
+        /// <summary>
+        /// 타워 램프 제어 (한 번에 하나만 점등)
+        /// DO 채널: 0(적색), 1(황색), 2(녹색)
+        /// </summary>
+        /// <param name="state">램프 상태</param>
+        void SetTowerLamp(TowerLampState state);
+
+        #endregion
     }
 }

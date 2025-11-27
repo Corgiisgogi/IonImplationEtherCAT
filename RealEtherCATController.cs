@@ -19,6 +19,11 @@ namespace IonImplationEtherCAT
 
         #region DO 채널 상수
 
+        // 타워 램프
+        private const int DO_TOWER_RED = 0;
+        private const int DO_TOWER_YELLOW = 1;
+        private const int DO_TOWER_GREEN = 2;
+
         // TM 제어
         private const int DO_TM_CYLINDER_EXTEND = 12;
         private const int DO_TM_CYLINDER_RETRACT = 13;
@@ -45,8 +50,8 @@ namespace IonImplationEtherCAT
         #region 고정 대기시간 설정 (ms)
 
         // 축 이동 대기시간
-        private const int UD_MOVE_DELAY = 3000;     // 상하 축 이동 대기
-        private const int LR_MOVE_DELAY = 3000;     // 좌우 축 이동 대기
+        private const int UD_MOVE_DELAY = 2000;     // 상하 축 이동 대기
+        private const int LR_MOVE_DELAY = 2000;     // 좌우 축 이동 대기
 
         // 원점복귀 대기시간
         private const int UD_HOMING_DELAY = 5000;   // 상하 축 원점복귀 대기
@@ -315,6 +320,23 @@ namespace IonImplationEtherCAT
                 default:
                     return (0, 0, 0);
             }
+        }
+
+        #endregion
+
+        #region 타워 램프 제어
+
+        /// <summary>
+        /// 타워 램프 제어 (한 번에 하나만 점등)
+        /// </summary>
+        public void SetTowerLamp(TowerLampState state)
+        {
+            if (etherCAT == null) return;
+
+            // 모든 램프 상태 설정 (해당 상태의 램프만 ON, 나머지는 OFF)
+            etherCAT.Digital_Output(DO_TOWER_RED, state == TowerLampState.Red);
+            etherCAT.Digital_Output(DO_TOWER_YELLOW, state == TowerLampState.Yellow);
+            etherCAT.Digital_Output(DO_TOWER_GREEN, state == TowerLampState.Green);
         }
 
         #endregion

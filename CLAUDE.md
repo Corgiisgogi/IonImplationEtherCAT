@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-IonImplationEtherCAT is a C# WinForms application (.NET Framework 4.7.2) that simulates an ion implantation semiconductor equipment control system. The application manages wafer processing through FOUPs (Front Opening Unified Pods), a Transfer Module (TM), and Process Modules (PMs).
+IonImplationEtherCAT is a C# WinForms application (.NET Framework 4.7.2) for ion implantation semiconductor equipment control. The application manages wafer processing through FOUPs (Front Opening Unified Pods), a Transfer Module (TM), and three Process Modules (PM1, PM2, PM3). It supports both real EtherCAT hardware control and simulation mode.
 
 ## Build and Development Commands
 
@@ -21,130 +21,120 @@ msbuild IonImplationEtherCAT.sln /p:Configuration=Release
 - Open the solution in Visual Studio and press F5 to run
 - Or build and run the executable from `bin\Debug\IonImplationEtherCAT.exe`
 
+### External Dependencies
+- `IEG3268_Dll.dll` - EtherCAT hardware control library (HintPath: `D:\2504110105\새 폴더\IEG3268_Dll.dll`)
+
 ## High-Level Architecture
 
 ### View Layer Structure
 
-The application uses a main form (`MainForm`) with a swappable content panel that displays different views:
+The application uses a main form (`MainForm`) with a swappable content panel:
 
-- **MainForm.cs**: Main application window with header (login/connection controls), content panel, and footer (navigation buttons)
-  - Manages login state (`IsLogined`) and connection state (`IsConnected`)
-  - Contains navigation to switch between views: Main, Alarm, Recipe, and Log
-  - Header shows EtherCAT status and module status indicators (TM, PM1, PM2, PM3)
+- **MainForm.cs**: Main window with header (login/EtherCAT connection), content panel, and footer navigation
+  - Manages `IsLogined`, `IsConnected`, and `IsSimulationMode` static properties
+  - Creates `RealEtherCATController` on successful hardware connection, or `SimulationEtherCATController` on failure
 
-- **MainView.cs**: Primary equipment control interface
-  - Displays FOUP A/B wafer status (5 slots each)
-  - Shows Process Module status and progress (PM1/A chamber)
-  - Contains TM graphics visualization via `TMGraphicsPanel`
-  - Manages recipe settings for ProcessModules A, B, C
+- **MainView.cs**: Primary equipment control interface (1600+ lines)
+  - Contains the automated workflow state machine in `StartFullAutomatedWorkflow()`
+  - Manages three ProcessModules (A=PM1, B=PM2, C=PM3), two FOUPs, and the TransferModule
+  - TM animation via 60 FPS timer (`tmAnimationTimer`)
+  - Process progress via 1-second timer (`processTimer`)
 
-- **AlarmView.cs**: Alarm management interface
-- **RecipeView.cs**: Recipe configuration interface
-- **LogView.cs**: Event logging interface
+- **AlarmView.cs**, **RecipeView.cs**, **LogView.cs**: Secondary views (placeholder implementations)
 
-### Core Equipment Models
+### Equipment Models
 
-**ProcessModule** (`ProcessModule.cs`): Represents a process chamber (PM)
+**ProcessModule** (`ProcessModule.cs`): Process chamber
 - States: `Idle`, `Running`, `Paused`, `Stoped`, `Error`
-- Tracks `processTime`, `elapsedTime`, `isWaferLoaded`
-- Methods: `StartProcess()`, `PauseProcess()`, `ResumeProcess()`, `StopProcess()`, `UpdateProcess()`
+- ModuleTypes: `PM1` (ion implant), `PM2` (ion implant), `PM3` (annealing)
+- `IsUnloadRequested` flag signals workflow to pick up completed wafer
+- Hardware integration via `IEtherCATController` for door/lamp control
 
-**TransferModule** (`TransferModule.cs`): Robotic arm for wafer transfer
+**TransferModule** (`TransferModule.cs`): Robotic arm
 - States: `Idle`, `Moving`, `Rotating`, `PickingWafer`, `PlacingWafer`
-- Manages rotation angle and arm extension with smooth animations (90°/sec rotation, 200px/sec extension)
-- Key methods: `SetTargetRotation()`, `ExtendArm()`, `RetractArm()`, `PickWafer()`, `PlaceWafer()`
-- Updates position via `Update(deltaTime)` called by 60 FPS timer
+- Smooth animations: 90°/sec rotation, 200px/sec extension
+- Events: `OnRotationComplete`, `OnArmMovementComplete`
 
-**Foup** (`Foup.cs`): Wafer container with 5 slots
-- Properties: `WaferSlots[5]`, `IsFull`, `IsEmpty`, `WaferCount`
-- Methods: `LoadWafers()`, `UnloadWafers()`, `LoadWafer(index)`, `UnloadWafer(index)`
+**Foup** (`Foup.cs`): Wafer container with 5 slots (index 0 = bottom/1st floor, index 4 = top/5th floor)
+
+**Wafer** (`Wafer.cs`): Individual wafer with state tracking
 
 ### Command Queue System
 
-**CommandQueue** (`CommandQueue.cs`): Manages sequential execution of equipment operations
-- Queues `ProcessCommand` objects and executes them asynchronously
-- Handles wafer transfer sequences (rotate → extend → pick → retract → rotate → extend → place → retract)
-- Waits for animations to complete before executing next command
-- Created in MainView and used for the "All Process" automated workflow
+**CommandQueue** (`CommandQueue.cs`): Async sequential command executor with timing constants for each operation type
 
-**ProcessCommand** (`ProcessCommand.cs`): Represents a single equipment operation
-- CommandTypes: `RotateTM`, `ExtendArm`, `RetractArm`, `PickWafer`, `PlaceWafer`, `StartProcess`, `RemoveWaferFromFoup`, `AddWaferToFoup`, `Delay`, `WaitForCompletion`
-- Contains parameters array for flexible command data (angles, modules, FOUP references, etc.)
+**ProcessCommand** (`ProcessCommand.cs`): Command types split into:
+- **Simulation commands**: `RotateTM`, `ExtendArm`, `RetractArm`, `PickWafer`, `PlaceWafer`, `StartProcess`, etc.
+- **Hardware commands**: `HomeUDAxis`, `HomeLRAxis`, `MoveUDAxis`, `MoveLRAxis`, `OpenPMDoor`, `ClosePMDoor`, `ExtendCylinder`, `RetractCylinder`, `EnableSuction`, `DisableSuction`, `EnableExhaust`, `DisableExhaust`, `ServoOn`, `ServoOff`
+
+### Hardware Abstraction
+
+**IEtherCATController** (`IEtherCATController.cs`): Interface for hardware control
+- Axis control: `MoveUDAxis()`, `MoveLRAxis()`, `HomeUDAxis()`, `HomeLRAxis()`
+- Servo control: `SetServoUD()`, `SetServoLR()`
+- Cylinder/vacuum: `ExtendCylinder()`, `RetractCylinder()`, `EnableSuction()`, `DisableSuction()`, `EnableExhaust()`, `DisableExhaust()`
+- PM control: `OpenPMDoor()`, `ClosePMDoor()`, `SetPMLamp()`
+
+**RealEtherCATController** (`RealEtherCATController.cs`): Real hardware implementation using IEG3268_Dll
+**SimulationEtherCATController** (`SimulationEtherCATController.cs`): Simulation mode stub
+
+**HardwarePositionMap** (`HardwarePositionMap.cs`): Motor position constants
+- FOUP A LR: 14140, FOUP B LR: -394293
+- PM1 LR: -59064, PM2 LR: -190823, PM3 LR: -321600
+- PM UD positions: Seating=776931, Lifted=1156931
+- FOUP slot UD arrays: `FOUP_A_UD_SEATING[]`, `FOUP_A_UD_LIFTED[]`
 
 ### UI Components
 
-**TMGraphicsPanel** (`TMGraphicsPanel.cs`): Custom panel that renders Transfer Module graphics
-- Draws TM arm, rotation, and wafer position in real-time
-- Positioned at (290, 210) within `MainView.panelMainControl`
-
-**CustomPictureBox** (`CustomPictureBox.cs`): Custom image display component
-**RotatableImagePanel** (`RotatableImagePanel.cs`): Panel supporting image rotation
-
-### Data Models
-
-**Wafer** (`Wafer.cs`): Represents a single wafer entity
+**TMGraphicsPanel** (`TMGraphicsPanel.cs`): Custom panel rendering TM with GDI+ (double-buffered, transparent background)
+- Location: (220, 120) in `panelMainControl`, Size: 300x300
 
 ## Key Workflows
 
-### Process Execution Flow
+### Complete Automated Workflow (FOUP A → PM1/PM2 → PM3 → FOUP B)
 
-1. User logs in (hardcoded: `admin`/`1234` in MainForm:147-148)
-2. User clicks Connect to establish EtherCAT connection (simulated)
-3. User loads wafers into FOUP A via "Load SW" button
-4. User sets recipe time for Process Module A (default 60 seconds)
-5. User clicks "All Process" which triggers:
-   - Command queue creation with wafer transfer sequence
-   - TM rotates to FOUP A (-50°)
-   - TM extends arm and picks top wafer from FOUP A
-   - TM retracts and rotates to PM1 (0°)
-   - TM extends and places wafer in PM1
-   - Process starts with 1-second timer updates
-6. Progress bar updates until process completes
-7. Process Module returns to Idle state
+`StartFullAutomatedWorkflow()` in MainView.cs implements a state-based event loop:
+1. **PM3 → FOUP B**: If PM3 has completed wafer (`IsUnloadRequested`), transfer to FOUP B
+2. **PM1/PM2 → PM3**: If PM3 empty and PM1 or PM2 has completed wafer, transfer to PM3
+3. **FOUP A → PM1**: If PM1 empty and FOUP A has wafers, load PM1
+4. **FOUP A → PM2**: If PM2 empty and FOUP A has wafers, load PM2
+5. **Wait**: If nothing to do, poll every 500ms
 
-### State Management Patterns
+Loop exits when FOUP A is empty, all PMs are empty, and FOUP B contains all wafers.
 
-- Login/connection state gates button activation via `ActivateButtons()` and `ActivateAllButtons()` in MainForm
-- Process cannot be interrupted if running (checked in Disconnect and Logout handlers)
-- FOUP validation prevents starting process if FOUP A is empty or FOUP B is full
-- Timer-driven updates for process progress (1 second interval) and TM animation (16ms ~60 FPS)
+### Hardware Transfer Sequence (Real Mode)
 
-### Graphics Update Pattern
+For FOUP A → PM transfer:
+1. Servo ON → UD home → LR to FOUP A
+2. UD to slot seating → Cylinder extend → Suction ON
+3. Remove wafer data → Pick wafer → UD to lifted → Cylinder retract
+4. UD home → LR to PM → PM door open
+5. UD to PM lifted → Cylinder extend → UD to PM seating
+6. Suction OFF → Exhaust ON/OFF → Place wafer data
+7. Cylinder retract → UD home → PM door close → Start process
 
-- `TMGraphicsPanel` invalidates/redraws when TM state changes
-- FOUP display updates by changing panel background colors (DeepSkyBlue = wafer present, DarkGray = empty)
-- Status icons change based on ProcessModule state (Gray/Green/Yellow/Red for Idle/Running/Paused/Error)
+### Login Credentials
+Hardcoded: `admin` / `1234` (MainForm.cs:204-205)
 
-## Important Implementation Details
+## Coordinate Systems
 
-### Coordinates and Positioning
+### TM UI Rotation Angles (simulation)
+- FOUP A: -50°
+- PM1: 0°
+- PM2: 90°
+- PM3: 180°
+- FOUP B: 230°
 
-TM components have initial positions set in `MainView.InitializeTransferModule()`:
+### TM Graphics Initial Positions
 - ArmHigh: (234, 237)
 - ArmLow: (261, 237)
 - Bottom (center): (287, 211)
 - Back: (472, 237)
 
-Rotation angles:
-- FOUP A: -50°
-- PM1: 0°
-- PM2: 90° (not implemented)
-- PM3: 180° (not implemented)
+## Key Implementation Notes
 
-### Async/Await Pattern
-
-The command queue uses `async/await` for sequential command execution while keeping UI responsive. All TM operations wait for animation completion before proceeding (`WaitForTMRotationComplete()`, `WaitForTMArmExtensionComplete()`).
-
-### Resource Management
-
-Images are loaded from `Properties.Resources`:
-- `StatusGray`, `StatusGreen`, `StatusYellow`, `StatusRed` for PM status indicators
-- `LampOn`, `LampOff` for PM lamp indicators
-
-## Code Architecture Notes
-
-- The application follows a partial separation of concerns: UI logic in views, equipment logic in model classes, but views directly instantiate and manage models
-- No EtherCAT implementation exists yet - connection is simulated with boolean flags
-- Only Process Module A (PM1) is fully implemented; PM2 (B) and PM3 (C) have models but no UI integration
-- Recipe configuration only sets process time; no actual recipe parameters are implemented
-- Alarm and Log views are placeholder implementations
+- `IsRealMode()` in MainView checks if connected to real hardware (not SimulationEtherCATController)
+- FOUP wafer extraction is from bottom slot first (slot 0), insertion to bottom empty slot first
+- PM lamp blinks at 500ms interval when `IsUnloadRequested` is true (handled by `lampBlinkTimer`)
+- Workflow cancellation via `isWorkflowCancelled` flag, checked in the event loop
+- All hardware commands have timing delays defined in CommandQueue (e.g., `CYLINDER_EXTEND_DELAY = 3000ms`)

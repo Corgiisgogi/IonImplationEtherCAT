@@ -7,22 +7,33 @@ namespace IonImplationEtherCAT
     public static class HardwarePositionMap
     {
         #region FOUP A 좌표 (LR: 12911)
+        //도겸씨 자리로 일시 조정함 (테스트)
 
         /// <summary>
         /// FOUP A의 LR(좌우) 좌표
         /// </summary>
-        public const long LR_FOUP_A = 12911;
+        //public const long LR_FOUP_A = 12911;
+        public const long LR_FOUP_A = 14140;
 
         /// <summary>
         /// FOUP A 각 슬롯의 UD 안착 위치 (웨이퍼 아래)
         /// </summary>
+        //public static readonly long[] FOUP_A_UD_SEATING = new long[]
+        //{
+        //    129136,   // 1층
+        //    789441,   // 2층
+        //    1432388,  // 3층
+        //    2123669,  // 4층
+        //    2813894   // 5층
+        //};
+
         public static readonly long[] FOUP_A_UD_SEATING = new long[]
         {
-            129136,   // 1층
-            789441,   // 2층
-            1432388,  // 3층
-            2123669,  // 4층
-            2813894   // 5층
+            72379,   // 1층
+            752378,   // 2층
+            1402388,  // 3층
+            2089399,  // 4층
+            2788463   // 5층
         };
 
         /// <summary>
@@ -30,11 +41,11 @@ namespace IonImplationEtherCAT
         /// </summary>
         public static readonly long[] FOUP_A_UD_LIFTED = new long[]
         {
-            180340,   // 1층
-            851866,   // 2층
-            1626850,  // 3층
-            2323717,  // 4층
-            3014110   // 5층
+            302380,   // 1층
+            982378,   // 2층
+            1627604,  // 3층
+            2332102,  // 4층
+            3018457   // 5층
         };
 
         #endregion
@@ -44,7 +55,7 @@ namespace IonImplationEtherCAT
         /// <summary>
         /// FOUP B의 LR(좌우) 좌표
         /// </summary>
-        public const long LR_FOUP_B = -395519;
+        public const long LR_FOUP_B = -394293;
 
         /// <summary>
         /// FOUP B 각 슬롯의 UD 안착 위치 (FOUP A와 동일)
@@ -73,12 +84,12 @@ namespace IonImplationEtherCAT
         /// <summary>
         /// PM3의 LR(좌우) 좌표
         /// </summary>
-        public const long LR_PM3 = -322000;
+        public const long LR_PM3 = -321600;
 
         /// <summary>
         /// PM 공통 UD 안착 위치 (웨이퍼 아래)
         /// </summary>
-        public const long PM_UD_SEATING = 706500;
+        public const long PM_UD_SEATING = 776931;
 
         /// <summary>
         /// PM 공통 UD 상승 위치 (웨이퍼 들어올림)

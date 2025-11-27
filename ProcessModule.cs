@@ -45,10 +45,13 @@ namespace IonImplationEtherCAT
         public ModuleType Type { get; set; }
 
         // 문 상태 (UI 표시용)
-        public bool IsDoorOpen { get; private set; }
+        public bool IsDoorOpen { get; set; }
 
         // 공정 완료 시 TM의 웨이퍼 언로드 요청 플래그
         public bool IsUnloadRequested { get; set; }
+
+        // 공정 완료 시간 (FIFO 판단용)
+        public DateTime? CompletedTime { get; set; }
 
         // 현재 처리 중인 웨이퍼
         public Wafer CurrentWafer { get; set; }
@@ -61,6 +64,7 @@ namespace IonImplationEtherCAT
             isWaferLoaded = false;
             Type = ModuleType.PM1;
             IsUnloadRequested = false;
+            CompletedTime = null;
             CurrentWafer = null;
             IsDoorOpen = false;
         }
@@ -73,6 +77,7 @@ namespace IonImplationEtherCAT
             isWaferLoaded = false;
             Type = ModuleType.PM1;
             IsUnloadRequested = false;
+            CompletedTime = null;
             CurrentWafer = null;
             IsDoorOpen = false;
         }
@@ -85,6 +90,7 @@ namespace IonImplationEtherCAT
             isWaferLoaded = false;
             Type = moduleType;
             IsUnloadRequested = false;
+            CompletedTime = null;
             CurrentWafer = null;
             IsDoorOpen = false;
         }
@@ -94,6 +100,7 @@ namespace IonImplationEtherCAT
             processTime = time;
             elapsedTime = 0;
             ModuleState = State.Running;
+            CompletedTime = null; // 완료 시간 초기화
         }
 
         /// <summary>
@@ -103,6 +110,7 @@ namespace IonImplationEtherCAT
         {
             elapsedTime = 0;
             ModuleState = State.Running;
+            CompletedTime = null; // 완료 시간 초기화
         }
 
         public void PauseProcess()
@@ -126,6 +134,7 @@ namespace IonImplationEtherCAT
             ModuleState = State.Stoped;
             elapsedTime = 0;
             IsUnloadRequested = false;
+            CompletedTime = null; // 완료 시간 초기화
         }
 
         public void UpdateProcess(int timeIncrement)
@@ -138,11 +147,12 @@ namespace IonImplationEtherCAT
                     ModuleState = State.Idle; // 프로세스 완료 후 대기 상태로 전환
                     elapsedTime = processTime; // 경과 시간을 최대값으로 설정
                     IsUnloadRequested = true; // 웨이퍼 언로드 요청 플래그 설정
+                    CompletedTime = DateTime.Now; // 완료 시간 기록 (FIFO 판단용)
 
                     // 웨이퍼 상태 업데이트
                     if (CurrentWafer != null)
                     {
-                        if (Type == ModuleType.PM1)
+                        if (Type == ModuleType.PM1 || Type == ModuleType.PM2)
                         {
                             CurrentWafer.UpdateState(Wafer.WaferState.IonProcessComplete);
                         }

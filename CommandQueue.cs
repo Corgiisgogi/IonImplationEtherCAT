@@ -334,6 +334,8 @@ namespace IonImplationEtherCAT
                     {
                         var controller = mainView.GetEtherCATController();
                         controller?.OpenPMDoor(pmOpenDoor.Type);
+                        pmOpenDoor.IsDoorOpen = true;
+                        mainView.UpdatePMDoorDisplay();
                     }
                     await Task.Delay(PM_DOOR_OPEN_DELAY); // 문 열림 완료 대기
                     return true;
@@ -343,6 +345,8 @@ namespace IonImplationEtherCAT
                     {
                         var controller = mainView.GetEtherCATController();
                         controller?.ClosePMDoor(pmCloseDoor.Type);
+                        pmCloseDoor.IsDoorOpen = false;
+                        mainView.UpdatePMDoorDisplay();
                     }
                     await Task.Delay(PM_DOOR_CLOSE_DELAY); // 문 닫힘 완료 대기
                     return true;
@@ -355,6 +359,8 @@ namespace IonImplationEtherCAT
                         {
                             realController.ForceClosePMDoor(pmForceCloseDoor.Type);
                         }
+                        pmForceCloseDoor.IsDoorOpen = false;
+                        mainView.UpdatePMDoorDisplay();
                         // 시뮬레이션에서도 대기 시간 적용
                     }
                     await Task.Delay(PM_DOOR_CLOSE_DELAY); // 문 닫힘 완료 대기

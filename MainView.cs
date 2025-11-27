@@ -54,14 +54,17 @@ namespace IonImplationEtherCAT
         // EtherCAT 컨트롤러 참조
         private IEtherCATController etherCATController;
 
+        // 타워 램프 상태
+        private TowerLampState currentTowerLampState = TowerLampState.Off;
+
         public MainView()
         {
             InitializeComponent();
 
-            // 각 공정용 ProcessModule 객체 생성 (기본값: 모두 60초로 병목 해소)
-            processModuleA = new ProcessModule(ProcessModule.ModuleType.PM1, 60);
-            processModuleB = new ProcessModule(ProcessModule.ModuleType.PM2, 60);
-            processModuleC = new ProcessModule(ProcessModule.ModuleType.PM3, 60);
+            // 각 공정용 ProcessModule 객체 생성 (기본값: 모두 30초)
+            processModuleA = new ProcessModule(ProcessModule.ModuleType.PM1, 30);
+            processModuleB = new ProcessModule(ProcessModule.ModuleType.PM2, 30);
+            processModuleC = new ProcessModule(ProcessModule.ModuleType.PM3, 30);
             
             // FOUP 객체 생성
             foupA = new Foup();
@@ -310,6 +313,25 @@ namespace IonImplationEtherCAT
             btnRecipeC.Enabled = activate;
             btnAllProcess.Enabled = activate;
             btnAllStop.Enabled = activate;
+
+            // 연결 시 황색(대기), 연결 해제 시 OFF
+            UpdateTowerLamp(activate ? TowerLampState.Yellow : TowerLampState.Off);
+        }
+
+        /// <summary>
+        /// 타워 램프 상태 업데이트 (한 번에 하나만 점등)
+        /// </summary>
+        private void UpdateTowerLamp(TowerLampState state)
+        {
+            currentTowerLampState = state;
+
+            // UI 색상 업데이트 (점등 시 밝은 색, 소등 시 어두운 색)
+            panelGreenAlert.BackColor = (state == TowerLampState.Green) ? Color.Lime : Color.DarkSeaGreen;
+            panelYellowAlert.BackColor = (state == TowerLampState.Yellow) ? Color.Yellow : Color.Khaki;
+            panelRedAlert.BackColor = (state == TowerLampState.Red) ? Color.Red : Color.RosyBrown;
+
+            // 하드웨어 제어
+            etherCATController?.SetTowerLamp(state);
         }
 
         /// <summary>
@@ -516,13 +538,17 @@ namespace IonImplationEtherCAT
             // 공정 타이머 시작
             processTimer.Start();
 
+            // 녹색 램프 ON (공정 진행 중)
+            UpdateTowerLamp(TowerLampState.Green);
+
             try
             {
                 // 상태 기반 이벤트 루프
                 while (true)
                 {
-                    // 취소 확인
-                    if (isWorkflowCancelled) throw new OperationCanceledException();
+                    // 취소 확인 (명령 큐가 실행 중이지 않을 때만)
+                    if (isWorkflowCancelled && !commandQueue.IsExecuting)
+                        throw new OperationCanceledException();
 
                     // 완료 조건: FOUP A 비었고, 모든 PM이 비었고, FOUP B에 모든 웨이퍼가 있음
                     if (foupA.IsEmpty &&
@@ -537,23 +563,39 @@ namespace IonImplationEtherCAT
                     // 1단계: PM3 완료 → FOUP B로 이송
                     if (processModuleC.IsUnloadRequested && processModuleC.isWaferLoaded)
                     {
+                        // FOUP B 가득 참 체크
+                        if (foupB.IsFull)
+                        {
+                            // 황색 램프 (지연)
+                            UpdateTowerLamp(TowerLampState.Yellow);
+                            MessageBox.Show("FOUP B가 가득 찼습니다.\nFOUP B를 언로드한 후 공정이 재개됩니다.",
+                                "대기 중", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                            // 언로드될 때까지 대기
+                            while (foupB.IsFull && !isWorkflowCancelled)
+                            {
+                                await Task.Delay(500);
+                            }
+
+                            if (isWorkflowCancelled && !commandQueue.IsExecuting)
+                                throw new OperationCanceledException();
+
+                            // 녹색 램프로 복귀 (공정 재개)
+                            UpdateTowerLamp(TowerLampState.Green);
+                        }
+
                         await TransferWaferFromPM3ToFoupB();
                         continue; // 다음 루프
                     }
 
-                    // 2단계: PM3 비었고, 이온주입 완료된 웨이퍼 있으면 → PM3로 이송
+                    // 2단계: PM3 비었고, 이온주입 완료된 웨이퍼 있으면 → PM3로 이송 (FIFO)
                     if (!processModuleC.isWaferLoaded)
                     {
-                        // PM1 완료된 웨이퍼 우선
-                        if (processModuleA.IsUnloadRequested && processModuleA.isWaferLoaded)
+                        // 먼저 완료된 PM에서 웨이퍼 가져옴
+                        ProcessModule completedPM = GetFirstCompletedIonPM();
+                        if (completedPM != null)
                         {
-                            await TransferWaferFromIonPMToPM3(processModuleA);
-                            continue;
-                        }
-                        // PM2 완료된 웨이퍼
-                        if (processModuleB.IsUnloadRequested && processModuleB.isWaferLoaded)
-                        {
-                            await TransferWaferFromIonPMToPM3(processModuleB);
+                            await TransferWaferFromIonPMToPM3(completedPM);
                             continue;
                         }
                     }
@@ -576,27 +618,76 @@ namespace IonImplationEtherCAT
                     await Task.Delay(500);
                 }
 
-                // 실제 모드에서는 서보 모터 OFF
+                // 실제 모드에서는 안전 종료 시퀀스 실행
                 if (IsRealMode())
                 {
                     commandQueue.Clear();
+                    // 1. 실린더 후진
+                    commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
+                    // 2. 흡기 OFF
+                    commandQueue.Enqueue(new ProcessCommand(CommandType.DisableSuction, "흡기 OFF"));
+                    // 3. 배기 OFF
+                    commandQueue.Enqueue(new ProcessCommand(CommandType.DisableExhaust, "배기 OFF"));
+                    // 4. UD 원점복귀
+                    commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
+                    // 5. LR 원점복귀
+                    commandQueue.Enqueue(new ProcessCommand(CommandType.HomeLRAxis, "LR 원점복귀"));
+                    // 6. 서보 모터 OFF
                     commandQueue.Enqueue(new ProcessCommand(CommandType.ServoOff, "서보 모터 OFF"));
                     await commandQueue.ExecuteAsync();
                 }
+
+                // 황색 램프 (공정 완료 - 대기)
+                UpdateTowerLamp(TowerLampState.Yellow);
 
                 MessageBox.Show($"전체 공정이 완료되었습니다!\n처리된 웨이퍼: {totalWafers}개",
                     "공정 완료", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (OperationCanceledException)
             {
-                // 워크플로우가 중단됨 - 서보 모터 OFF
+                // 워크플로우가 중단됨 - 안전 종료 시퀀스 실행
                 if (IsRealMode())
                 {
                     commandQueue.Clear();
+                    // 1. 실린더 후진
+                    commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
+                    // 2. 흡기 OFF
+                    commandQueue.Enqueue(new ProcessCommand(CommandType.DisableSuction, "흡기 OFF"));
+                    // 3. 배기 OFF
+                    commandQueue.Enqueue(new ProcessCommand(CommandType.DisableExhaust, "배기 OFF"));
+                    // 4. UD 원점복귀
+                    commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
+                    // 5. LR 원점복귀
+                    commandQueue.Enqueue(new ProcessCommand(CommandType.HomeLRAxis, "LR 원점복귀"));
+                    // 6. 서보 모터 OFF
                     commandQueue.Enqueue(new ProcessCommand(CommandType.ServoOff, "서보 모터 OFF"));
                     await commandQueue.ExecuteAsync();
                 }
+
+                // 황색 램프 (중단 - 대기)
+                UpdateTowerLamp(TowerLampState.Yellow);
+
                 // Stop 버튼에서 이미 메시지를 표시했으므로 여기서는 표시하지 않음
+            }
+            catch (Exception ex)
+            {
+                // 오류 발생 - 적색 램프
+                UpdateTowerLamp(TowerLampState.Red);
+
+                // 실제 모드에서는 안전 종료 시퀀스 실행
+                if (IsRealMode())
+                {
+                    commandQueue.Clear();
+                    commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
+                    commandQueue.Enqueue(new ProcessCommand(CommandType.DisableSuction, "흡기 OFF"));
+                    commandQueue.Enqueue(new ProcessCommand(CommandType.DisableExhaust, "배기 OFF"));
+                    commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
+                    commandQueue.Enqueue(new ProcessCommand(CommandType.HomeLRAxis, "LR 원점복귀"));
+                    commandQueue.Enqueue(new ProcessCommand(CommandType.ServoOff, "서보 모터 OFF"));
+                    await commandQueue.ExecuteAsync();
+                }
+
+                ShowErrorMessage($"공정 중 오류 발생:\n{ex.Message}");
             }
         }
 
@@ -743,7 +834,8 @@ namespace IonImplationEtherCAT
                 // 1. UD 원점복귀 (안전)
                 commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
 
-                // 2. LR을 소스 PM 위치로 이동
+                // 2. LR을 소스 PM 위치로 이동 + UI 애니메이션
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, $"{pmName}로 회전 (UI)", sourceAngle));
                 long sourcePMLR = HardwarePositionMap.GetPMLRPosition(sourcePM.Type);
                 commandQueue.Enqueue(new ProcessCommand(CommandType.MoveLRAxis, $"{pmName}로 LR 이동", sourcePMLR));
 
@@ -753,7 +845,8 @@ namespace IonImplationEtherCAT
                 // 4. UD를 PM 안착 위치로 이동
                 commandQueue.Enqueue(new ProcessCommand(CommandType.MoveUDAxis, "UD 안착 위치 이동", HardwarePositionMap.PM_UD_SEATING));
 
-                // 5. 실린더 전진
+                // 5. 실린더 전진 + UI 애니메이션
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendArm, "암 확장 (UI)"));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendCylinder, "실린더 전진"));
 
                 // 6. 흡착 ON
@@ -766,7 +859,8 @@ namespace IonImplationEtherCAT
                 // 8. UD를 PM 상승 위치로 이동 (웨이퍼 들어올림)
                 commandQueue.Enqueue(new ProcessCommand(CommandType.MoveUDAxis, "UD 상승 위치 이동", HardwarePositionMap.PM_UD_LIFTED));
 
-                // 9. 실린더 후진
+                // 9. 실린더 후진 + UI 애니메이션
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축 (UI)"));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
 
                 // 10. UD 원점복귀
@@ -775,7 +869,8 @@ namespace IonImplationEtherCAT
                 // 11. 소스 PM 문 닫기
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ClosePMDoor, $"{pmName} 문 닫기", sourcePM));
 
-                // 12. LR을 PM3 위치로 이동
+                // 12. LR을 PM3 위치로 이동 + UI 애니메이션
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, "PM3로 회전 (UI)", ANGLE_PM3));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.MoveLRAxis, "PM3로 LR 이동", HardwarePositionMap.LR_PM3));
 
                 // 13. PM3 문 열기
@@ -784,7 +879,8 @@ namespace IonImplationEtherCAT
                 // 14. UD를 PM3 상승 위치로 이동
                 commandQueue.Enqueue(new ProcessCommand(CommandType.MoveUDAxis, "UD 상승 위치 이동", HardwarePositionMap.PM_UD_LIFTED));
 
-                // 15. 실린더 전진
+                // 15. 실린더 전진 + UI 애니메이션
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendArm, "암 확장 (UI)"));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendCylinder, "실린더 전진"));
 
                 // 16. UD를 PM3 안착 위치로 이동 (웨이퍼 내려놓음)
@@ -798,7 +894,8 @@ namespace IonImplationEtherCAT
                 // 18. PM3에 웨이퍼 배치 (데이터 처리)
                 commandQueue.Enqueue(new ProcessCommand(CommandType.PlaceWafer, "웨이퍼 배치", processModuleC));
 
-                // 19. 실린더 후진
+                // 19. 실린더 후진 + UI 애니메이션
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축 (UI)"));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
 
                 // 20. UD 원점복귀
@@ -865,7 +962,8 @@ namespace IonImplationEtherCAT
                 // 1. UD 원점복귀 (안전)
                 commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
 
-                // 2. LR을 PM3 위치로 이동
+                // 2. LR을 PM3 위치로 이동 + UI 애니메이션
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, "PM3로 회전 (UI)", ANGLE_PM3));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.MoveLRAxis, "PM3로 LR 이동", HardwarePositionMap.LR_PM3));
 
                 // 3. PM3 문 열기
@@ -874,7 +972,8 @@ namespace IonImplationEtherCAT
                 // 4. UD를 PM3 안착 위치로 이동
                 commandQueue.Enqueue(new ProcessCommand(CommandType.MoveUDAxis, "UD 안착 위치 이동", HardwarePositionMap.PM_UD_SEATING));
 
-                // 5. 실린더 전진
+                // 5. 실린더 전진 + UI 애니메이션
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendArm, "암 확장 (UI)"));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendCylinder, "실린더 전진"));
 
                 // 6. 흡착 ON
@@ -887,7 +986,8 @@ namespace IonImplationEtherCAT
                 // 8. UD를 PM3 상승 위치로 이동 (웨이퍼 들어올림)
                 commandQueue.Enqueue(new ProcessCommand(CommandType.MoveUDAxis, "UD 상승 위치 이동", HardwarePositionMap.PM_UD_LIFTED));
 
-                // 9. 실린더 후진
+                // 9. 실린더 후진 + UI 애니메이션
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축 (UI)"));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
 
                 // 10. UD 원점복귀
@@ -896,14 +996,16 @@ namespace IonImplationEtherCAT
                 // 11. PM3 문 닫기
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ClosePMDoor, "PM3 문 닫기", processModuleC));
 
-                // 12. LR을 FOUP B 위치로 이동
+                // 12. LR을 FOUP B 위치로 이동 + UI 애니메이션
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, "FOUP B로 회전 (UI)", ANGLE_FOUP_B));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.MoveLRAxis, "FOUP B로 LR 이동", HardwarePositionMap.LR_FOUP_B));
 
                 // 13. UD를 FOUP B 상승 위치로 이동
                 long foupLifted = HardwarePositionMap.GetFoupLiftedPosition(emptySlot, false);
                 commandQueue.Enqueue(new ProcessCommand(CommandType.MoveUDAxis, "UD 상승 위치 이동", foupLifted));
 
-                // 14. 실린더 전진
+                // 14. 실린더 전진 + UI 애니메이션
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendArm, "암 확장 (UI)"));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendCylinder, "실린더 전진"));
 
                 // 15. UD를 FOUP B 안착 위치로 이동 (웨이퍼 내려놓음)
@@ -918,7 +1020,8 @@ namespace IonImplationEtherCAT
                 // 17. FOUP B에 웨이퍼 추가 (데이터 처리)
                 commandQueue.Enqueue(new ProcessCommand(CommandType.AddWaferToFoup, "FOUP B에 웨이퍼 추가", foupB, emptySlot));
 
-                // 18. 실린더 후진
+                // 18. 실린더 후진 + UI 애니메이션
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축 (UI)"));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
 
                 // 19. UD 원점복귀
@@ -1062,8 +1165,16 @@ namespace IonImplationEtherCAT
             // 워크플로우 취소 플래그 설정
             isWorkflowCancelled = true;
 
+            // TM이 명령 실행 중이면 현재 명령 완료 후 중단
+            if (commandQueue.IsExecuting)
+            {
+                MessageBox.Show("현재 TM 동작을 완료한 후 워크플로우가 중단됩니다.",
+                    "중단 예약", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             bool anyStopped = false;
-            bool workflowWasRunning = commandQueue.IsExecuting;
+            bool workflowWasRunning = false;
 
             // processModuleA (PM1) 공정 중지 및 완전 초기화
             if (processModuleA.ModuleState != ProcessModule.State.Idle)
@@ -1129,6 +1240,9 @@ namespace IonImplationEtherCAT
             // 워크플로우 진행 중이었거나 공정이 실행 중이었으면 메시지 표시
             if (anyStopped || workflowWasRunning)
             {
+                // 황색 램프 (중단 - 대기)
+                UpdateTowerLamp(TowerLampState.Yellow);
+
                 MessageBox.Show("실행 중인 모든 공정과 워크플로우가 중지 및 초기화되었습니다.",
                     "공정 중지", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -1202,32 +1316,32 @@ namespace IonImplationEtherCAT
 
         /// <summary>
         /// FOUP A 웨이퍼 상태를 화면에 표시
-        /// UI 하단(Wafer1) = 슬롯[0] (1층, 맨 아래)
-        /// UI 상단(Wafer5) = 슬롯[4] (5층, 맨 위)
+        /// 실제 장비는 Slot[0]부터 제거하므로, GUI에서 아래부터 빠지도록 매핑 반전
+        /// UI 하단(Wafer1) = 슬롯[4], UI 상단(Wafer5) = 슬롯[0]
         /// </summary>
         private void UpdateFoupADisplay()
         {
-            // 웨이퍼 슬롯 색상 업데이트
-            panelFoupAWafer1.BackColor = foupA.WaferSlots[0] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // 1층 (맨 아래)
-            panelFoupAWafer2.BackColor = foupA.WaferSlots[1] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // 2층
-            panelFoupAWafer3.BackColor = foupA.WaferSlots[2] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // 3층
-            panelFoupAWafer4.BackColor = foupA.WaferSlots[3] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // 4층
-            panelFoupAWafer5.BackColor = foupA.WaferSlots[4] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // 5층 (맨 위)
+            // 웨이퍼 슬롯 색상 업데이트 (매핑 반전: UI 아래 = 데이터 위)
+            panelFoupAWafer1.BackColor = foupA.WaferSlots[4] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // UI 아래 ← Slot[4]
+            panelFoupAWafer2.BackColor = foupA.WaferSlots[3] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // UI 2번째 ← Slot[3]
+            panelFoupAWafer3.BackColor = foupA.WaferSlots[2] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // UI 중간 ← Slot[2]
+            panelFoupAWafer4.BackColor = foupA.WaferSlots[1] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // UI 4번째 ← Slot[1]
+            panelFoupAWafer5.BackColor = foupA.WaferSlots[0] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // UI 위 ← Slot[0]
         }
 
         /// <summary>
         /// FOUP B 웨이퍼 상태를 화면에 표시
-        /// UI 하단(Wafer1) = 슬롯[0] (1층, 맨 아래)
-        /// UI 상단(Wafer5) = 슬롯[4] (5층, 맨 위)
+        /// 실제 장비는 Slot[0]부터 채우므로, GUI에서 아래부터 채워지도록 매핑 반전
+        /// UI 하단(Wafer1) = 슬롯[4], UI 상단(Wafer5) = 슬롯[0]
         /// </summary>
         private void UpdateFoupBDisplay()
         {
-            // 웨이퍼 슬롯 색상 업데이트
-            panelFoupBWafer1.BackColor = foupB.WaferSlots[0] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // 1층 (맨 아래)
-            panelFoupBWafer2.BackColor = foupB.WaferSlots[1] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // 2층
-            panelFoupBWafer3.BackColor = foupB.WaferSlots[2] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // 3층
-            panelFoupBWafer4.BackColor = foupB.WaferSlots[3] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // 4층
-            panelFoupBWafer5.BackColor = foupB.WaferSlots[4] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // 5층 (맨 위)
+            // 웨이퍼 슬롯 색상 업데이트 (매핑 반전: UI 아래 = 데이터 위)
+            panelFoupBWafer1.BackColor = foupB.WaferSlots[4] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // UI 아래 ← Slot[4]
+            panelFoupBWafer2.BackColor = foupB.WaferSlots[3] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // UI 2번째 ← Slot[3]
+            panelFoupBWafer3.BackColor = foupB.WaferSlots[2] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // UI 중간 ← Slot[2]
+            panelFoupBWafer4.BackColor = foupB.WaferSlots[1] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // UI 4번째 ← Slot[1]
+            panelFoupBWafer5.BackColor = foupB.WaferSlots[0] != null ? Color.DeepSkyBlue : Color.FromArgb(64, 64, 64); // UI 위 ← Slot[0]
         }
 
         /// <summary>
@@ -1237,6 +1351,17 @@ namespace IonImplationEtherCAT
         {
             UpdateFoupADisplay();
             UpdateFoupBDisplay();
+        }
+
+        /// <summary>
+        /// PM 문 상태를 화면에 표시
+        /// 문 열림 = DarkGray, 문 닫힘 = ControlLight
+        /// </summary>
+        public void UpdatePMDoorDisplay()
+        {
+            panelPM1Door.BackColor = processModuleA.IsDoorOpen ? Color.DarkGray : SystemColors.ControlLight;
+            panelPM2Door.BackColor = processModuleB.IsDoorOpen ? Color.DarkGray : SystemColors.ControlLight;
+            panelPM3Door.BackColor = processModuleC.IsDoorOpen ? Color.DarkGray : SystemColors.ControlLight;
         }
 
         /// <summary>
@@ -1462,6 +1587,35 @@ namespace IonImplationEtherCAT
         #region Process Module 접근 메서드
 
         /// <summary>
+        /// 먼저 완료된 이온 주입 PM 반환 (FIFO 기반)
+        /// PM1과 PM2 중 먼저 공정이 완료된 PM을 선택
+        /// </summary>
+        private ProcessModule GetFirstCompletedIonPM()
+        {
+            bool pm1Ready = processModuleA.IsUnloadRequested && processModuleA.isWaferLoaded;
+            bool pm2Ready = processModuleB.IsUnloadRequested && processModuleB.isWaferLoaded;
+
+            if (pm1Ready && pm2Ready)
+            {
+                // 둘 다 완료된 경우 - 먼저 완료된 PM 선택
+                if (processModuleA.CompletedTime <= processModuleB.CompletedTime)
+                    return processModuleA;
+                else
+                    return processModuleB;
+            }
+            else if (pm1Ready)
+            {
+                return processModuleA;
+            }
+            else if (pm2Ready)
+            {
+                return processModuleB;
+            }
+
+            return null; // 완료된 PM 없음
+        }
+
+        /// <summary>
         /// ProcessModule A (PM1) 반환
         /// </summary>
         public ProcessModule GetProcessModuleA()
@@ -1565,6 +1719,9 @@ namespace IonImplationEtherCAT
             picBoxPM1Lamp.BackgroundImage = Properties.Resources.LampOff;
             picBoxPM2Lamp.BackgroundImage = Properties.Resources.LampOff;
             picBoxPM3Lamp.BackgroundImage = Properties.Resources.LampOff;
+
+            // 타워 램프 OFF
+            UpdateTowerLamp(TowerLampState.Off);
         }
 
         /// <summary>
@@ -1584,6 +1741,7 @@ namespace IonImplationEtherCAT
         /// <summary>
         /// 실제 장비 초기화 시퀀스
         /// - 서보 모터 ON
+        /// - 실린더 후진 (안전)
         /// - TM 원점복귀 (UD → LR 순서)
         /// - 서보 모터 OFF
         /// - 모든 PM 램프 OFF
@@ -1604,29 +1762,32 @@ namespace IonImplationEtherCAT
                 // 1. 서보 모터 ON (원점복귀를 위해 먼저 켜야 함)
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ServoOn, "서보 모터 ON"));
 
-                // 2. TM 원점복귀 (UD → LR 순서)
+                // 2. 실린더 후진 (축 이동 전 안전 확보)
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
+
+                // 3. TM 원점복귀 (UD → LR 순서)
                 commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "TM 상하축(UD) 원점복귀"));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.HomeLRAxis, "TM 좌우축(LR) 원점복귀"));
 
-                // 3. 서보 모터 OFF (원점복귀 완료 후)
+                // 4. 서보 모터 OFF (원점복귀 완료 후)
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ServoOff, "서보 모터 OFF"));
 
-                // 4. PM1 램프 OFF 및 문 강제 닫기
+                // 5. PM1 램프 OFF 및 문 강제 닫기
                 commandQueue.Enqueue(new ProcessCommand(CommandType.SetPMLampOff, "PM1 램프 OFF", processModuleA));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ForceClosePMDoor, "PM1 문 강제 닫기", processModuleA));
 
-                // 5. PM2 램프 OFF 및 문 강제 닫기
+                // 6. PM2 램프 OFF 및 문 강제 닫기
                 commandQueue.Enqueue(new ProcessCommand(CommandType.SetPMLampOff, "PM2 램프 OFF", processModuleB));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ForceClosePMDoor, "PM2 문 강제 닫기", processModuleB));
 
-                // 6. PM3 램프 OFF 및 문 강제 닫기
+                // 7. PM3 램프 OFF 및 문 강제 닫기
                 commandQueue.Enqueue(new ProcessCommand(CommandType.SetPMLampOff, "PM3 램프 OFF", processModuleC));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ForceClosePMDoor, "PM3 문 강제 닫기", processModuleC));
 
                 // 초기화 명령 실행
                 await commandQueue.ExecuteAsync();
 
-                MessageBox.Show("실제 장비 초기화가 완료되었습니다.\n- 서보 모터: ON → 원점복귀 → OFF\n- TM 원점복귀: 완료 (UD → LR)\n- PM 램프: 모두 OFF\n- PM 문: 모두 닫힘",
+                MessageBox.Show("실제 장비 초기화가 완료되었습니다.\n- 서보 모터: ON → 실린더 후진 → 원점복귀 → OFF\n- TM 원점복귀: 완료 (UD → LR)\n- PM 램프: 모두 OFF\n- PM 문: 모두 닫힘",
                     "장비 초기화 완료", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)

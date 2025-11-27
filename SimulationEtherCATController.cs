@@ -139,5 +139,14 @@ namespace IonImplationEtherCAT
         }
 
         #endregion
+
+        #region 타워 램프 제어
+
+        public void SetTowerLamp(TowerLampState state)
+        {
+            // 시뮬레이션에서는 no-op (UI 상태는 MainView에서 관리)
+        }
+
+        #endregion
     }
 }

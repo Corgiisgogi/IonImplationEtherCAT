@@ -191,7 +191,7 @@
             this.tblLayoutPanelPM1Progress.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblLayoutPanelPM1Progress.ColumnCount = 2;
             this.tblLayoutPanelPM1Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.8595F));
-            this.tblLayoutPanelPM1Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 181F));
+            this.tblLayoutPanelPM1Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 182F));
             this.tblLayoutPanelPM1Progress.Controls.Add(this.progressBarPM1, 1, 0);
             this.tblLayoutPanelPM1Progress.Controls.Add(this.lblPM1Progress, 0, 0);
             this.tblLayoutPanelPM1Progress.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -204,7 +204,7 @@
             // 
             // progressBarPM1
             // 
-            this.progressBarPM1.Location = new System.Drawing.Point(62, 4);
+            this.progressBarPM1.Location = new System.Drawing.Point(61, 4);
             this.progressBarPM1.Name = "progressBarPM1";
             this.progressBarPM1.Size = new System.Drawing.Size(163, 23);
             this.progressBarPM1.TabIndex = 5;
@@ -216,7 +216,7 @@
             this.lblPM1Progress.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPM1Progress.Location = new System.Drawing.Point(4, 1);
             this.lblPM1Progress.Name = "lblPM1Progress";
-            this.lblPM1Progress.Size = new System.Drawing.Size(51, 30);
+            this.lblPM1Progress.Size = new System.Drawing.Size(50, 30);
             this.lblPM1Progress.TabIndex = 5;
             this.lblPM1Progress.Text = "progress";
             this.lblPM1Progress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -465,6 +465,7 @@
             // 
             this.panelPM3Door.BackColor = System.Drawing.SystemColors.ControlDarkDark;
             this.panelPM3Door.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelPM3Door.ForeColor = System.Drawing.SystemColors.ControlText;
             this.panelPM3Door.Location = new System.Drawing.Point(4, 55);
             this.panelPM3Door.Name = "panelPM3Door";
             this.panelPM3Door.Size = new System.Drawing.Size(29, 115);
@@ -720,7 +721,7 @@
             this.tblLayoutPanelPM2Progress.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblLayoutPanelPM2Progress.ColumnCount = 2;
             this.tblLayoutPanelPM2Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.8595F));
-            this.tblLayoutPanelPM2Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 180F));
+            this.tblLayoutPanelPM2Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 181F));
             this.tblLayoutPanelPM2Progress.Controls.Add(this.progressBarPM2, 1, 0);
             this.tblLayoutPanelPM2Progress.Controls.Add(this.lblPM2Progress, 0, 0);
             this.tblLayoutPanelPM2Progress.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -733,7 +734,7 @@
             // 
             // progressBarPM2
             // 
-            this.progressBarPM2.Location = new System.Drawing.Point(63, 4);
+            this.progressBarPM2.Location = new System.Drawing.Point(62, 4);
             this.progressBarPM2.Name = "progressBarPM2";
             this.progressBarPM2.Size = new System.Drawing.Size(163, 23);
             this.progressBarPM2.TabIndex = 5;
@@ -745,7 +746,7 @@
             this.lblPM2Progress.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPM2Progress.Location = new System.Drawing.Point(4, 1);
             this.lblPM2Progress.Name = "lblPM2Progress";
-            this.lblPM2Progress.Size = new System.Drawing.Size(52, 30);
+            this.lblPM2Progress.Size = new System.Drawing.Size(51, 30);
             this.lblPM2Progress.TabIndex = 5;
             this.lblPM2Progress.Text = "progress";
             this.lblPM2Progress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -920,7 +921,7 @@
             this.tblLayoutPanelPM3Progress.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblLayoutPanelPM3Progress.ColumnCount = 2;
             this.tblLayoutPanelPM3Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.8595F));
-            this.tblLayoutPanelPM3Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 176F));
+            this.tblLayoutPanelPM3Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 177F));
             this.tblLayoutPanelPM3Progress.Controls.Add(this.progressBarPM3, 1, 0);
             this.tblLayoutPanelPM3Progress.Controls.Add(this.lblPM3Progress, 0, 0);
             this.tblLayoutPanelPM3Progress.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -933,7 +934,7 @@
             // 
             // progressBarPM3
             // 
-            this.progressBarPM3.Location = new System.Drawing.Point(67, 4);
+            this.progressBarPM3.Location = new System.Drawing.Point(66, 4);
             this.progressBarPM3.Name = "progressBarPM3";
             this.progressBarPM3.Size = new System.Drawing.Size(160, 23);
             this.progressBarPM3.TabIndex = 5;
@@ -945,7 +946,7 @@
             this.lblPM3Progress.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPM3Progress.Location = new System.Drawing.Point(4, 1);
             this.lblPM3Progress.Name = "lblPM3Progress";
-            this.lblPM3Progress.Size = new System.Drawing.Size(56, 30);
+            this.lblPM3Progress.Size = new System.Drawing.Size(55, 30);
             this.lblPM3Progress.TabIndex = 5;
             this.lblPM3Progress.Text = "progress";
             this.lblPM3Progress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
