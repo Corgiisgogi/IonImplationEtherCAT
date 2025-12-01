@@ -1,55 +1,236 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace IonImplationEtherCAT
 {
     public partial class AlarmView : UserControl
     {
+        // 현재 표시 중인 알람 목록 (행 인덱스와 매핑용)
+        private List<LogEntry> _displayedAlarms = new List<LogEntry>();
+
         public AlarmView()
         {
             InitializeComponent();
-            LoadAlarms();
+            SubscribeToLogManager();
         }
 
-        // 디자이너에 추가된 컨트롤:
-        // DataGridView: dgvAlarms
-        // Button: btnRestore
+        /// <summary>
+        /// LogManager 이벤트 구독
+        /// </summary>
+        private void SubscribeToLogManager()
+        {
+            LogManager.Instance.OnLogAdded += OnLogAdded;
+            LogManager.Instance.OnAlarmRestored += OnAlarmRestored;
+            LogManager.Instance.OnLogsLoaded += OnLogsLoaded;
+        }
+
+        /// <summary>
+        /// 새 로그 추가 시 호출
+        /// </summary>
+        private void OnLogAdded(LogEntry entry)
+        {
+            if (!entry.IsAlarm)
+                return;
+
+            if (InvokeRequired)
+            {
+                Invoke(new Action<LogEntry>(OnLogAdded), entry);
+                return;
+            }
+
+            AddAlarmRow(entry);
+        }
+
+        /// <summary>
+        /// 알람 복구 시 호출
+        /// </summary>
+        private void OnAlarmRestored(LogEntry entry)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<LogEntry>(OnAlarmRestored), entry);
+                return;
+            }
+
+            RefreshAlarms();
+        }
+
+        /// <summary>
+        /// 로그 파일 로드 완료 시 호출
+        /// </summary>
+        private void OnLogsLoaded()
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(OnLogsLoaded));
+                return;
+            }
+
+            RefreshAlarms();
+        }
 
         private void AlarmView_Load(object sender, EventArgs e)
         {
-            // 이 화면이 로드될 때 알람 데이터를 불러오는 함수 호출
-            LoadAlarms();
+            RefreshAlarms();
         }
 
-        private void LoadAlarms()
+        /// <summary>
+        /// 알람 목록 새로고침
+        /// </summary>
+        private void RefreshAlarms()
         {
-            // (임시 데이터 추가)
-            // 실제로는 DB나 파일에서 알람 이력을 읽어와야 함
-            dgvAlarms.Rows.Clear(); // 기존 데이터 지우기
+            dgvAlarms.Rows.Clear();
+            _displayedAlarms.Clear();
 
-            // DataGridView에 컬럼이 미리 디자인되어 있어야 함 (시각, 발생 위치, 알람 종류, 상세)
-            dgvAlarms.Rows.Add("2025/11/03 16:20", "PM1", "장비 에러", "압력 기준치 초과");
+            // 모든 알람 가져오기 (복구된 것 포함)
+            var alarms = LogManager.Instance.GetAllAlarms();
 
-            // 최신 알람이 빨간색으로 보이도록 (예시)
-            if (dgvAlarms.Rows.Count > 0)
+            // 최신순으로 정렬
+            alarms = alarms.OrderByDescending(a => a.Time).ToList();
+
+            foreach (var alarm in alarms)
             {
-                dgvAlarms.Rows[0].DefaultCellStyle.BackColor = System.Drawing.Color.LightCoral;
+                AddAlarmRow(alarm);
             }
         }
 
+        /// <summary>
+        /// DataGridView에 알람 행 추가
+        /// </summary>
+        private void AddAlarmRow(LogEntry alarm)
+        {
+            // 컬럼 순서: 시각, 발생위치, 종류, 상세
+            int rowIndex = dgvAlarms.Rows.Add(
+                alarm.Time.ToString("yyyy/MM/dd HH:mm:ss"),
+                alarm.Location,
+                alarm.Category.ToString(),
+                alarm.Description
+            );
+
+            _displayedAlarms.Add(alarm);
+
+            // 색상 설정
+            if (alarm.IsRestored)
+            {
+                // 복구된 알람: 회색
+                dgvAlarms.Rows[rowIndex].DefaultCellStyle.BackColor = Color.LightGray;
+                dgvAlarms.Rows[rowIndex].DefaultCellStyle.ForeColor = Color.DarkGray;
+            }
+            else
+            {
+                // 활성 알람: 빨간색
+                dgvAlarms.Rows[rowIndex].DefaultCellStyle.BackColor = Color.LightCoral;
+                dgvAlarms.Rows[rowIndex].DefaultCellStyle.ForeColor = Color.Black;
+            }
+        }
+
+        /// <summary>
+        /// 복구 버튼 클릭
+        /// </summary>
         private void btnRestore_Click(object sender, EventArgs e)
         {
-            // 알람 복구(해제) 로직
-            // 선택된 알람을 dgvAlarms에서 지우거나 상태를 변경
-            MessageBox.Show("알람이 복구되었습니다.");
-            LoadAlarms(); // 목록 새로고침
+            if (dgvAlarms.SelectedRows.Count == 0)
+            {
+                MessageBox.Show("복구할 알람을 선택해주세요.", "알림", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            int restoredCount = 0;
+
+            foreach (DataGridViewRow row in dgvAlarms.SelectedRows)
+            {
+                int index = row.Index;
+                if (index >= 0 && index < _displayedAlarms.Count)
+                {
+                    var alarm = _displayedAlarms[index];
+                    if (!alarm.IsRestored)
+                    {
+                        LogManager.Instance.RestoreAlarm(alarm);
+                        restoredCount++;
+                    }
+                }
+            }
+
+            if (restoredCount > 0)
+            {
+                MessageBox.Show($"{restoredCount}개의 알람이 복구되었습니다.", "복구 완료", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else
+            {
+                MessageBox.Show("이미 복구된 알람입니다.", "알림", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        /// <summary>
+        /// 저장 버튼 클릭 - CSV 내보내기
+        /// </summary>
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
+                sfd.Filter = "CSV 파일 (*.csv)|*.csv";
+                sfd.FileName = $"alarms_{DateTime.Now:yyyyMMdd_HHmmss}.csv";
+                sfd.InitialDirectory = LogManager.Instance.GetLogFolderPath();
+
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    var alarms = LogManager.Instance.GetAllAlarms();
+                    if (LogManager.Instance.SaveToCSV(sfd.FileName, alarms))
+                    {
+                        MessageBox.Show("알람 이력이 저장되었습니다.", "저장 완료", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("저장에 실패했습니다.", "저장 실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 불러오기 버튼 클릭 - CSV 불러오기
+        /// </summary>
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            using (OpenFileDialog ofd = new OpenFileDialog())
+            {
+                ofd.Filter = "CSV 파일 (*.csv)|*.csv";
+                ofd.InitialDirectory = LogManager.Instance.GetLogFolderPath();
+
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    if (LogManager.Instance.LoadFromCSV(ofd.FileName))
+                    {
+                        MessageBox.Show("알람 이력을 불러왔습니다.", "불러오기 완료", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show("불러오기에 실패했습니다.", "불러오기 실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 컨트롤 해제 시 이벤트 구독 해제
+        /// </summary>
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                LogManager.Instance.OnLogAdded -= OnLogAdded;
+                LogManager.Instance.OnAlarmRestored -= OnAlarmRestored;
+                LogManager.Instance.OnLogsLoaded -= OnLogsLoaded;
+
+                if (components != null)
+                {
+                    components.Dispose();
+                }
+            }
+            base.Dispose(disposing);
         }
     }
 }

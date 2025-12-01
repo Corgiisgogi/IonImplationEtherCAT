@@ -84,6 +84,8 @@
     </Compile>
     <Compile Include="CommandQueue.cs" />
     <Compile Include="Foup.cs" />
+    <Compile Include="LogEntry.cs" />
+    <Compile Include="LogManager.cs" />
     <Compile Include="ProcessCommand.cs" />
     <Compile Include="ProcessModule.cs" />
     <Compile Include="ProcessParameters.cs" />

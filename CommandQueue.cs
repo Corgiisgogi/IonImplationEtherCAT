@@ -364,7 +364,12 @@ namespace IonImplationEtherCAT
                         if (controller != null)
                         {
                             bool success = await controller.HomeUDAxis();
-                            if (!success) return false;
+                            if (!success)
+                            {
+                                LogManager.Instance.Alarm("UD축 원점복귀 실패", "TM");
+                                return false;
+                            }
+                            LogManager.Instance.AddLog("", "UD축 원점복귀 완료", "TM", LogCategory.Hardware, false);
                             await Task.Delay(AXIS_MOVE_SETTLE_DELAY); // 안정화 대기
                         }
                     }
@@ -376,7 +381,12 @@ namespace IonImplationEtherCAT
                         if (controller != null)
                         {
                             bool success = await controller.HomeLRAxis();
-                            if (!success) return false;
+                            if (!success)
+                            {
+                                LogManager.Instance.Alarm("LR축 원점복귀 실패", "TM");
+                                return false;
+                            }
+                            LogManager.Instance.AddLog("", "LR축 원점복귀 완료", "TM", LogCategory.Hardware, false);
                             await Task.Delay(AXIS_MOVE_SETTLE_DELAY); // 안정화 대기
                         }
                     }
@@ -389,7 +399,11 @@ namespace IonImplationEtherCAT
                         if (controller != null)
                         {
                             bool success = await controller.MoveUDAxis(udPos);
-                            if (!success) return false;
+                            if (!success)
+                            {
+                                LogManager.Instance.Alarm($"UD축 이동 실패 (목표: {udPos})", "TM");
+                                return false;
+                            }
                             await Task.Delay(AXIS_MOVE_SETTLE_DELAY); // 안정화 대기
                         }
                     }
@@ -402,7 +416,11 @@ namespace IonImplationEtherCAT
                         if (controller != null)
                         {
                             bool success = await controller.MoveLRAxis(lrPos);
-                            if (!success) return false;
+                            if (!success)
+                            {
+                                LogManager.Instance.Alarm($"LR축 이동 실패 (목표: {lrPos})", "TM");
+                                return false;
+                            }
                             await Task.Delay(AXIS_MOVE_SETTLE_DELAY); // 안정화 대기
                         }
                     }

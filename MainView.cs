@@ -664,6 +664,9 @@ namespace IonImplationEtherCAT
             MessageBox.Show($"전체 자동 공정을 시작합니다.\n처리할 웨이퍼: {totalWafers}개\n\nFOUP A → (PM1/PM2 이온 주입) → PM3(어닐링) → FOUP B",
                 "자동 공정 시작", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
+            // 공정 시작 로그
+            LogManager.Instance.AddLog($"자동 공정", $"전체 자동 공정 시작 - 처리할 웨이퍼: {totalWafers}개", "System", LogCategory.Process, false);
+
             // 실제 모드에서는 서보 모터 ON
             if (IsRealMode())
             {
@@ -777,6 +780,9 @@ namespace IonImplationEtherCAT
                 // 황색 램프 (공정 완료 - 대기)
                 UpdateTowerLamp(TowerLampState.Yellow);
 
+                // 공정 완료 로그
+                LogManager.Instance.AddLog($"자동 공정", $"전체 자동 공정 완료 - 처리된 웨이퍼: {totalWafers}개", "System", LogCategory.Process, false);
+
                 MessageBox.Show($"전체 공정이 완료되었습니다!\n처리된 웨이퍼: {totalWafers}개",
                     "공정 완료", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
@@ -803,6 +809,9 @@ namespace IonImplationEtherCAT
 
                 // 황색 램프 (중단 - 대기)
                 UpdateTowerLamp(TowerLampState.Yellow);
+
+                // 공정 중단 로그
+                LogManager.Instance.AddLog($"자동 공정", "사용자에 의해 공정 중단됨", "System", LogCategory.Warning, false);
 
                 // Stop 버튼에서 이미 메시지를 표시했으므로 여기서는 표시하지 않음
             }
@@ -1881,13 +1890,16 @@ namespace IonImplationEtherCAT
         /// <summary>
         /// 에러 메시지 표시 (UI 스레드에서 실행)
         /// </summary>
-        public void ShowErrorMessage(string message)
+        public void ShowErrorMessage(string message, string location = "System")
         {
             if (this.InvokeRequired)
             {
-                this.Invoke(new Action(() => ShowErrorMessage(message)));
+                this.Invoke(new Action(() => ShowErrorMessage(message, location)));
                 return;
             }
+
+            // 알람 로그 추가
+            LogManager.Instance.Alarm(message, location);
 
             MessageBox.Show(message, "오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }

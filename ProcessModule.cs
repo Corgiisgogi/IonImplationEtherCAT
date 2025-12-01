@@ -28,8 +28,8 @@ namespace IonImplationEtherCAT
         // PM 모듈 타입 정의
         public enum ModuleType
         {
-            PM1,    // 이온 주입
-            PM2,    // 미사용 (향후 확장)
+            PM1,    // 이온 주입1
+            PM2,    // 이온 주입2
             PM3     // 어닐링
         };
 
@@ -112,6 +112,9 @@ namespace IonImplationEtherCAT
             ModuleState = State.Running;
             CompletedTime = null; // 완료 시간 초기화
             InitializeParametersFromRecipe();
+
+            // 공정 시작 로그
+            LogManager.Instance.AddLog($"{Type} 공정", $"공정 시작 (시간: {time}초)", Type.ToString(), LogCategory.Process, false);
         }
 
         /// <summary>
@@ -123,6 +126,9 @@ namespace IonImplationEtherCAT
             ModuleState = State.Running;
             CompletedTime = null; // 완료 시간 초기화
             InitializeParametersFromRecipe();
+
+            // 공정 시작 로그
+            LogManager.Instance.AddLog($"{Type} 공정", $"공정 시작 (시간: {processTime}초)", Type.ToString(), LogCategory.Process, false);
         }
 
         /// <summary>
@@ -234,6 +240,9 @@ namespace IonImplationEtherCAT
                                 CurrentWafer.UpdateState(Wafer.WaferState.AnnealingProcessComplete);
                             }
                         }
+
+                        // 공정 완료 로그
+                        LogManager.Instance.AddLog($"{Type} 공정", $"공정 완료 (소요 시간: {processTime}초)", Type.ToString(), LogCategory.Process, false);
                     }
                 }
             }
@@ -258,6 +267,9 @@ namespace IonImplationEtherCAT
         {
             CurrentWafer = wafer;
             isWaferLoaded = true;
+
+            // 웨이퍼 로드 로그
+            LogManager.Instance.AddLog($"웨이퍼 이동", $"웨이퍼 로드 완료", Type.ToString(), LogCategory.Transfer, false);
         }
 
         /// <summary>
@@ -269,6 +281,10 @@ namespace IonImplationEtherCAT
             CurrentWafer = null;
             isWaferLoaded = false;
             IsUnloadRequested = false; // 언로드 요청 플래그 리셋
+
+            // 웨이퍼 언로드 로그
+            LogManager.Instance.AddLog($"웨이퍼 이동", $"웨이퍼 언로드 완료", Type.ToString(), LogCategory.Transfer, false);
+
             return wafer;
         }
 
