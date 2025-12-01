@@ -13,6 +13,7 @@ namespace IonImplationEtherCAT
     public partial class MainView : UserControl
     {
         // TM 회전 각도 상수
+        private const float ANGLE_HOME = -25f;   // 원점 (PM1과 FOUP A 사이)
         private const float ANGLE_FOUP_A = -50f;
         private const float ANGLE_PM1 = 0f;
         private const float ANGLE_PM2 = 90f;
@@ -67,10 +68,10 @@ namespace IonImplationEtherCAT
         {
             InitializeComponent();
 
-            // 각 공정용 ProcessModule 객체 생성 (기본값: 모두 30초)
-            processModuleA = new ProcessModule(ProcessModule.ModuleType.PM1, 30);
-            processModuleB = new ProcessModule(ProcessModule.ModuleType.PM2, 30);
-            processModuleC = new ProcessModule(ProcessModule.ModuleType.PM3, 30);
+            // 각 공정용 ProcessModule 객체 생성 (기본값: 모두 35초)
+            processModuleA = new ProcessModule(ProcessModule.ModuleType.PM1, 35);
+            processModuleB = new ProcessModule(ProcessModule.ModuleType.PM2, 35);
+            processModuleC = new ProcessModule(ProcessModule.ModuleType.PM3, 35);
             
             // FOUP 객체 생성
             foupA = new Foup();
@@ -185,6 +186,17 @@ namespace IonImplationEtherCAT
         /// </summary>
         private void UpdatePM1Display()
         {
+            // 연결되지 않았으면 "-" 표시
+            if (!MainForm.IsConnected)
+            {
+                lblPM1Status.Text = "-";
+                lblPM1Progress.Text = "-";
+                progressBarPM1.Value = 0;
+                picBoxPM1Status.BackgroundImage = Properties.Resources.StatusGray;
+                picBoxPM1Lamp.BackgroundImage = Properties.Resources.LampOff;
+                return;
+            }
+
             lblPM1Status.Text = processModuleA.ModuleState.ToString();
 
             // 진행률 계산 및 표시
@@ -230,6 +242,17 @@ namespace IonImplationEtherCAT
         /// </summary>
         private void UpdatePM2Display()
         {
+            // 연결되지 않았으면 "-" 표시
+            if (!MainForm.IsConnected)
+            {
+                lblPM2Status.Text = "-";
+                lblPM2Progress.Text = "-";
+                progressBarPM2.Value = 0;
+                picBoxPM2Status.BackgroundImage = Properties.Resources.StatusGray;
+                picBoxPM2Lamp.BackgroundImage = Properties.Resources.LampOff;
+                return;
+            }
+
             lblPM2Status.Text = processModuleB.ModuleState.ToString();
 
             // 진행률 계산 및 표시
@@ -275,6 +298,17 @@ namespace IonImplationEtherCAT
         /// </summary>
         private void UpdatePM3Display()
         {
+            // 연결되지 않았으면 "-" 표시
+            if (!MainForm.IsConnected)
+            {
+                lblPM3Status.Text = "-";
+                lblPM3Progress.Text = "-";
+                progressBarPM3.Value = 0;
+                picBoxPM3Status.BackgroundImage = Properties.Resources.StatusGray;
+                picBoxPM3Lamp.BackgroundImage = Properties.Resources.LampOff;
+                return;
+            }
+
             lblPM3Status.Text = processModuleC.ModuleState.ToString();
 
             // 진행률 계산 및 표시
@@ -322,6 +356,16 @@ namespace IonImplationEtherCAT
         /// </summary>
         private void UpdatePM1Parameters()
         {
+            // 연결되지 않았으면 "-" 표시
+            if (!MainForm.IsConnected)
+            {
+                lblPM1TemperatureValue.Text = "-";
+                lblPM1PressureValue.Text = "-";
+                lblPM1AVValue.Text = "-";
+                lblPM1DoseValue.Text = "-";
+                return;
+            }
+
             var p = processModuleA.Parameters;
             lblPM1TemperatureValue.Text = p.GetTemperatureDisplay();
             lblPM1PressureValue.Text = p.GetPressureDisplay();
@@ -334,6 +378,16 @@ namespace IonImplationEtherCAT
         /// </summary>
         private void UpdatePM2Parameters()
         {
+            // 연결되지 않았으면 "-" 표시
+            if (!MainForm.IsConnected)
+            {
+                lblPM2TemperatureValue.Text = "-";
+                lblPM2PressureValue.Text = "-";
+                lblPM2AVValue.Text = "-";
+                lblPM2DoseValue.Text = "-";
+                return;
+            }
+
             var p = processModuleB.Parameters;
             lblPM2TemperatureValue.Text = p.GetTemperatureDisplay();
             lblPM2PressureValue.Text = p.GetPressureDisplay();
@@ -346,6 +400,14 @@ namespace IonImplationEtherCAT
         /// </summary>
         private void UpdatePM3Parameters()
         {
+            // 연결되지 않았으면 "-" 표시
+            if (!MainForm.IsConnected)
+            {
+                lblTemperatureValue.Text = "-";
+                lblPressureValue.Text = "-";
+                return;
+            }
+
             var p = processModuleC.Parameters;
             lblTemperatureValue.Text = p.GetTemperatureDisplay();
             lblPressureValue.Text = p.GetPressureDisplay();
@@ -366,18 +428,30 @@ namespace IonImplationEtherCAT
         /// </summary>
         private void ResetPMParametersDisplay()
         {
+            // PM1 상태 및 파라미터 초기화
+            lblPM1Status.Text = "-";
+            lblPM1Progress.Text = "-";
             lblPM1TemperatureValue.Text = "-";
             lblPM1PressureValue.Text = "-";
             lblPM1AVValue.Text = "-";
             lblPM1DoseValue.Text = "-";
+            picBoxPM1Status.BackgroundImage = Properties.Resources.StatusGray;
 
+            // PM2 상태 및 파라미터 초기화
+            lblPM2Status.Text = "-";
+            lblPM2Progress.Text = "-";
             lblPM2TemperatureValue.Text = "-";
             lblPM2PressureValue.Text = "-";
             lblPM2AVValue.Text = "-";
             lblPM2DoseValue.Text = "-";
+            picBoxPM2Status.BackgroundImage = Properties.Resources.StatusGray;
 
+            // PM3 상태 및 파라미터 초기화
+            lblPM3Status.Text = "-";
+            lblPM3Progress.Text = "-";
             lblTemperatureValue.Text = "-";
             lblPressureValue.Text = "-";
+            picBoxPM3Status.BackgroundImage = Properties.Resources.StatusGray;
         }
 
         #endregion
@@ -426,7 +500,7 @@ namespace IonImplationEtherCAT
 
             // UI 색상 업데이트 (점등 시 밝은 색, 소등 시 어두운 색)
             panelGreenAlert.BackColor = (state == TowerLampState.Green) ? Color.Lime : Color.DarkSeaGreen;
-            panelYellowAlert.BackColor = (state == TowerLampState.Yellow) ? Color.Yellow : Color.Khaki;
+            panelYellowAlert.BackColor = (state == TowerLampState.Yellow) ? Color.Orange : Color.Khaki;
             panelRedAlert.BackColor = (state == TowerLampState.Red) ? Color.Red : Color.RosyBrown;
 
             // 하드웨어 제어
@@ -522,25 +596,25 @@ namespace IonImplationEtherCAT
                 Font = new Font("나눔고딕", 10F, FontStyle.Regular)
             };
 
-            Label textLabel = new Label() 
-            { 
-                Left = 30, 
-                Top = 20, 
+            Label textLabel = new Label()
+            {
+                Left = 30,
+                Top = 20,
                 Width = 380,
                 Height = 60,
-                Text = $"공정 시간을 입력하세요 (초 단위):\n현재 설정: {currentTime}초",
+                Text = $"공정 시간을 입력하세요 (35초 ~ 120초):\n현재 설정: {currentTime}초",
                 Font = new Font("나눔고딕", 11F, FontStyle.Regular)
             };
-            
-            NumericUpDown numericInput = new NumericUpDown() 
-            { 
-                Left = 30, 
-                Top = 90, 
+
+            NumericUpDown numericInput = new NumericUpDown()
+            {
+                Left = 30,
+                Top = 90,
                 Width = 380,
                 Height = 30,
-                Minimum = 1,
-                Maximum = 3600,  // 최대 1시간
-                Value = currentTime,
+                Minimum = 35,    // 최소 35초 (마무리 단계 10초 확보)
+                Maximum = 120,   // 최대 120초
+                Value = Math.Max(35, Math.Min(120, currentTime)),  // 현재값을 범위 내로 제한
                 DecimalPlaces = 0,
                 Font = new Font("나눔고딕", 12F, FontStyle.Regular)
             };
@@ -690,40 +764,41 @@ namespace IonImplationEtherCAT
                     if (isWorkflowCancelled && !commandQueue.IsExecuting)
                         throw new OperationCanceledException();
 
-                    // 완료 조건: FOUP A 비었고, 모든 PM이 비었고, FOUP B에 모든 웨이퍼가 있음
+                    // 정상 완료 조건: FOUP A 비어있고, 모든 PM 비어있고, TM도 웨이퍼 없음 (FOUP B 상태 무관)
                     if (foupA.IsEmpty &&
                         !processModuleA.isWaferLoaded &&
                         !processModuleB.isWaferLoaded &&
                         !processModuleC.isWaferLoaded &&
-                        foupB.WaferCount == totalWafers)
+                        !transferModule.HasWafer)
                     {
                         break; // 완료!
+                    }
+
+                    // 오류 조건: FOUP B가 꽉 찼는데 PM, FOUP A, 또는 TM에 웨이퍼가 남아있음
+                    bool hasRemainingWafers = !foupA.IsEmpty ||
+                                               processModuleA.isWaferLoaded ||
+                                               processModuleB.isWaferLoaded ||
+                                               processModuleC.isWaferLoaded ||
+                                               transferModule.HasWafer;
+                    if (foupB.IsFull && hasRemainingWafers)
+                    {
+                        // 적색 램프 (오류)
+                        UpdateTowerLamp(TowerLampState.Red);
+
+                        // 알람 로그
+                        LogManager.Instance.Alarm("FOUP B가 가득 차서 공정을 진행할 수 없습니다. 웨이퍼가 PM, FOUP A, 또는 TM에 남아있습니다.", "System");
+
+                        throw new InvalidOperationException("FOUP B가 가득 차서 공정을 진행할 수 없습니다.\n\n남은 웨이퍼:\n" +
+                            $"- FOUP A: {foupA.WaferCount}개\n" +
+                            $"- PM1: {(processModuleA.isWaferLoaded ? "1개" : "없음")}\n" +
+                            $"- PM2: {(processModuleB.isWaferLoaded ? "1개" : "없음")}\n" +
+                            $"- PM3: {(processModuleC.isWaferLoaded ? "1개" : "없음")}\n" +
+                            $"- TM: {(transferModule.HasWafer ? "1개 (이송 중)" : "없음")}");
                     }
 
                     // 1단계: PM3 완료 → FOUP B로 이송
                     if (processModuleC.IsUnloadRequested && processModuleC.isWaferLoaded)
                     {
-                        // FOUP B 가득 참 체크
-                        if (foupB.IsFull)
-                        {
-                            // 황색 램프 (지연)
-                            UpdateTowerLamp(TowerLampState.Yellow);
-                            MessageBox.Show("FOUP B가 가득 찼습니다.\nFOUP B를 언로드한 후 공정이 재개됩니다.",
-                                "대기 중", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-
-                            // 언로드될 때까지 대기
-                            while (foupB.IsFull && !isWorkflowCancelled)
-                            {
-                                await Task.Delay(500);
-                            }
-
-                            if (isWorkflowCancelled && !commandQueue.IsExecuting)
-                                throw new OperationCanceledException();
-
-                            // 녹색 램프로 복귀 (공정 재개)
-                            UpdateTowerLamp(TowerLampState.Green);
-                        }
-
                         await TransferWaferFromPM3ToFoupB();
                         continue; // 다음 루프
                     }
@@ -780,10 +855,13 @@ namespace IonImplationEtherCAT
                 // 황색 램프 (공정 완료 - 대기)
                 UpdateTowerLamp(TowerLampState.Yellow);
 
-                // 공정 완료 로그
-                LogManager.Instance.AddLog($"자동 공정", $"전체 자동 공정 완료 - 처리된 웨이퍼: {totalWafers}개", "System", LogCategory.Process, false);
+                // 실제 처리된 웨이퍼 수 (FOUP B에 들어간 웨이퍼)
+                int processedWafers = foupB.WaferCount;
 
-                MessageBox.Show($"전체 공정이 완료되었습니다!\n처리된 웨이퍼: {totalWafers}개",
+                // 공정 완료 로그
+                LogManager.Instance.AddLog($"자동 공정", $"전체 자동 공정 완료 - 처리된 웨이퍼: {processedWafers}개", "System", LogCategory.Process, false);
+
+                MessageBox.Show($"전체 공정이 완료되었습니다!\n처리된 웨이퍼: {processedWafers}개",
                     "공정 완료", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (OperationCanceledException)
@@ -1278,8 +1356,61 @@ namespace IonImplationEtherCAT
             processTimer.Start();
             UpdateProcessDisplay();
             
-            MessageBox.Show($"공정 A가 시작되었습니다.\n공정 시간: {processModuleA.processTime}초", 
+            MessageBox.Show($"공정 A가 시작되었습니다.\n공정 시간: {processModuleA.processTime}초",
                 "공정 시작", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        /// <summary>
+        /// TM을 원점(0도)으로 복귀시키는 애니메이션 (실린더 후진 → 회전)
+        /// </summary>
+        private async Task ReturnTMToHomeAsync()
+        {
+            // 1. 실린더가 전진해있으면 후진
+            if (transferModule.IsArmExtended || transferModule.CurrentExtension > 0)
+            {
+                transferModule.RetractArm();
+
+                // 애니메이션 완료 대기
+                bool completed = false;
+                Action handler = () => completed = true;
+                transferModule.OnArmMovementComplete += handler;
+
+                // 최대 3초 대기 (후진 시간)
+                int timeout = 3000;
+                int elapsed = 0;
+                while (!completed && elapsed < timeout)
+                {
+                    await Task.Delay(50);
+                    elapsed += 50;
+                }
+
+                transferModule.OnArmMovementComplete -= handler;
+            }
+
+            // 2. 원점(ANGLE_HOME)으로 회전
+            if (Math.Abs(transferModule.CurrentRotationAngle - ANGLE_HOME) > 0.1f)
+            {
+                transferModule.SetTargetRotation(ANGLE_HOME);
+
+                // 애니메이션 완료 대기
+                bool completed = false;
+                Action handler = () => completed = true;
+                transferModule.OnRotationComplete += handler;
+
+                // 최대 5초 대기 (회전 시간)
+                int timeout = 5000;
+                int elapsed = 0;
+                while (!completed && elapsed < timeout)
+                {
+                    await Task.Delay(50);
+                    elapsed += 50;
+                }
+
+                transferModule.OnRotationComplete -= handler;
+            }
+
+            // 3. 그래픽 업데이트
+            UpdateTransferModuleGraphics();
         }
 
         private async void btnAllStop_Click(object sender, EventArgs e)
@@ -1365,12 +1496,6 @@ namespace IonImplationEtherCAT
             commandQueue.Stop();
             commandQueue.ResetStopFlag();
 
-            // TM 위치 초기화 (UI 각도를 0도로 리셋)
-            transferModule.RotateImmediate(0);
-            UpdateTransferModuleGraphics();
-
-            UpdateProcessDisplay();
-
             // 모든 램프를 명시적으로 끄기 (점멸 상태 해제)
             picBoxPM1Lamp.BackgroundImage = Properties.Resources.LampOff;
             picBoxPM2Lamp.BackgroundImage = Properties.Resources.LampOff;
@@ -1381,11 +1506,13 @@ namespace IonImplationEtherCAT
             etherCATController?.SetPMLamp(ProcessModule.ModuleType.PM2, false);
             etherCATController?.SetPMLamp(ProcessModule.ModuleType.PM3, false);
 
-            // 실제 모드에서는 장비 초기화 (서보 ON → 원점복귀 → 서보 OFF, PM 문 닫기 등)
-            if (IsRealMode() && (anyStopped || wasExecuting))
+            // 장비 초기화 (하드웨어 + 애니메이션 병렬 실행, 메시지 표시 안함)
+            if (anyStopped || wasExecuting)
             {
-                await InitializeHardwareAsync();
+                await InitializeHardwareAsync(showMessage: false);
             }
+
+            UpdateProcessDisplay();
 
             // 워크플로우 진행 중이었거나 공정이 실행 중이었으면 메시지 표시
             if (anyStopped || wasExecuting)
@@ -1573,6 +1700,9 @@ namespace IonImplationEtherCAT
                 new Point(287, 211),  // Bottom 위치 (중심)
                 new Point(472, 237)   // Back 위치
             );
+
+            // 초기 각도 설정 (원점 = PM1과 FOUP A 사이)
+            transferModule.RotateImmediate(ANGLE_HOME);
         }
 
         /// <summary>
@@ -1823,6 +1953,22 @@ namespace IonImplationEtherCAT
             processModuleA.SetEtherCATController(controller);
             processModuleB.SetEtherCATController(controller);
             processModuleC.SetEtherCATController(controller);
+
+            // 연결 시 모든 PM 상태를 Idle로 초기화
+            processModuleA.ModuleState = ProcessModule.State.Idle;
+            processModuleA.elapsedTime = 0;
+            processModuleA.Parameters.Reset();
+
+            processModuleB.ModuleState = ProcessModule.State.Idle;
+            processModuleB.elapsedTime = 0;
+            processModuleB.Parameters.Reset();
+
+            processModuleC.ModuleState = ProcessModule.State.Idle;
+            processModuleC.elapsedTime = 0;
+            processModuleC.Parameters.Reset();
+
+            // 라벨 업데이트
+            UpdateProcessDisplay();
         }
 
         /// <summary>
@@ -1856,9 +2002,10 @@ namespace IonImplationEtherCAT
             processModuleC.IsUnloadRequested = false;
             processModuleC.Parameters.Reset();
 
-            // TM 상태 초기화
+            // TM 상태 초기화 (원점 = PM1과 FOUP A 사이)
             transferModule.State = TransferModule.TMState.Idle;
-            transferModule.CurrentRotationAngle = 0;
+            transferModule.CurrentRotationAngle = ANGLE_HOME;
+            transferModule.TargetRotationAngle = ANGLE_HOME;
             transferModule.IsArmExtended = false;
             transferModule.HasWafer = false;
 
@@ -1913,11 +2060,15 @@ namespace IonImplationEtherCAT
         /// - 모든 PM 램프 OFF
         /// - 모든 PM 문 강제 닫기
         /// </summary>
-        public async Task InitializeHardwareAsync()
+        public async Task InitializeHardwareAsync(bool showMessage = true)
         {
+            // UI 애니메이션 Task (실제/시뮬레이션 모두 실행)
+            Task animationTask = ReturnTMToHomeAsync();
+
             if (!IsRealMode())
             {
-                // 시뮬레이션 모드에서는 초기화 불필요
+                // 시뮬레이션 모드에서는 애니메이션만 실행
+                await animationTask;
                 return;
             }
 
@@ -1950,11 +2101,15 @@ namespace IonImplationEtherCAT
                 commandQueue.Enqueue(new ProcessCommand(CommandType.SetPMLampOff, "PM3 램프 OFF", processModuleC));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ForceClosePMDoor, "PM3 문 강제 닫기", processModuleC));
 
-                // 초기화 명령 실행
-                await commandQueue.ExecuteAsync();
+                // 하드웨어 초기화와 애니메이션을 병렬 실행
+                Task hardwareTask = commandQueue.ExecuteAsync();
+                await Task.WhenAll(hardwareTask, animationTask);
 
-                MessageBox.Show("실제 장비 초기화가 완료되었습니다.\n- 서보 모터: ON → 실린더 후진 → 원점복귀 → OFF\n- TM 원점복귀: 완료 (UD → LR)\n- PM 램프: 모두 OFF\n- PM 문: 모두 닫힘",
-                    "장비 초기화 완료", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (showMessage)
+                {
+                    MessageBox.Show("실제 장비 초기화가 완료되었습니다.\n- 서보 모터: ON → 실린더 후진 → 원점복귀 → OFF\n- TM 원점복귀: 완료 (UD → LR)\n- PM 램프: 모두 OFF\n- PM 문: 모두 닫힘",
+                        "장비 초기화 완료", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
             }
             catch (Exception ex)
             {

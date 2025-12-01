@@ -36,8 +36,27 @@ namespace IonImplationEtherCAT
         // EtherCAT 컨트롤러 참조
         private IEtherCATController etherCATController;
 
+        // 공정 시간 백킹 필드
+        private int _processTime;
+
         public State ModuleState { get; set; }
-        public int processTime { get; set; }
+
+        /// <summary>
+        /// 공정 시간 (35초 ~ 120초)
+        /// </summary>
+        public int processTime
+        {
+            get => _processTime;
+            set
+            {
+                if (value < 35 || value > 120)
+                {
+                    throw new ArgumentOutOfRangeException(nameof(processTime), $"공정 시간은 35초에서 120초 사이여야 합니다. (입력값: {value}초)");
+                }
+                _processTime = value;
+            }
+        }
+
         public int elapsedTime { get; set; }
         public bool isWaferLoaded { get; set; }
 
@@ -80,7 +99,7 @@ namespace IonImplationEtherCAT
         public ProcessModule(int defaultProcessTime)
         {
             ModuleState = State.Idle;
-            processTime = defaultProcessTime;
+            processTime = defaultProcessTime; // setter에서 자동 검증 (30~120초)
             elapsedTime = 0;
             isWaferLoaded = false;
             Type = ModuleType.PM1;
@@ -94,7 +113,7 @@ namespace IonImplationEtherCAT
         public ProcessModule(ModuleType moduleType, int defaultProcessTime)
         {
             ModuleState = State.Idle;
-            processTime = defaultProcessTime;
+            processTime = defaultProcessTime; // setter에서 자동 검증 (30~120초)
             elapsedTime = 0;
             isWaferLoaded = false;
             Type = moduleType;
@@ -107,7 +126,7 @@ namespace IonImplationEtherCAT
 
         public void StartProcess(int time)
         {
-            processTime = time;
+            processTime = time; // setter에서 자동 검증 (30~120초)
             elapsedTime = 0;
             ModuleState = State.Running;
             CompletedTime = null; // 완료 시간 초기화
@@ -208,42 +227,140 @@ namespace IonImplationEtherCAT
             Parameters.StartFalling(); // 파라미터 하강 시작
         }
 
+        // 이전에 기록한 공정 단계 (중복 로그 방지)
+        private int lastLoggedStep = -1;
+
         public void UpdateProcess(int timeIncrement)
         {
             if (ModuleState == State.Running)
             {
-                // 파라미터 업데이트 (상승/안정 애니메이션) - 항상 실행
-                Parameters.Update(timeIncrement);
+                // 안정화 여부와 상관없이 즉시 시간 카운트 시작
+                elapsedTime += timeIncrement;
 
-                // 파라미터가 안정된 후에만 공정 시간 카운트
-                if (Parameters.IsStable)
+                // 공정 절차에 맞춘 파라미터 업데이트
+                bool isAnnealing = (Type == ModuleType.PM3);
+                Parameters.UpdatePhased(elapsedTime, processTime, isAnnealing, timeIncrement);
+
+                // 단계별 로그 출력
+                LogProcessStep(elapsedTime, processTime);
+
+                if (elapsedTime >= processTime)
                 {
-                    elapsedTime += timeIncrement;
+                    ModuleState = State.Idle; // 프로세스 완료 후 대기 상태로 전환
+                    elapsedTime = processTime; // 경과 시간을 최대값으로 설정
+                    IsUnloadRequested = true; // 웨이퍼 언로드 요청 플래그 설정
+                    CompletedTime = DateTime.Now; // 완료 시간 기록 (FIFO 판단용)
+                    lastLoggedStep = -1; // 다음 공정을 위해 리셋
 
-                    if (elapsedTime >= processTime)
+                    // 파라미터 하강 시작 (공정 완료 후 상온/대기압으로 복귀)
+                    Parameters.StartFalling();
+
+                    // 웨이퍼 상태 업데이트
+                    if (CurrentWafer != null)
                     {
-                        ModuleState = State.Idle; // 프로세스 완료 후 대기 상태로 전환
-                        elapsedTime = processTime; // 경과 시간을 최대값으로 설정
-                        IsUnloadRequested = true; // 웨이퍼 언로드 요청 플래그 설정
-                        CompletedTime = DateTime.Now; // 완료 시간 기록 (FIFO 판단용)
-                        Parameters.StartFalling(); // 파라미터 하강 시작
-
-                        // 웨이퍼 상태 업데이트
-                        if (CurrentWafer != null)
+                        if (Type == ModuleType.PM1 || Type == ModuleType.PM2)
                         {
-                            if (Type == ModuleType.PM1 || Type == ModuleType.PM2)
-                            {
-                                CurrentWafer.UpdateState(Wafer.WaferState.IonProcessComplete);
-                            }
-                            else if (Type == ModuleType.PM3)
-                            {
-                                CurrentWafer.UpdateState(Wafer.WaferState.AnnealingProcessComplete);
-                            }
+                            CurrentWafer.UpdateState(Wafer.WaferState.IonProcessComplete);
                         }
-
-                        // 공정 완료 로그
-                        LogManager.Instance.AddLog($"{Type} 공정", $"공정 완료 (소요 시간: {processTime}초)", Type.ToString(), LogCategory.Process, false);
+                        else if (Type == ModuleType.PM3)
+                        {
+                            CurrentWafer.UpdateState(Wafer.WaferState.AnnealingProcessComplete);
+                        }
                     }
+
+                    // 공정 완료 로그
+                    LogManager.Instance.AddLog($"{Type} 공정", $"공정 완료 (소요 시간: {processTime}초)", Type.ToString(), LogCategory.Process, false);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 공정 단계별 로그 출력 (중복 방지)
+        /// </summary>
+        private void LogProcessStep(int elapsed, int total)
+        {
+            int step = GetCurrentStep(elapsed, total);
+            if (step == lastLoggedStep) return; // 이미 기록된 단계면 스킵
+
+            lastLoggedStep = step;
+            string message = GetStepMessage(step, elapsed, total);
+            if (!string.IsNullOrEmpty(message))
+            {
+                LogManager.Instance.AddLog($"{Type} 공정", message, Type.ToString(), LogCategory.Process, false);
+            }
+        }
+
+        /// <summary>
+        /// 현재 공정 단계 번호 반환
+        /// </summary>
+        private int GetCurrentStep(int elapsed, int total)
+        {
+            int timeToEnd = total - elapsed;
+            bool isAnnealing = (Type == ModuleType.PM3);
+
+            if (isAnnealing)
+            {
+                // 어닐링 공정 단계
+                if (elapsed <= 1) return 1;      // 진공 시작
+                if (elapsed <= 3) return 2;      // 진공 도달
+                if (elapsed <= 4) return 3;      // RTA 램프 ON
+                if (elapsed <= 5) return 4;      // 급속 가열 완료
+                if (timeToEnd > 5) return 5;     // 어닐링 진행 중
+                if (timeToEnd > 2) return 6;     // 냉각 시작
+                return 7;                        // 챔버 벤트
+            }
+            else
+            {
+                // 이온 주입 공정 단계
+                if (elapsed <= 1) return 1;      // 진공 시작
+                if (elapsed <= 3) return 2;      // 진공 도달
+                if (elapsed <= 4) return 3;      // 이온 소스 ON
+                if (elapsed <= 5) return 4;      // 질량 분석기 ON
+                if (elapsed <= 6) return 5;      // 가속 전압 인가
+                if (elapsed <= 8) return 6;      // HV 안정화
+                if (elapsed <= 10) return 7;     // 빔 게이트 OPEN, 스캐너 시작
+                if (timeToEnd > 3) return 8;     // 이온 주입 중
+                if (timeToEnd > 1) return 9;     // 빔 게이트 CLOSE
+                return 10;                       // 가속 전압 OFF, 벤트
+            }
+        }
+
+        /// <summary>
+        /// 단계별 로그 메시지 반환
+        /// </summary>
+        private string GetStepMessage(int step, int elapsed, int total)
+        {
+            bool isAnnealing = (Type == ModuleType.PM3);
+
+            if (isAnnealing)
+            {
+                switch (step)
+                {
+                    case 1: return "챔버 진공 시작";
+                    case 2: return "진공 도달";
+                    case 3: return "RTA 램프 ON";
+                    case 4: return "목표 온도 도달";
+                    case 5: return "어닐링 진행 중...";
+                    case 6: return "냉각 시작";
+                    case 7: return "챔버 벤트 (대기압 복구)";
+                    default: return null;
+                }
+            }
+            else
+            {
+                switch (step)
+                {
+                    case 1: return "챔버 진공 시작";
+                    case 2: return "진공 도달";
+                    case 3: return "이온 소스 ON";
+                    case 4: return "질량 분석기 ON";
+                    case 5: return "가속 전압 인가";
+                    case 6: return "HV 안정화 완료";
+                    case 7: return "빔 게이트 OPEN, 스캐너 작동 시작";
+                    case 8: return "이온 주입 중... (도즈 적산)";
+                    case 9: return "목표 도즈 도달, 빔 게이트 CLOSE";
+                    case 10: return "가속 전압 OFF, 챔버 벤트";
+                    default: return null;
                 }
             }
         }

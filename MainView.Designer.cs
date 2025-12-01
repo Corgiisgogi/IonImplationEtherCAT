@@ -108,6 +108,12 @@
             this.lblPM3 = new System.Windows.Forms.Label();
             this.btnAllProcess = new System.Windows.Forms.Button();
             this.btnAllStop = new System.Windows.Forms.Button();
+            this.lblPm1Caption = new System.Windows.Forms.Label();
+            this.lblPm2Caption = new System.Windows.Forms.Label();
+            this.lblPm3Caption = new System.Windows.Forms.Label();
+            this.lblPM1onPmlabel = new System.Windows.Forms.Label();
+            this.lblPM2onPmlabel = new System.Windows.Forms.Label();
+            this.lblPM3onPmlabel = new System.Windows.Forms.Label();
             this.panelPM1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxPM1Lamp)).BeginInit();
             this.panelPM1Status.SuspendLayout();
@@ -135,6 +141,7 @@
             // 
             this.panelPM1.BackColor = System.Drawing.SystemColors.ControlLight;
             this.panelPM1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelPM1.Controls.Add(this.lblPM1onPmlabel);
             this.panelPM1.Controls.Add(this.panelPM1Door);
             this.panelPM1.Controls.Add(this.picBoxPM1Lamp);
             this.panelPM1.Location = new System.Drawing.Point(73, 167);
@@ -165,6 +172,7 @@
             // 
             this.panelPM1Status.BackColor = System.Drawing.SystemColors.ControlLight;
             this.panelPM1Status.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelPM1Status.Controls.Add(this.lblPm1Caption);
             this.panelPM1Status.Controls.Add(this.lblPM1Status);
             this.panelPM1Status.Controls.Add(this.tblLayoutPanelPM1Progress);
             this.panelPM1Status.Controls.Add(this.tblLayoutPanelPM1Status);
@@ -191,7 +199,7 @@
             this.tblLayoutPanelPM1Progress.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblLayoutPanelPM1Progress.ColumnCount = 2;
             this.tblLayoutPanelPM1Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.8595F));
-            this.tblLayoutPanelPM1Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 182F));
+            this.tblLayoutPanelPM1Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 174F));
             this.tblLayoutPanelPM1Progress.Controls.Add(this.progressBarPM1, 1, 0);
             this.tblLayoutPanelPM1Progress.Controls.Add(this.lblPM1Progress, 0, 0);
             this.tblLayoutPanelPM1Progress.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -204,7 +212,7 @@
             // 
             // progressBarPM1
             // 
-            this.progressBarPM1.Location = new System.Drawing.Point(61, 4);
+            this.progressBarPM1.Location = new System.Drawing.Point(69, 4);
             this.progressBarPM1.Name = "progressBarPM1";
             this.progressBarPM1.Size = new System.Drawing.Size(163, 23);
             this.progressBarPM1.TabIndex = 5;
@@ -216,7 +224,7 @@
             this.lblPM1Progress.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPM1Progress.Location = new System.Drawing.Point(4, 1);
             this.lblPM1Progress.Name = "lblPM1Progress";
-            this.lblPM1Progress.Size = new System.Drawing.Size(50, 30);
+            this.lblPM1Progress.Size = new System.Drawing.Size(58, 30);
             this.lblPM1Progress.TabIndex = 5;
             this.lblPM1Progress.Text = "progress";
             this.lblPM1Progress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -424,6 +432,7 @@
             // 
             this.panelPM2.BackColor = System.Drawing.SystemColors.ControlLight;
             this.panelPM2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelPM2.Controls.Add(this.lblPM2onPmlabel);
             this.panelPM2.Controls.Add(this.panelPM2Door);
             this.panelPM2.Controls.Add(this.picBoxPM2Lamp);
             this.panelPM2.Location = new System.Drawing.Point(264, 12);
@@ -454,6 +463,7 @@
             // 
             this.panelPM3.BackColor = System.Drawing.SystemColors.ControlLight;
             this.panelPM3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelPM3.Controls.Add(this.lblPM3onPmlabel);
             this.panelPM3.Controls.Add(this.panelPM3Door);
             this.panelPM3.Controls.Add(this.picBoxPM3Lamp);
             this.panelPM3.Location = new System.Drawing.Point(503, 167);
@@ -541,27 +551,27 @@
             // 
             this.panelRedAlert.BackColor = System.Drawing.Color.RosyBrown;
             this.panelRedAlert.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelRedAlert.Location = new System.Drawing.Point(664, 91);
+            this.panelRedAlert.Location = new System.Drawing.Point(664, 3);
             this.panelRedAlert.Name = "panelRedAlert";
-            this.panelRedAlert.Size = new System.Drawing.Size(50, 40);
+            this.panelRedAlert.Size = new System.Drawing.Size(62, 52);
             this.panelRedAlert.TabIndex = 8;
             // 
             // panelYellowAlert
             // 
             this.panelYellowAlert.BackColor = System.Drawing.Color.Khaki;
             this.panelYellowAlert.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelYellowAlert.Location = new System.Drawing.Point(664, 52);
+            this.panelYellowAlert.Location = new System.Drawing.Point(664, 51);
             this.panelYellowAlert.Name = "panelYellowAlert";
-            this.panelYellowAlert.Size = new System.Drawing.Size(50, 40);
+            this.panelYellowAlert.Size = new System.Drawing.Size(62, 57);
             this.panelYellowAlert.TabIndex = 8;
             // 
             // panelGreenAlert
             // 
             this.panelGreenAlert.BackColor = System.Drawing.Color.DarkSeaGreen;
             this.panelGreenAlert.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelGreenAlert.Location = new System.Drawing.Point(664, 13);
+            this.panelGreenAlert.Location = new System.Drawing.Point(664, 107);
             this.panelGreenAlert.Name = "panelGreenAlert";
-            this.panelGreenAlert.Size = new System.Drawing.Size(50, 40);
+            this.panelGreenAlert.Size = new System.Drawing.Size(62, 58);
             this.panelGreenAlert.TabIndex = 8;
             // 
             // btnRecipeC
@@ -695,6 +705,7 @@
             // 
             this.panelPM2Status.BackColor = System.Drawing.SystemColors.ControlLight;
             this.panelPM2Status.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelPM2Status.Controls.Add(this.lblPm2Caption);
             this.panelPM2Status.Controls.Add(this.lblPM2Status);
             this.panelPM2Status.Controls.Add(this.tblLayoutPanelPM2Progress);
             this.panelPM2Status.Controls.Add(this.tblLayoutPanelPM2Status);
@@ -721,7 +732,7 @@
             this.tblLayoutPanelPM2Progress.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblLayoutPanelPM2Progress.ColumnCount = 2;
             this.tblLayoutPanelPM2Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.8595F));
-            this.tblLayoutPanelPM2Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 181F));
+            this.tblLayoutPanelPM2Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 177F));
             this.tblLayoutPanelPM2Progress.Controls.Add(this.progressBarPM2, 1, 0);
             this.tblLayoutPanelPM2Progress.Controls.Add(this.lblPM2Progress, 0, 0);
             this.tblLayoutPanelPM2Progress.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -734,7 +745,7 @@
             // 
             // progressBarPM2
             // 
-            this.progressBarPM2.Location = new System.Drawing.Point(62, 4);
+            this.progressBarPM2.Location = new System.Drawing.Point(66, 4);
             this.progressBarPM2.Name = "progressBarPM2";
             this.progressBarPM2.Size = new System.Drawing.Size(163, 23);
             this.progressBarPM2.TabIndex = 5;
@@ -746,7 +757,7 @@
             this.lblPM2Progress.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPM2Progress.Location = new System.Drawing.Point(4, 1);
             this.lblPM2Progress.Name = "lblPM2Progress";
-            this.lblPM2Progress.Size = new System.Drawing.Size(51, 30);
+            this.lblPM2Progress.Size = new System.Drawing.Size(55, 30);
             this.lblPM2Progress.TabIndex = 5;
             this.lblPM2Progress.Text = "progress";
             this.lblPM2Progress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -895,6 +906,7 @@
             // 
             this.panelPM3Status.BackColor = System.Drawing.SystemColors.ControlLight;
             this.panelPM3Status.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelPM3Status.Controls.Add(this.lblPm3Caption);
             this.panelPM3Status.Controls.Add(this.lblPM3Status);
             this.panelPM3Status.Controls.Add(this.tblLayoutPanelPM3Progress);
             this.panelPM3Status.Controls.Add(this.tblLayoutPanelPM3Status);
@@ -921,7 +933,7 @@
             this.tblLayoutPanelPM3Progress.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblLayoutPanelPM3Progress.ColumnCount = 2;
             this.tblLayoutPanelPM3Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.8595F));
-            this.tblLayoutPanelPM3Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 177F));
+            this.tblLayoutPanelPM3Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 176F));
             this.tblLayoutPanelPM3Progress.Controls.Add(this.progressBarPM3, 1, 0);
             this.tblLayoutPanelPM3Progress.Controls.Add(this.lblPM3Progress, 0, 0);
             this.tblLayoutPanelPM3Progress.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -934,7 +946,7 @@
             // 
             // progressBarPM3
             // 
-            this.progressBarPM3.Location = new System.Drawing.Point(66, 4);
+            this.progressBarPM3.Location = new System.Drawing.Point(67, 4);
             this.progressBarPM3.Name = "progressBarPM3";
             this.progressBarPM3.Size = new System.Drawing.Size(160, 23);
             this.progressBarPM3.TabIndex = 5;
@@ -946,7 +958,7 @@
             this.lblPM3Progress.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPM3Progress.Location = new System.Drawing.Point(4, 1);
             this.lblPM3Progress.Name = "lblPM3Progress";
-            this.lblPM3Progress.Size = new System.Drawing.Size(55, 30);
+            this.lblPM3Progress.Size = new System.Drawing.Size(56, 30);
             this.lblPM3Progress.TabIndex = 5;
             this.lblPM3Progress.Text = "progress";
             this.lblPM3Progress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1063,6 +1075,69 @@
             this.btnAllStop.UseVisualStyleBackColor = false;
             this.btnAllStop.Click += new System.EventHandler(this.btnAllStop_Click);
             // 
+            // lblPm1Caption
+            // 
+            this.lblPm1Caption.AutoSize = true;
+            this.lblPm1Caption.Font = new System.Drawing.Font("나눔고딕", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblPm1Caption.Location = new System.Drawing.Point(76, 11);
+            this.lblPm1Caption.Name = "lblPm1Caption";
+            this.lblPm1Caption.Size = new System.Drawing.Size(113, 17);
+            this.lblPm1Caption.TabIndex = 7;
+            this.lblPm1Caption.Text = "Ion Implation 1";
+            this.lblPm1Caption.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblPm2Caption
+            // 
+            this.lblPm2Caption.AutoSize = true;
+            this.lblPm2Caption.Font = new System.Drawing.Font("나눔고딕", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblPm2Caption.Location = new System.Drawing.Point(79, 11);
+            this.lblPm2Caption.Name = "lblPm2Caption";
+            this.lblPm2Caption.Size = new System.Drawing.Size(113, 17);
+            this.lblPm2Caption.TabIndex = 8;
+            this.lblPm2Caption.Text = "Ion Implation 2";
+            this.lblPm2Caption.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblPm3Caption
+            // 
+            this.lblPm3Caption.AutoSize = true;
+            this.lblPm3Caption.Font = new System.Drawing.Font("나눔고딕", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblPm3Caption.Location = new System.Drawing.Point(76, 11);
+            this.lblPm3Caption.Name = "lblPm3Caption";
+            this.lblPm3Caption.Size = new System.Drawing.Size(79, 17);
+            this.lblPm3Caption.TabIndex = 8;
+            this.lblPm3Caption.Text = "Annealing";
+            this.lblPm3Caption.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // lblPM1onPmlabel
+            // 
+            this.lblPM1onPmlabel.AutoSize = true;
+            this.lblPM1onPmlabel.Font = new System.Drawing.Font("나눔고딕", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblPM1onPmlabel.Location = new System.Drawing.Point(27, 3);
+            this.lblPM1onPmlabel.Name = "lblPM1onPmlabel";
+            this.lblPM1onPmlabel.Size = new System.Drawing.Size(75, 31);
+            this.lblPM1onPmlabel.TabIndex = 9;
+            this.lblPM1onPmlabel.Text = "PM1";
+            // 
+            // lblPM2onPmlabel
+            // 
+            this.lblPM2onPmlabel.AutoSize = true;
+            this.lblPM2onPmlabel.Font = new System.Drawing.Font("나눔고딕", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblPM2onPmlabel.Location = new System.Drawing.Point(59, 3);
+            this.lblPM2onPmlabel.Name = "lblPM2onPmlabel";
+            this.lblPM2onPmlabel.Size = new System.Drawing.Size(75, 31);
+            this.lblPM2onPmlabel.TabIndex = 10;
+            this.lblPM2onPmlabel.Text = "PM2";
+            // 
+            // lblPM3onPmlabel
+            // 
+            this.lblPM3onPmlabel.AutoSize = true;
+            this.lblPM3onPmlabel.Font = new System.Drawing.Font("나눔고딕", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblPM3onPmlabel.Location = new System.Drawing.Point(44, 3);
+            this.lblPM3onPmlabel.Name = "lblPM3onPmlabel";
+            this.lblPM3onPmlabel.Size = new System.Drawing.Size(75, 31);
+            this.lblPM3onPmlabel.TabIndex = 10;
+            this.lblPM3onPmlabel.Text = "PM3";
+            // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
@@ -1076,6 +1151,7 @@
             this.Name = "MainView";
             this.Size = new System.Drawing.Size(1424, 715);
             this.panelPM1.ResumeLayout(false);
+            this.panelPM1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxPM1Lamp)).EndInit();
             this.panelPM1Status.ResumeLayout(false);
             this.panelPM1Status.PerformLayout();
@@ -1086,8 +1162,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.picBoxPM1Status)).EndInit();
             this.panelFoupA.ResumeLayout(false);
             this.panelPM2.ResumeLayout(false);
+            this.panelPM2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxPM2Lamp)).EndInit();
             this.panelPM3.ResumeLayout(false);
+            this.panelPM3.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxPM3Lamp)).EndInit();
             this.panelMainControl.ResumeLayout(false);
             this.panelMainControl.PerformLayout();
@@ -1192,5 +1270,11 @@
         private System.Windows.Forms.Panel panelGreenAlert;
         private System.Windows.Forms.Panel panelRedAlert;
         private System.Windows.Forms.Panel panelYellowAlert;
+        private System.Windows.Forms.Label lblPm1Caption;
+        private System.Windows.Forms.Label lblPm2Caption;
+        private System.Windows.Forms.Label lblPm3Caption;
+        private System.Windows.Forms.Label lblPM1onPmlabel;
+        private System.Windows.Forms.Label lblPM2onPmlabel;
+        private System.Windows.Forms.Label lblPM3onPmlabel;
     }
 }

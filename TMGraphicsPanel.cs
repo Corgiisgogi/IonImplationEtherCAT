@@ -12,11 +12,11 @@ namespace IonImplationEtherCAT
     {
         private TransferModule transferModule;
         
-        // TM 구성 요소의 크기
-        private readonly Size armHighSize = new Size(232, 95);
-        private readonly Size armLowSize = new Size(236, 95);
-        private readonly Size bottomSize = new Size(150, 150);
-        private readonly Size backSize = new Size(25, 95);
+        // TM 구성 요소의 크기 (2/3로 축소)
+        private readonly Size armHighSize = new Size(155, 63);
+        private readonly Size armLowSize = new Size(157, 63);
+        private readonly Size bottomSize = new Size(100, 100);
+        private readonly Size backSize = new Size(17, 63);
 
         // 색상
         private readonly Color armColor = Color.FromArgb(180, 180, 180);
@@ -114,37 +114,38 @@ namespace IonImplationEtherCAT
             g.RotateTransform(transferModule.CurrentRotationAngle);
             g.TranslateTransform(-centerX, -centerY);
 
-            // 2. 확장 오프셋 계산 (회전 변환 후에 별도로 적용)
-            // 회전된 좌표계에서 암이 확장되는 방향으로 이동
-            float extensionAmount = transferModule.CurrentExtension;
-
-            // 회전된 좌표계에서 왼쪽(암 방향) = 원래 좌표계에서 회전 각도에 따른 방향
-            // 확장 오프셋은 회전된 좌표계에서 왼쪽으로 이동
-            g.TranslateTransform(-extensionAmount, 0);
-
+            // 2. 고정된 부분 먼저 그리기 (Back, Low Arm)
             // Back Arm (뒷부분)
             DrawBack(g, centerX, centerY);
 
             // Low Arm (아래 팔)
             DrawArmLow(g, centerX, centerY);
 
-            // High Arm (위 팔)
+            // 3. 확장 오프셋 계산 및 적용 (High Arm과 Wafer만 이동)
+            float extensionAmount = transferModule.CurrentExtension;
+            GraphicsState extState = g.Save();
+            g.TranslateTransform(-extensionAmount, 0);
+
+            // High Arm (위 팔) - 실린더 이동에 따라 움직임
             DrawArmHigh(g, centerX, centerY);
 
-            // 웨이퍼 (TM이 들고 있을 때)
+            // 웨이퍼 (TM이 들고 있을 때) - High Arm과 함께 움직임
             if (transferModule.HasWafer)
             {
                 DrawWafer(g, centerX, centerY);
             }
 
-            // 변환 복원
+            // 확장 변환 복원
+            g.Restore(extState);
+
+            // 회전 변환 복원
             g.Restore(state);
         }
 
         private void DrawBack(Graphics g, int centerX, int centerY)
         {
             // 중심에서 오른쪽으로 약간 떨어진 위치
-            int x = centerX + 90;
+            int x = centerX + 60;
             int y = centerY - backSize.Height / 2;
 
             Rectangle rect = new Rectangle(x, y, backSize.Width, backSize.Height);
@@ -163,7 +164,7 @@ namespace IonImplationEtherCAT
         private void DrawArmHigh(Graphics g, int centerX, int centerY)
         {
             // 중심에서 왼쪽으로
-            int x = centerX - 180;
+            int x = centerX - 120;
             int y = centerY - armHighSize.Height / 2;
 
             Rectangle rect = new Rectangle(x, y, armHighSize.Width, armHighSize.Height);
@@ -196,8 +197,8 @@ namespace IonImplationEtherCAT
         private void DrawArmLow(Graphics g, int centerX, int centerY)
         {
             // 중심에서 왼쪽으로 (High보다 약간 아래)
-            int x = centerX - 153;
-            int y = centerY - armLowSize.Height / 2 + 5;
+            int x = centerX - 102;
+            int y = centerY - armLowSize.Height / 2 + 3;
 
             Rectangle rect = new Rectangle(x, y, armLowSize.Width, armLowSize.Height);
 
@@ -229,9 +230,9 @@ namespace IonImplationEtherCAT
         private void DrawWafer(Graphics g, int centerX, int centerY)
         {
             // Arm High 끝 부분에 위치
-            int x = centerX - 230;
-            int y = centerY - 40;
-            int size = 80;
+            int x = centerX - 153;
+            int y = centerY - 27;
+            int size = 53;
 
             Rectangle waferRect = new Rectangle(x, y, size, size);
 
@@ -248,7 +249,7 @@ namespace IonImplationEtherCAT
             // 웨이퍼 중심 마크
             using (Pen markPen = new Pen(Color.FromArgb(30, 80, 130), 1))
             {
-                int markSize = 20;
+                int markSize = 13;
                 int markX = x + size / 2;
                 int markY = y + size / 2;
                 g.DrawLine(markPen, markX - markSize, markY, markX + markSize, markY);

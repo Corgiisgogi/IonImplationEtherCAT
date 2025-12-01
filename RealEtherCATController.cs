@@ -50,8 +50,8 @@ namespace IonImplationEtherCAT
         #region 고정 대기시간 설정 (ms)
 
         // 축 이동 대기시간
-        private const int UD_MOVE_DELAY = 2000;     // 상하 축 이동 대기
-        private const int LR_MOVE_DELAY = 2000;     // 좌우 축 이동 대기
+        private const int UD_MOVE_DELAY = 1300;     // 상하 축 이동 대기
+        private const int LR_MOVE_DELAY = 1300;     // 좌우 축 이동 대기
 
         // 원점복귀 대기시간
         private const int UD_HOMING_DELAY = 5000;   // 상하 축 원점복귀 대기

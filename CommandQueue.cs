@@ -21,6 +21,17 @@ namespace IonImplationEtherCAT
         public int CommandCount => commands.Count;
         public bool IsStopRequested => stopRequested;
 
+        #region TM 각도-LR 위치 매핑 상수
+
+        // TM UI 회전 각도
+        private const float ANGLE_FOUP_A = -50f;
+        private const float ANGLE_PM1 = 0f;
+        private const float ANGLE_PM2 = 90f;
+        private const float ANGLE_PM3 = 180f;
+        private const float ANGLE_FOUP_B = 230f;
+
+        #endregion
+
         #region 동작 대기 시간 상수 (ms)
 
         // 서보 제어
@@ -181,23 +192,88 @@ namespace IonImplationEtherCAT
                 case CommandType.RotateTM:
                     if (command.Parameters.Length > 0 && command.Parameters[0] is float angle)
                     {
-                        mainView.RotateTM(angle);
-                        // TM 회전 완료 대기
-                        await WaitForTMRotationComplete();
+                        var controller = mainView.GetEtherCATController();
+                        bool isRealMode = controller != null && !(controller is SimulationEtherCATController);
+
+                        if (isRealMode)
+                        {
+                            // 실제 모드: 장비 LR축 이동과 애니메이션 동시 실행
+                            long lrPosition = GetLRPositionFromAngle(angle);
+
+                            // 장비 명령 비동기 시작
+                            Task hardwareTask = controller.MoveLRAxis(lrPosition);
+
+                            // 동시에 애니메이션 시작
+                            mainView.RotateTM(angle);
+                            Task animationTask = WaitForTMRotationComplete();
+
+                            // 둘 다 완료 대기
+                            await Task.WhenAll(hardwareTask, animationTask);
+                        }
+                        else
+                        {
+                            // 시뮬레이션 모드: 애니메이션만 실행
+                            mainView.RotateTM(angle);
+                            await WaitForTMRotationComplete();
+                        }
                         await Task.Delay(TM_SETTLE_DELAY); // 안정화 대기
                     }
                     return true;
 
                 case CommandType.ExtendArm:
-                    mainView.ExtendTMArm();
-                    await WaitForTMArmExtensionComplete();
-                    await Task.Delay(TM_SETTLE_DELAY); // 안정화 대기
+                    {
+                        var controller = mainView.GetEtherCATController();
+                        bool isRealMode = controller != null && !(controller is SimulationEtherCATController);
+
+                        if (isRealMode)
+                        {
+                            // 실제 모드: 장비 실린더 전진과 애니메이션 동시 실행
+                            controller.ExtendCylinder();
+
+                            // 애니메이션 시작
+                            mainView.ExtendTMArm();
+
+                            // 애니메이션 완료와 실린더 대기 중 더 긴 시간 대기
+                            Task animationTask = WaitForTMArmExtensionComplete();
+                            Task hardwareTask = Task.Delay(CYLINDER_EXTEND_DELAY);
+                            await Task.WhenAll(animationTask, hardwareTask);
+                        }
+                        else
+                        {
+                            // 시뮬레이션 모드: 애니메이션만 실행
+                            mainView.ExtendTMArm();
+                            await WaitForTMArmExtensionComplete();
+                        }
+                        await Task.Delay(TM_SETTLE_DELAY); // 안정화 대기
+                    }
                     return true;
 
                 case CommandType.RetractArm:
-                    mainView.RetractTMArm();
-                    await WaitForTMArmRetractionComplete();
-                    await Task.Delay(TM_SETTLE_DELAY); // 안정화 대기
+                    {
+                        var controller = mainView.GetEtherCATController();
+                        bool isRealMode = controller != null && !(controller is SimulationEtherCATController);
+
+                        if (isRealMode)
+                        {
+                            // 실제 모드: 장비 실린더 후진과 애니메이션 동시 실행
+                            controller.RetractCylinder();
+
+                            // 애니메이션 시작
+                            mainView.RetractTMArm();
+
+                            // 애니메이션 완료와 실린더 대기 중 더 긴 시간 대기
+                            Task animationTask = WaitForTMArmRetractionComplete();
+                            Task hardwareTask = Task.Delay(CYLINDER_RETRACT_DELAY);
+                            await Task.WhenAll(animationTask, hardwareTask);
+                        }
+                        else
+                        {
+                            // 시뮬레이션 모드: 애니메이션만 실행
+                            mainView.RetractTMArm();
+                            await WaitForTMArmRetractionComplete();
+                        }
+                        await Task.Delay(TM_SETTLE_DELAY); // 안정화 대기
+                    }
                     return true;
 
                 case CommandType.PickWafer:
@@ -588,6 +664,34 @@ namespace IonImplationEtherCAT
         private async Task WaitForTMArmRetractionComplete()
         {
             await Task.Delay(TM_ARM_RETRACT_DELAY);
+        }
+
+        /// <summary>
+        /// TM 회전 각도에서 LR 위치 계산
+        /// </summary>
+        private long GetLRPositionFromAngle(float angle)
+        {
+            // 각도 허용 오차 (±5도)
+            const float tolerance = 5f;
+
+            if (Math.Abs(angle - ANGLE_FOUP_A) < tolerance || Math.Abs(angle + 50f) < tolerance)
+                return HardwarePositionMap.LR_FOUP_A;
+
+            if (Math.Abs(angle - ANGLE_PM1) < tolerance || Math.Abs(angle) < tolerance)
+                return HardwarePositionMap.LR_PM1;
+
+            if (Math.Abs(angle - ANGLE_PM2) < tolerance || Math.Abs(angle - 90f) < tolerance)
+                return HardwarePositionMap.LR_PM2;
+
+            if (Math.Abs(angle - ANGLE_PM3) < tolerance || Math.Abs(angle - 180f) < tolerance)
+                return HardwarePositionMap.LR_PM3;
+
+            if (Math.Abs(angle - ANGLE_FOUP_B) < tolerance || Math.Abs(angle - 230f) < tolerance)
+                return HardwarePositionMap.LR_FOUP_B;
+
+            // 매칭되는 위치가 없으면 PM1 위치 반환 (기본값)
+            System.Diagnostics.Debug.WriteLine($"경고: 알 수 없는 각도 {angle}, PM1 위치 반환");
+            return HardwarePositionMap.LR_PM1;
         }
     }
 }
