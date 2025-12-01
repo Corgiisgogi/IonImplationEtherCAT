@@ -44,20 +44,11 @@
             this.textBoxCurrent = new System.Windows.Forms.TextBox();
             this.lblVoltage = new System.Windows.Forms.Label();
             this.lblDose = new System.Windows.Forms.Label();
-            this.lblGas = new System.Windows.Forms.Label();
             this.lblIonGas = new System.Windows.Forms.Label();
             this.textBoxVoltage = new System.Windows.Forms.TextBox();
-            this.listBoxGas = new System.Windows.Forms.ListBox();
             this.listBoxIonGas = new System.Windows.Forms.ListBox();
             this.textBoxDose = new System.Windows.Forms.TextBox();
             this.panelPm2 = new System.Windows.Forms.Panel();
-            this.panelPm3 = new System.Windows.Forms.Panel();
-            this.textBoxVaccum = new System.Windows.Forms.TextBox();
-            this.textBoxTemperature = new System.Windows.Forms.TextBox();
-            this.labelProcesstime = new System.Windows.Forms.Label();
-            this.lblTemperature = new System.Windows.Forms.Label();
-            this.lblVaccum = new System.Windows.Forms.Label();
-            this.textBoxProcesstime = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.lblScannerVoltage2 = new System.Windows.Forms.Label();
             this.textBoxScannerVoltage2 = new System.Windows.Forms.TextBox();
@@ -68,19 +59,22 @@
             this.textBoxCurrent2 = new System.Windows.Forms.TextBox();
             this.lblVoltage2 = new System.Windows.Forms.Label();
             this.lblDose2 = new System.Windows.Forms.Label();
-            this.lblGas2 = new System.Windows.Forms.Label();
             this.lblIonGas2 = new System.Windows.Forms.Label();
             this.textBoxVoltage2 = new System.Windows.Forms.TextBox();
-            this.listBoxGas2 = new System.Windows.Forms.ListBox();
             this.listBoxIonGas2 = new System.Windows.Forms.ListBox();
             this.textBoxDose2 = new System.Windows.Forms.TextBox();
+            this.panelPm3 = new System.Windows.Forms.Panel();
+            this.textBoxVaccum = new System.Windows.Forms.TextBox();
+            this.textBoxTemperature = new System.Windows.Forms.TextBox();
+            this.lblTemperature = new System.Windows.Forms.Label();
+            this.lblVaccum = new System.Windows.Forms.Label();
             this.panelPm1.SuspendLayout();
             this.gBoxScanner.SuspendLayout();
             this.gBoxAnalyzer.SuspendLayout();
             this.panelPm2.SuspendLayout();
-            this.panelPm3.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.panelPm3.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnRecipePm1
@@ -144,10 +138,8 @@
             this.panelPm1.Controls.Add(this.gBoxAnalyzer);
             this.panelPm1.Controls.Add(this.lblVoltage);
             this.panelPm1.Controls.Add(this.lblDose);
-            this.panelPm1.Controls.Add(this.lblGas);
             this.panelPm1.Controls.Add(this.lblIonGas);
             this.panelPm1.Controls.Add(this.textBoxVoltage);
-            this.panelPm1.Controls.Add(this.listBoxGas);
             this.panelPm1.Controls.Add(this.listBoxIonGas);
             this.panelPm1.Controls.Add(this.textBoxDose);
             this.panelPm1.Location = new System.Drawing.Point(270, 58);
@@ -210,7 +202,7 @@
             this.gBoxAnalyzer.Controls.Add(this.lblCurrent);
             this.gBoxAnalyzer.Controls.Add(this.textBoxCurrent);
             this.gBoxAnalyzer.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.gBoxAnalyzer.Location = new System.Drawing.Point(14, 230);
+            this.gBoxAnalyzer.Location = new System.Drawing.Point(18, 168);
             this.gBoxAnalyzer.Name = "gBoxAnalyzer";
             this.gBoxAnalyzer.Size = new System.Drawing.Size(317, 86);
             this.gBoxAnalyzer.TabIndex = 8;
@@ -230,7 +222,7 @@
             // textBoxCurrent
             // 
             this.textBoxCurrent.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBoxCurrent.Location = new System.Drawing.Point(115, 28);
+            this.textBoxCurrent.Location = new System.Drawing.Point(112, 28);
             this.textBoxCurrent.Name = "textBoxCurrent";
             this.textBoxCurrent.Size = new System.Drawing.Size(188, 29);
             this.textBoxCurrent.TabIndex = 10;
@@ -239,7 +231,7 @@
             // 
             this.lblVoltage.AutoSize = true;
             this.lblVoltage.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblVoltage.Location = new System.Drawing.Point(28, 191);
+            this.lblVoltage.Location = new System.Drawing.Point(28, 138);
             this.lblVoltage.Name = "lblVoltage";
             this.lblVoltage.Size = new System.Drawing.Size(82, 25);
             this.lblVoltage.TabIndex = 7;
@@ -249,21 +241,11 @@
             // 
             this.lblDose.AutoSize = true;
             this.lblDose.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblDose.Location = new System.Drawing.Point(66, 138);
+            this.lblDose.Location = new System.Drawing.Point(66, 94);
             this.lblDose.Name = "lblDose";
             this.lblDose.Size = new System.Drawing.Size(62, 25);
             this.lblDose.TabIndex = 6;
             this.lblDose.Text = "Dose";
-            // 
-            // lblGas
-            // 
-            this.lblGas.AutoSize = true;
-            this.lblGas.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblGas.Location = new System.Drawing.Point(74, 89);
-            this.lblGas.Name = "lblGas";
-            this.lblGas.Size = new System.Drawing.Size(44, 25);
-            this.lblGas.TabIndex = 5;
-            this.lblGas.Text = "가스";
             // 
             // lblIonGas
             // 
@@ -278,26 +260,22 @@
             // textBoxVoltage
             // 
             this.textBoxVoltage.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBoxVoltage.Location = new System.Drawing.Point(130, 186);
+            this.textBoxVoltage.Location = new System.Drawing.Point(130, 133);
             this.textBoxVoltage.Name = "textBoxVoltage";
             this.textBoxVoltage.Size = new System.Drawing.Size(188, 29);
             this.textBoxVoltage.TabIndex = 3;
             // 
-            // listBoxGas
-            // 
-            this.listBoxGas.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.listBoxGas.FormattingEnabled = true;
-            this.listBoxGas.ItemHeight = 24;
-            this.listBoxGas.Location = new System.Drawing.Point(130, 89);
-            this.listBoxGas.Name = "listBoxGas";
-            this.listBoxGas.Size = new System.Drawing.Size(188, 28);
-            this.listBoxGas.TabIndex = 2;
-            // 
             // listBoxIonGas
             // 
+            this.listBoxIonGas.AllowDrop = true;
             this.listBoxIonGas.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.listBoxIonGas.FormattingEnabled = true;
             this.listBoxIonGas.ItemHeight = 24;
+            this.listBoxIonGas.Items.AddRange(new object[] {
+            "붕소(B)",
+            "인(P)",
+            "비소(As)",
+            "포스핀(PH₃)"});
             this.listBoxIonGas.Location = new System.Drawing.Point(130, 47);
             this.listBoxIonGas.Name = "listBoxIonGas";
             this.listBoxIonGas.Size = new System.Drawing.Size(188, 28);
@@ -306,7 +284,7 @@
             // textBoxDose
             // 
             this.textBoxDose.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBoxDose.Location = new System.Drawing.Point(130, 133);
+            this.textBoxDose.Location = new System.Drawing.Point(130, 89);
             this.textBoxDose.Name = "textBoxDose";
             this.textBoxDose.Size = new System.Drawing.Size(188, 29);
             this.textBoxDose.TabIndex = 0;
@@ -317,10 +295,8 @@
             this.panelPm2.Controls.Add(this.groupBox2);
             this.panelPm2.Controls.Add(this.lblVoltage2);
             this.panelPm2.Controls.Add(this.lblDose2);
-            this.panelPm2.Controls.Add(this.lblGas2);
             this.panelPm2.Controls.Add(this.lblIonGas2);
             this.panelPm2.Controls.Add(this.textBoxVoltage2);
-            this.panelPm2.Controls.Add(this.listBoxGas2);
             this.panelPm2.Controls.Add(this.listBoxIonGas2);
             this.panelPm2.Controls.Add(this.textBoxDose2);
             this.panelPm2.Location = new System.Drawing.Point(270, 58);
@@ -328,74 +304,6 @@
             this.panelPm2.Size = new System.Drawing.Size(1022, 449);
             this.panelPm2.TabIndex = 10;
             this.panelPm2.Visible = false;
-            // 
-            // panelPm3
-            // 
-            this.panelPm3.Controls.Add(this.textBoxVaccum);
-            this.panelPm3.Controls.Add(this.textBoxTemperature);
-            this.panelPm3.Controls.Add(this.labelProcesstime);
-            this.panelPm3.Controls.Add(this.lblTemperature);
-            this.panelPm3.Controls.Add(this.lblVaccum);
-            this.panelPm3.Controls.Add(this.textBoxProcesstime);
-            this.panelPm3.Location = new System.Drawing.Point(270, 58);
-            this.panelPm3.Name = "panelPm3";
-            this.panelPm3.Size = new System.Drawing.Size(1022, 449);
-            this.panelPm3.TabIndex = 11;
-            this.panelPm3.Visible = false;
-            // 
-            // textBoxVaccum
-            // 
-            this.textBoxVaccum.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBoxVaccum.Location = new System.Drawing.Point(129, 43);
-            this.textBoxVaccum.Name = "textBoxVaccum";
-            this.textBoxVaccum.Size = new System.Drawing.Size(188, 29);
-            this.textBoxVaccum.TabIndex = 8;
-            // 
-            // textBoxTemperature
-            // 
-            this.textBoxTemperature.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBoxTemperature.Location = new System.Drawing.Point(129, 89);
-            this.textBoxTemperature.Name = "textBoxTemperature";
-            this.textBoxTemperature.Size = new System.Drawing.Size(188, 29);
-            this.textBoxTemperature.TabIndex = 7;
-            // 
-            // labelProcesstime
-            // 
-            this.labelProcesstime.AutoSize = true;
-            this.labelProcesstime.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.labelProcesstime.Location = new System.Drawing.Point(35, 137);
-            this.labelProcesstime.Name = "labelProcesstime";
-            this.labelProcesstime.Size = new System.Drawing.Size(82, 25);
-            this.labelProcesstime.TabIndex = 6;
-            this.labelProcesstime.Text = "공정 시간";
-            // 
-            // lblTemperature
-            // 
-            this.lblTemperature.AutoSize = true;
-            this.lblTemperature.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblTemperature.Location = new System.Drawing.Point(74, 89);
-            this.lblTemperature.Name = "lblTemperature";
-            this.lblTemperature.Size = new System.Drawing.Size(44, 25);
-            this.lblTemperature.TabIndex = 5;
-            this.lblTemperature.Text = "온도";
-            // 
-            // lblVaccum
-            // 
-            this.lblVaccum.AutoSize = true;
-            this.lblVaccum.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblVaccum.Location = new System.Drawing.Point(73, 47);
-            this.lblVaccum.Name = "lblVaccum";
-            this.lblVaccum.Size = new System.Drawing.Size(44, 25);
-            this.lblVaccum.TabIndex = 4;
-            this.lblVaccum.Text = "진공";
-            // 
-            // textBoxProcesstime
-            // 
-            this.textBoxProcesstime.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBoxProcesstime.Location = new System.Drawing.Point(130, 133);
-            this.textBoxProcesstime.Name = "textBoxProcesstime";
-            this.textBoxProcesstime.Size = new System.Drawing.Size(188, 29);
-            this.textBoxProcesstime.TabIndex = 0;
             // 
             // groupBox1
             // 
@@ -452,7 +360,7 @@
             this.groupBox2.Controls.Add(this.lblCurrent2);
             this.groupBox2.Controls.Add(this.textBoxCurrent2);
             this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.groupBox2.Location = new System.Drawing.Point(14, 230);
+            this.groupBox2.Location = new System.Drawing.Point(14, 174);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(317, 86);
             this.groupBox2.TabIndex = 8;
@@ -481,7 +389,7 @@
             // 
             this.lblVoltage2.AutoSize = true;
             this.lblVoltage2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblVoltage2.Location = new System.Drawing.Point(28, 191);
+            this.lblVoltage2.Location = new System.Drawing.Point(28, 143);
             this.lblVoltage2.Name = "lblVoltage2";
             this.lblVoltage2.Size = new System.Drawing.Size(82, 25);
             this.lblVoltage2.TabIndex = 7;
@@ -491,21 +399,11 @@
             // 
             this.lblDose2.AutoSize = true;
             this.lblDose2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblDose2.Location = new System.Drawing.Point(66, 138);
+            this.lblDose2.Location = new System.Drawing.Point(65, 96);
             this.lblDose2.Name = "lblDose2";
             this.lblDose2.Size = new System.Drawing.Size(62, 25);
             this.lblDose2.TabIndex = 6;
             this.lblDose2.Text = "Dose";
-            // 
-            // lblGas2
-            // 
-            this.lblGas2.AutoSize = true;
-            this.lblGas2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblGas2.Location = new System.Drawing.Point(74, 89);
-            this.lblGas2.Name = "lblGas2";
-            this.lblGas2.Size = new System.Drawing.Size(44, 25);
-            this.lblGas2.TabIndex = 5;
-            this.lblGas2.Text = "가스";
             // 
             // lblIonGas2
             // 
@@ -520,26 +418,21 @@
             // textBoxVoltage2
             // 
             this.textBoxVoltage2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBoxVoltage2.Location = new System.Drawing.Point(130, 186);
+            this.textBoxVoltage2.Location = new System.Drawing.Point(130, 138);
             this.textBoxVoltage2.Name = "textBoxVoltage2";
             this.textBoxVoltage2.Size = new System.Drawing.Size(188, 29);
             this.textBoxVoltage2.TabIndex = 3;
-            // 
-            // listBoxGas2
-            // 
-            this.listBoxGas2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.listBoxGas2.FormattingEnabled = true;
-            this.listBoxGas2.ItemHeight = 24;
-            this.listBoxGas2.Location = new System.Drawing.Point(130, 89);
-            this.listBoxGas2.Name = "listBoxGas2";
-            this.listBoxGas2.Size = new System.Drawing.Size(188, 28);
-            this.listBoxGas2.TabIndex = 2;
             // 
             // listBoxIonGas2
             // 
             this.listBoxIonGas2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
             this.listBoxIonGas2.FormattingEnabled = true;
             this.listBoxIonGas2.ItemHeight = 24;
+            this.listBoxIonGas2.Items.AddRange(new object[] {
+            "붕소(B)",
+            "인(P)",
+            "비소(As)",
+            "포스핀(PH₃)"});
             this.listBoxIonGas2.Location = new System.Drawing.Point(130, 47);
             this.listBoxIonGas2.Name = "listBoxIonGas2";
             this.listBoxIonGas2.Size = new System.Drawing.Size(188, 28);
@@ -548,17 +441,65 @@
             // textBoxDose2
             // 
             this.textBoxDose2.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.textBoxDose2.Location = new System.Drawing.Point(130, 133);
+            this.textBoxDose2.Location = new System.Drawing.Point(130, 91);
             this.textBoxDose2.Name = "textBoxDose2";
             this.textBoxDose2.Size = new System.Drawing.Size(188, 29);
             this.textBoxDose2.TabIndex = 0;
+            // 
+            // panelPm3
+            // 
+            this.panelPm3.Controls.Add(this.textBoxVaccum);
+            this.panelPm3.Controls.Add(this.textBoxTemperature);
+            this.panelPm3.Controls.Add(this.lblTemperature);
+            this.panelPm3.Controls.Add(this.lblVaccum);
+            this.panelPm3.Location = new System.Drawing.Point(270, 58);
+            this.panelPm3.Name = "panelPm3";
+            this.panelPm3.Size = new System.Drawing.Size(1022, 449);
+            this.panelPm3.TabIndex = 11;
+            this.panelPm3.Visible = false;
+            // 
+            // textBoxVaccum
+            // 
+            this.textBoxVaccum.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.textBoxVaccum.Location = new System.Drawing.Point(129, 43);
+            this.textBoxVaccum.Name = "textBoxVaccum";
+            this.textBoxVaccum.Size = new System.Drawing.Size(188, 29);
+            this.textBoxVaccum.TabIndex = 8;
+            // 
+            // textBoxTemperature
+            // 
+            this.textBoxTemperature.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.textBoxTemperature.Location = new System.Drawing.Point(129, 89);
+            this.textBoxTemperature.Name = "textBoxTemperature";
+            this.textBoxTemperature.Size = new System.Drawing.Size(188, 29);
+            this.textBoxTemperature.TabIndex = 7;
+            // 
+            // lblTemperature
+            // 
+            this.lblTemperature.AutoSize = true;
+            this.lblTemperature.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblTemperature.Location = new System.Drawing.Point(74, 89);
+            this.lblTemperature.Name = "lblTemperature";
+            this.lblTemperature.Size = new System.Drawing.Size(44, 25);
+            this.lblTemperature.TabIndex = 5;
+            this.lblTemperature.Text = "온도";
+            // 
+            // lblVaccum
+            // 
+            this.lblVaccum.AutoSize = true;
+            this.lblVaccum.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblVaccum.Location = new System.Drawing.Point(73, 47);
+            this.lblVaccum.Name = "lblVaccum";
+            this.lblVaccum.Size = new System.Drawing.Size(44, 25);
+            this.lblVaccum.TabIndex = 4;
+            this.lblVaccum.Text = "진공";
             // 
             // RecipeView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.panelPm3);
             this.Controls.Add(this.panelPm2);
+            this.Controls.Add(this.panelPm3);
             this.Controls.Add(this.panelPm1);
             this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.btnSave);
@@ -575,12 +516,12 @@
             this.gBoxAnalyzer.PerformLayout();
             this.panelPm2.ResumeLayout(false);
             this.panelPm2.PerformLayout();
-            this.panelPm3.ResumeLayout(false);
-            this.panelPm3.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            this.panelPm3.ResumeLayout(false);
+            this.panelPm3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -594,12 +535,10 @@
         private System.Windows.Forms.Button btnLoad;
         private System.Windows.Forms.Panel panelPm1;
         private System.Windows.Forms.TextBox textBoxVoltage;
-        private System.Windows.Forms.ListBox listBoxGas;
         private System.Windows.Forms.ListBox listBoxIonGas;
         private System.Windows.Forms.TextBox textBoxDose;
         private System.Windows.Forms.Label lblVoltage;
         private System.Windows.Forms.Label lblDose;
-        private System.Windows.Forms.Label lblGas;
         private System.Windows.Forms.Label lblIonGas;
         private System.Windows.Forms.GroupBox gBoxScanner;
         private System.Windows.Forms.Label lblMotor;
@@ -620,18 +559,14 @@
         private System.Windows.Forms.TextBox textBoxCurrent2;
         private System.Windows.Forms.Label lblVoltage2;
         private System.Windows.Forms.Label lblDose2;
-        private System.Windows.Forms.Label lblGas2;
         private System.Windows.Forms.Label lblIonGas2;
         private System.Windows.Forms.TextBox textBoxVoltage2;
-        private System.Windows.Forms.ListBox listBoxGas2;
         private System.Windows.Forms.ListBox listBoxIonGas2;
         private System.Windows.Forms.TextBox textBoxDose2;
         private System.Windows.Forms.Panel panelPm3;
         private System.Windows.Forms.TextBox textBoxVaccum;
         private System.Windows.Forms.TextBox textBoxTemperature;
-        private System.Windows.Forms.Label labelProcesstime;
         private System.Windows.Forms.Label lblTemperature;
         private System.Windows.Forms.Label lblVaccum;
-        private System.Windows.Forms.TextBox textBoxProcesstime;
     }
 }

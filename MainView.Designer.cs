@@ -278,7 +278,7 @@
             this.lblPM1AV.Name = "lblPM1AV";
             this.lblPM1AV.Size = new System.Drawing.Size(99, 41);
             this.lblPM1AV.TabIndex = 5;
-            this.lblPM1AV.Text = "AV";
+            this.lblPM1AV.Text = "HV";
             this.lblPM1AV.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblPM1Temperature
@@ -808,7 +808,7 @@
             this.lblPM2AV.Name = "lblPM2AV";
             this.lblPM2AV.Size = new System.Drawing.Size(100, 41);
             this.lblPM2AV.TabIndex = 5;
-            this.lblPM2AV.Text = "AV";
+            this.lblPM2AV.Text = "HV";
             this.lblPM2AV.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // lblPM2Temperature

@@ -51,8 +51,14 @@ namespace IonImplationEtherCAT
         // 워크플로우 취소 플래그
         private bool isWorkflowCancelled;
 
+        // Stop 진행 중 플래그 (버튼 비활성화용)
+        private bool isStopping;
+
         // EtherCAT 컨트롤러 참조
         private IEtherCATController etherCATController;
+
+        // RecipeView 참조
+        private RecipeView recipeView;
 
         // 타워 램프 상태
         private TowerLampState currentTowerLampState = TowerLampState.Off;
@@ -80,11 +86,12 @@ namespace IonImplationEtherCAT
             // 명령 큐 생성
             commandQueue = new CommandQueue(this);
             
-            // 타이머 초기화 (1초마다 실행)
+            // 타이머 초기화 (1초마다 실행) - 파라미터 애니메이션을 위해 항상 실행
             processTimer = new Timer();
             processTimer.Interval = 1000; // 1초
             processTimer.Tick += ProcessTimer_Tick;
-            
+            processTimer.Start(); // 파라미터 애니메이션을 위해 항상 시작
+
             // TM 애니메이션 타이머 초기화 (약 60 FPS)
             tmAnimationTimer = new Timer();
             tmAnimationTimer.Interval = 16; // 약 60fps
@@ -102,6 +109,9 @@ namespace IonImplationEtherCAT
             // 워크플로우 취소 플래그 초기화
             isWorkflowCancelled = false;
 
+            // Stop 진행 중 플래그 초기화
+            isStopping = false;
+
             // 초기에는 모든 버튼 비활성화
             ActivateButtons(false);
 
@@ -111,42 +121,48 @@ namespace IonImplationEtherCAT
         }
 
         /// <summary>
-        /// 타이머 틱 이벤트 - 공정 업데이트
+        /// 타이머 틱 이벤트 - 공정 업데이트 및 파라미터 애니메이션
         /// </summary>
         private void ProcessTimer_Tick(object sender, EventArgs e)
         {
-            // processModuleA (PM1) 업데이트 (1초씩 증가)
+            // processModuleA (PM1) 업데이트
             if (processModuleA.ModuleState == ProcessModule.State.Running)
             {
                 processModuleA.UpdateProcess(1);
-
-                // 진행 상황 업데이트
                 UpdateProcessDisplay();
-
-                // 공정 완료 알림은 제거 (자동 워크플로우에서 자동 처리됨)
+            }
+            else
+            {
+                // Idle/Stopped 상태에서 파라미터 하강 애니메이션
+                processModuleA.UpdateParametersWhenIdle();
             }
 
-            // processModuleB (PM2) 업데이트 (1초씩 증가)
+            // processModuleB (PM2) 업데이트
             if (processModuleB.ModuleState == ProcessModule.State.Running)
             {
                 processModuleB.UpdateProcess(1);
-
-                // 진행 상황 업데이트
                 UpdateProcessDisplay();
-
-                // 공정 완료 알림은 제거 (자동 워크플로우에서 자동 처리됨)
+            }
+            else
+            {
+                // Idle/Stopped 상태에서 파라미터 하강 애니메이션
+                processModuleB.UpdateParametersWhenIdle();
             }
 
-            // processModuleC (PM3) 업데이트 (1초씩 증가)
+            // processModuleC (PM3) 업데이트
             if (processModuleC.ModuleState == ProcessModule.State.Running)
             {
                 processModuleC.UpdateProcess(1);
-
-                // 진행 상황 업데이트
                 UpdateProcessDisplay();
-
-                // 공정 완료 알림은 제거 (자동 워크플로우에서 자동 처리됨)
             }
+            else
+            {
+                // Idle/Stopped 상태에서 파라미터 하강 애니메이션
+                processModuleC.UpdateParametersWhenIdle();
+            }
+
+            // 모든 PM 파라미터 표시 업데이트 (항상 실행 - 애니메이션용)
+            UpdateAllPMParameters();
         }
 
         /// <summary>
@@ -299,18 +315,101 @@ namespace IonImplationEtherCAT
             }
         }
 
+        #region PM 파라미터 표시 업데이트
+
+        /// <summary>
+        /// PM1 파라미터 값 표시 업데이트
+        /// </summary>
+        private void UpdatePM1Parameters()
+        {
+            var p = processModuleA.Parameters;
+            lblPM1TemperatureValue.Text = p.GetTemperatureDisplay();
+            lblPM1PressureValue.Text = p.GetPressureDisplay();
+            lblPM1AVValue.Text = p.GetHVDisplay();
+            lblPM1DoseValue.Text = p.GetDoseDisplay();
+        }
+
+        /// <summary>
+        /// PM2 파라미터 값 표시 업데이트
+        /// </summary>
+        private void UpdatePM2Parameters()
+        {
+            var p = processModuleB.Parameters;
+            lblPM2TemperatureValue.Text = p.GetTemperatureDisplay();
+            lblPM2PressureValue.Text = p.GetPressureDisplay();
+            lblPM2AVValue.Text = p.GetHVDisplay();
+            lblPM2DoseValue.Text = p.GetDoseDisplay();
+        }
+
+        /// <summary>
+        /// PM3 파라미터 값 표시 업데이트 (Temperature, Pressure만)
+        /// </summary>
+        private void UpdatePM3Parameters()
+        {
+            var p = processModuleC.Parameters;
+            lblTemperatureValue.Text = p.GetTemperatureDisplay();
+            lblPressureValue.Text = p.GetPressureDisplay();
+        }
+
+        /// <summary>
+        /// 모든 PM 파라미터 표시 업데이트
+        /// </summary>
+        private void UpdateAllPMParameters()
+        {
+            UpdatePM1Parameters();
+            UpdatePM2Parameters();
+            UpdatePM3Parameters();
+        }
+
+        /// <summary>
+        /// 모든 PM 파라미터 표시 초기화
+        /// </summary>
+        private void ResetPMParametersDisplay()
+        {
+            lblPM1TemperatureValue.Text = "-";
+            lblPM1PressureValue.Text = "-";
+            lblPM1AVValue.Text = "-";
+            lblPM1DoseValue.Text = "-";
+
+            lblPM2TemperatureValue.Text = "-";
+            lblPM2PressureValue.Text = "-";
+            lblPM2AVValue.Text = "-";
+            lblPM2DoseValue.Text = "-";
+
+            lblTemperatureValue.Text = "-";
+            lblPressureValue.Text = "-";
+        }
+
+        #endregion
+
         /// <summary>
         /// 로그인 상태에 따라 모든 버튼을 활성화/비활성화
         /// </summary>
         public void ActivateButtons(bool activate)
         {
+            ActivateRecipeButtons(activate);
+            ActivateEquipmentButtons(activate);
+        }
+
+        /// <summary>
+        /// 레시피 설정 버튼 활성화 (로그인만 하면 사용 가능)
+        /// </summary>
+        public void ActivateRecipeButtons(bool activate)
+        {
+            btnRecipeA.Enabled = activate;
+            btnRecipeB.Enabled = activate;
+            btnRecipeC.Enabled = activate;
+        }
+
+        /// <summary>
+        /// 장비 제어 버튼 활성화 (로그인 + 연결 시 사용 가능)
+        /// </summary>
+        public void ActivateEquipmentButtons(bool activate)
+        {
             btnFoupALoadSW.Enabled = activate;
             buttonFoupAUnloadSW.Enabled = activate;
             btnFoupBLoadSW.Enabled = activate;
             btnFoupBUnloadSW.Enabled = activate;
-            btnRecipeA.Enabled = activate;
-            btnRecipeB.Enabled = activate;
-            btnRecipeC.Enabled = activate;
             btnAllProcess.Enabled = activate;
             btnAllStop.Enabled = activate;
 
@@ -350,6 +449,41 @@ namespace IonImplationEtherCAT
         private void LoadSW()
         {
 
+        }
+
+        /// <summary>
+        /// RecipeView 참조 설정
+        /// </summary>
+        public void SetRecipeView(RecipeView view)
+        {
+            recipeView = view;
+        }
+
+        /// <summary>
+        /// RecipeView에서 레시피를 가져와 PM에 적용
+        /// </summary>
+        public void LoadRecipesFromRecipeView()
+        {
+            if (recipeView == null)
+            {
+                System.Diagnostics.Debug.WriteLine("RecipeView가 설정되지 않았습니다.");
+                return;
+            }
+
+            // RecipeView에서 현재 레시피 세트 가져오기
+            RecipeSet recipeSet = recipeView.GetCurrentRecipeSet();
+
+            // PM1에 레시피 적용
+            processModuleA.IonRecipe = recipeSet.PM1Recipe;
+            System.Diagnostics.Debug.WriteLine($"PM1 레시피 로드: Dose={processModuleA.IonRecipe.Dose}, Voltage={processModuleA.IonRecipe.Voltage}");
+
+            // PM2에 레시피 적용
+            processModuleB.IonRecipe = recipeSet.PM2Recipe;
+            System.Diagnostics.Debug.WriteLine($"PM2 레시피 로드: Dose={processModuleB.IonRecipe.Dose}, Voltage={processModuleB.IonRecipe.Voltage}");
+
+            // PM3에 레시피 적용
+            processModuleC.AnnealRecipe = recipeSet.PM3Recipe;
+            System.Diagnostics.Debug.WriteLine($"PM3 레시피 로드: Temperature={processModuleC.AnnealRecipe.Temperature}, Vacuum={processModuleC.AnnealRecipe.Vacuum}");
         }
 
         private void btnRecipeA_Click(object sender, EventArgs e)
@@ -514,6 +648,9 @@ namespace IonImplationEtherCAT
         /// </summary>
         private async Task StartFullAutomatedWorkflow()
         {
+            // RecipeView에서 최신 레시피 로드
+            LoadRecipesFromRecipeView();
+
             int totalWafers = foupA.WaferCount;
             if (totalWafers == 0)
             {
@@ -711,10 +848,7 @@ namespace IonImplationEtherCAT
             {
                 // === 실제 하드웨어 시퀀스 ===
 
-                // 1. UD 원점복귀 (안전)
-                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
-
-                // 2. LR을 FOUP A 위치로 이동 + UI 애니메이션
+                // 1. LR을 FOUP A 위치로 이동 + UI 애니메이션
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, "FOUP A로 회전 (UI)", ANGLE_FOUP_A));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.MoveLRAxis, "FOUP A로 LR 이동", HardwarePositionMap.LR_FOUP_A));
 
@@ -741,10 +875,7 @@ namespace IonImplationEtherCAT
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축 (UI)"));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
 
-                // 9. UD 원점복귀
-                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
-
-                // 10. LR을 PM 위치로 이동 + UI 애니메이션
+                // 9. LR을 PM 위치로 이동 + UI 애니메이션
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, $"{pmName}로 회전 (UI)", targetAngle));
                 long pmLR = HardwarePositionMap.GetPMLRPosition(targetPM.Type);
                 commandQueue.Enqueue(new ProcessCommand(CommandType.MoveLRAxis, $"{pmName}로 LR 이동", pmLR));
@@ -774,13 +905,10 @@ namespace IonImplationEtherCAT
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축 (UI)"));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
 
-                // 18. UD 원점복귀
-                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
-
-                // 19. PM 문 닫기
+                // 18. PM 문 닫기
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ClosePMDoor, "PM 문 닫기", targetPM));
 
-                // 20. 공정 시작
+                // 20. 공정 시작 (파라미터 안정화 후 시간 카운트 시작)
                 commandQueue.Enqueue(new ProcessCommand(CommandType.StartProcess, $"{pmName} 공정 시작", targetPM));
             }
             else
@@ -802,7 +930,7 @@ namespace IonImplationEtherCAT
                 commandQueue.Enqueue(new ProcessCommand(CommandType.PlaceWafer, "웨이퍼 배치", targetPM));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축"));
 
-                // 4. 공정 시작
+                // 4. 공정 시작 (파라미터 안정화 후 시간 카운트 시작)
                 commandQueue.Enqueue(new ProcessCommand(CommandType.StartProcess, $"{pmName} 공정 시작", targetPM));
             }
 
@@ -831,10 +959,7 @@ namespace IonImplationEtherCAT
             {
                 // === 실제 하드웨어 시퀀스 ===
 
-                // 1. UD 원점복귀 (안전)
-                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
-
-                // 2. LR을 소스 PM 위치로 이동 + UI 애니메이션
+                // 1. LR을 소스 PM 위치로 이동 + UI 애니메이션
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, $"{pmName}로 회전 (UI)", sourceAngle));
                 long sourcePMLR = HardwarePositionMap.GetPMLRPosition(sourcePM.Type);
                 commandQueue.Enqueue(new ProcessCommand(CommandType.MoveLRAxis, $"{pmName}로 LR 이동", sourcePMLR));
@@ -863,10 +988,7 @@ namespace IonImplationEtherCAT
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축 (UI)"));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
 
-                // 10. UD 원점복귀
-                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
-
-                // 11. 소스 PM 문 닫기
+                // 10. 소스 PM 문 닫기
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ClosePMDoor, $"{pmName} 문 닫기", sourcePM));
 
                 // 12. LR을 PM3 위치로 이동 + UI 애니메이션
@@ -898,13 +1020,10 @@ namespace IonImplationEtherCAT
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축 (UI)"));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
 
-                // 20. UD 원점복귀
-                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
-
-                // 21. PM3 문 닫기
+                // 20. PM3 문 닫기
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ClosePMDoor, "PM3 문 닫기", processModuleC));
 
-                // 22. PM3 공정 시작
+                // 22. PM3 공정 시작 (파라미터 안정화 후 시간 카운트 시작)
                 commandQueue.Enqueue(new ProcessCommand(CommandType.StartProcess, "PM3 공정 시작", processModuleC));
             }
             else
@@ -926,7 +1045,7 @@ namespace IonImplationEtherCAT
                 commandQueue.Enqueue(new ProcessCommand(CommandType.PlaceWafer, "웨이퍼 배치", processModuleC));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축"));
 
-                // 4. PM3 공정 시작
+                // 4. PM3 공정 시작 (파라미터 안정화 후 시간 카운트 시작)
                 commandQueue.Enqueue(new ProcessCommand(CommandType.StartProcess, "PM3 공정 시작", processModuleC));
             }
 
@@ -959,10 +1078,7 @@ namespace IonImplationEtherCAT
             {
                 // === 실제 하드웨어 시퀀스 ===
 
-                // 1. UD 원점복귀 (안전)
-                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
-
-                // 2. LR을 PM3 위치로 이동 + UI 애니메이션
+                // 1. LR을 PM3 위치로 이동 + UI 애니메이션
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, "PM3로 회전 (UI)", ANGLE_PM3));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.MoveLRAxis, "PM3로 LR 이동", HardwarePositionMap.LR_PM3));
 
@@ -990,10 +1106,7 @@ namespace IonImplationEtherCAT
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축 (UI)"));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
 
-                // 10. UD 원점복귀
-                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
-
-                // 11. PM3 문 닫기
+                // 10. PM3 문 닫기
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ClosePMDoor, "PM3 문 닫기", processModuleC));
 
                 // 12. LR을 FOUP B 위치로 이동 + UI 애니메이션
@@ -1023,9 +1136,6 @@ namespace IonImplationEtherCAT
                 // 18. 실린더 후진 + UI 애니메이션
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축 (UI)"));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
-
-                // 19. UD 원점복귀
-                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
             }
             else
             {
@@ -1108,6 +1218,9 @@ namespace IonImplationEtherCAT
         /// </summary>
         private async Task StartWaferTransferAndProcess()
         {
+            // RecipeView에서 최신 레시피 로드
+            LoadRecipesFromRecipeView();
+
             // 맨 위 웨이퍼 슬롯 찾기
             int waferSlot = GetTopWaferSlotFromFoupA();
             if (waferSlot < 0)
@@ -1146,7 +1259,7 @@ namespace IonImplationEtherCAT
             // 9. 암 수축
             commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축"));
 
-            // 10. 공정 시작
+            // 10. 공정 시작 (파라미터 안정화 후 시간 카운트 시작)
             commandQueue.Enqueue(new ProcessCommand(CommandType.StartProcess, "공정 시작", processModuleA));
 
             // 명령 큐 실행
@@ -1162,22 +1275,45 @@ namespace IonImplationEtherCAT
 
         private async void btnAllStop_Click(object sender, EventArgs e)
         {
-            // 워크플로우 취소 플래그 설정
-            isWorkflowCancelled = true;
-
-            // TM이 명령 실행 중이면 현재 명령 완료 후 중단
-            if (commandQueue.IsExecuting)
+            // 이미 Stop 진행 중이면 무시
+            if (isStopping)
             {
-                MessageBox.Show("현재 TM 동작을 완료한 후 워크플로우가 중단됩니다.",
-                    "중단 예약", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 
+            // Stop 진행 중 플래그 설정 및 모든 버튼 비활성화
+            isStopping = true;
+            ActivateButtons(false);
+            btnAllStop.Enabled = false; // Stop 버튼도 비활성화
+
+            // 워크플로우 취소 플래그 설정
+            isWorkflowCancelled = true;
+
             bool anyStopped = false;
-            bool workflowWasRunning = false;
+            bool wasExecuting = commandQueue.IsExecuting;
+
+            // TM이 명령 실행 중이면 현재 명령 완료까지 대기
+            if (wasExecuting)
+            {
+                // CommandQueue에 Stop 요청 (현재 명령 완료 후 중단)
+                commandQueue.RequestStop();
+
+                // 현재 명령 완료까지 대기 (최대 30초)
+                int timeout = 30000;
+                int elapsed = 0;
+                int pollInterval = 100;
+
+                while (commandQueue.IsExecuting && elapsed < timeout)
+                {
+                    await Task.Delay(pollInterval);
+                    elapsed += pollInterval;
+                }
+            }
 
             // processModuleA (PM1) 공정 중지 및 완전 초기화
-            if (processModuleA.ModuleState != ProcessModule.State.Idle)
+            if (processModuleA.ModuleState != ProcessModule.State.Idle ||
+                processModuleA.Parameters.IsRising ||
+                processModuleA.Parameters.IsStable)
             {
                 processModuleA.StopProcess();
                 processModuleA.ModuleState = ProcessModule.State.Idle;
@@ -1189,7 +1325,9 @@ namespace IonImplationEtherCAT
             processModuleA.IsUnloadRequested = false;
 
             // processModuleB (PM2) 공정 중지 및 완전 초기화
-            if (processModuleB.ModuleState != ProcessModule.State.Idle)
+            if (processModuleB.ModuleState != ProcessModule.State.Idle ||
+                processModuleB.Parameters.IsRising ||
+                processModuleB.Parameters.IsStable)
             {
                 processModuleB.StopProcess();
                 processModuleB.ModuleState = ProcessModule.State.Idle;
@@ -1201,7 +1339,9 @@ namespace IonImplationEtherCAT
             processModuleB.IsUnloadRequested = false;
 
             // processModuleC (PM3) 공정 중지 및 완전 초기화
-            if (processModuleC.ModuleState != ProcessModule.State.Idle)
+            if (processModuleC.ModuleState != ProcessModule.State.Idle ||
+                processModuleC.Parameters.IsRising ||
+                processModuleC.Parameters.IsStable)
             {
                 processModuleC.StopProcess();
                 processModuleC.ModuleState = ProcessModule.State.Idle;
@@ -1212,8 +1352,9 @@ namespace IonImplationEtherCAT
             // Idle 상태여도 IsUnloadRequested는 무조건 초기화
             processModuleC.IsUnloadRequested = false;
 
-            // 명령 큐 중지 및 초기화
+            // 명령 큐 완전 중지 및 초기화
             commandQueue.Stop();
+            commandQueue.ResetStopFlag();
 
             // TM 위치 초기화 (UI 각도를 0도로 리셋)
             transferModule.RotateImmediate(0);
@@ -1232,13 +1373,13 @@ namespace IonImplationEtherCAT
             etherCATController?.SetPMLamp(ProcessModule.ModuleType.PM3, false);
 
             // 실제 모드에서는 장비 초기화 (서보 ON → 원점복귀 → 서보 OFF, PM 문 닫기 등)
-            if (IsRealMode() && (anyStopped || workflowWasRunning))
+            if (IsRealMode() && (anyStopped || wasExecuting))
             {
                 await InitializeHardwareAsync();
             }
 
             // 워크플로우 진행 중이었거나 공정이 실행 중이었으면 메시지 표시
-            if (anyStopped || workflowWasRunning)
+            if (anyStopped || wasExecuting)
             {
                 // 황색 램프 (중단 - 대기)
                 UpdateTowerLamp(TowerLampState.Yellow);
@@ -1252,10 +1393,20 @@ namespace IonImplationEtherCAT
                     "알림", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
-            // Stop 버튼을 누른 후에는 다시 시작할 수 있도록 플래그 리셋
-            // (약간의 지연 후 리셋하여 취소 처리가 완료되도록 함)
-            await Task.Delay(100);
+            // 플래그 리셋 및 버튼 재활성화
             isWorkflowCancelled = false;
+            isStopping = false;
+
+            // 로그인 상태에 따라 버튼 활성화
+            if (MainForm.IsLogined)
+            {
+                ActivateRecipeButtons(true);
+                if (MainForm.IsConnected)
+                {
+                    ActivateEquipmentButtons(true);
+                }
+            }
+            btnAllStop.Enabled = true;
         }
 
         private void btnFoupALoadSW_Click(object sender, EventArgs e)
@@ -1670,9 +1821,6 @@ namespace IonImplationEtherCAT
         /// </summary>
         public void ResetAllState()
         {
-            // 공정 타이머 중지
-            processTimer.Stop();
-
             // 워크플로우 취소
             isWorkflowCancelled = true;
 
@@ -1685,16 +1833,19 @@ namespace IonImplationEtherCAT
             processModuleA.elapsedTime = 0;
             processModuleA.isWaferLoaded = false;
             processModuleA.IsUnloadRequested = false;
+            processModuleA.Parameters.Reset();
 
             processModuleB.ModuleState = ProcessModule.State.Idle;
             processModuleB.elapsedTime = 0;
             processModuleB.isWaferLoaded = false;
             processModuleB.IsUnloadRequested = false;
+            processModuleB.Parameters.Reset();
 
             processModuleC.ModuleState = ProcessModule.State.Idle;
             processModuleC.elapsedTime = 0;
             processModuleC.isWaferLoaded = false;
             processModuleC.IsUnloadRequested = false;
+            processModuleC.Parameters.Reset();
 
             // TM 상태 초기화
             transferModule.State = TransferModule.TMState.Idle;
@@ -1714,6 +1865,9 @@ namespace IonImplationEtherCAT
             progressBarPM1.Value = 0;
             progressBarPM2.Value = 0;
             progressBarPM3.Value = 0;
+
+            // PM 파라미터 표시 초기화
+            ResetPMParametersDisplay();
 
             // 램프 끄기
             picBoxPM1Lamp.BackgroundImage = Properties.Resources.LampOff;

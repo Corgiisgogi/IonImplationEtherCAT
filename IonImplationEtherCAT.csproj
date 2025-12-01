@@ -49,6 +49,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +86,9 @@
     <Compile Include="Foup.cs" />
     <Compile Include="ProcessCommand.cs" />
     <Compile Include="ProcessModule.cs" />
+    <Compile Include="ProcessParameters.cs" />
+    <Compile Include="Recipe.cs" />
+    <Compile Include="RecipeManager.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="RealEtherCATController.cs" />
     <Compile Include="RotatableImagePanel.cs">

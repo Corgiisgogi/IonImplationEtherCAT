@@ -78,11 +78,12 @@ The application uses a main form (`MainForm`) with a swappable content panel:
 **RealEtherCATController** (`RealEtherCATController.cs`): Real hardware implementation using IEG3268_Dll
 **SimulationEtherCATController** (`SimulationEtherCATController.cs`): Simulation mode stub
 
-**HardwarePositionMap** (`HardwarePositionMap.cs`): Motor position constants
+**HardwarePositionMap** (`HardwarePositionMap.cs`): Motor position constants (EtherCAT motor units)
 - FOUP A LR: 14140, FOUP B LR: -394293
 - PM1 LR: -59064, PM2 LR: -190823, PM3 LR: -321600
 - PM UD positions: Seating=776931, Lifted=1156931
-- FOUP slot UD arrays: `FOUP_A_UD_SEATING[]`, `FOUP_A_UD_LIFTED[]`
+- FOUP slot UD arrays: `FOUP_A_UD_SEATING[]` (1층=72379 ~ 5층=2788463), `FOUP_A_UD_LIFTED[]`
+- Helper methods: `GetFoupSeatingPosition()`, `GetFoupLiftedPosition()`, `GetPMLRPosition()`
 
 ### UI Components
 
@@ -137,4 +138,11 @@ Hardcoded: `admin` / `1234` (MainForm.cs:204-205)
 - FOUP wafer extraction is from bottom slot first (slot 0), insertion to bottom empty slot first
 - PM lamp blinks at 500ms interval when `IsUnloadRequested` is true (handled by `lampBlinkTimer`)
 - Workflow cancellation via `isWorkflowCancelled` flag, checked in the event loop
-- All hardware commands have timing delays defined in CommandQueue (e.g., `CYLINDER_EXTEND_DELAY = 3000ms`)
+- All hardware commands have timing delays defined in CommandQueue:
+  - Servo: ON=1000ms, OFF=500ms
+  - Axis move settle: 1000ms
+  - PM door: Open/Close=2500ms
+  - Cylinder: Extend/Retract=3000ms
+  - Suction: Enable=1500ms, Disable=1000ms
+  - Exhaust: Enable=1000ms, Disable=1500ms
+  - TM arm: Extend/Retract=1500ms, Settle=1000ms

@@ -14,8 +14,12 @@ namespace IonImplationEtherCAT
         private bool isExecuting;
         private MainView mainView;
 
+        // Stop 요청 플래그 - 현재 명령 완료 후 중단
+        private bool stopRequested;
+
         public bool IsExecuting => isExecuting;
         public int CommandCount => commands.Count;
+        public bool IsStopRequested => stopRequested;
 
         #region 동작 대기 시간 상수 (ms)
 
@@ -56,6 +60,7 @@ namespace IonImplationEtherCAT
         {
             commands = new Queue<ProcessCommand>();
             isExecuting = false;
+            stopRequested = false;
             mainView = view;
         }
 
@@ -89,12 +94,29 @@ namespace IonImplationEtherCAT
         }
 
         /// <summary>
-        /// 실행 중단 플래그 설정
+        /// 실행 중단 요청 - 현재 명령 완료 후 중단
+        /// </summary>
+        public void RequestStop()
+        {
+            stopRequested = true;
+        }
+
+        /// <summary>
+        /// 즉시 중단 및 큐 초기화
         /// </summary>
         public void Stop()
         {
+            stopRequested = true;
             commands.Clear();
             isExecuting = false;
+        }
+
+        /// <summary>
+        /// Stop 요청 플래그 리셋
+        /// </summary>
+        public void ResetStopFlag()
+        {
+            stopRequested = false;
         }
 
         /// <summary>
@@ -106,10 +128,20 @@ namespace IonImplationEtherCAT
                 return;
 
             isExecuting = true;
+            stopRequested = false; // 실행 시작 시 stop 플래그 초기화
             ProcessCommand previousCommand = null;
 
             while (commands.Count > 0 && isExecuting)
             {
+                // Stop 요청이 있으면 현재 명령 완료 후 중단
+                if (stopRequested)
+                {
+                    System.Diagnostics.Debug.WriteLine("Stop 요청으로 워크플로우 중단");
+                    commands.Clear();
+                    isExecuting = false;
+                    return;
+                }
+
                 var command = commands.Dequeue();
                 bool success = await ExecuteCommandAsync(command, previousCommand);
 
@@ -125,6 +157,15 @@ namespace IonImplationEtherCAT
 
                 command.IsCompleted = true;
                 previousCommand = command;
+
+                // 각 명령 완료 후 Stop 요청 확인
+                if (stopRequested)
+                {
+                    System.Diagnostics.Debug.WriteLine("명령 완료 후 Stop 요청으로 워크플로우 중단");
+                    commands.Clear();
+                    isExecuting = false;
+                    return;
+                }
             }
 
             isExecuting = false;
@@ -275,6 +316,44 @@ namespace IonImplationEtherCAT
                         }
                     }
                     await Task.Delay(WAFER_PLACE_DELAY); // PM에 웨이퍼 로드 대기
+                    return true;
+
+                case CommandType.InitializeParameters:
+                    // 공정 시작 전 파라미터 상승 시작 (레시피 적용)
+                    if (command.Parameters.Length > 0 && command.Parameters[0] is ProcessModule pmInit)
+                    {
+                        pmInit.InitializeParametersFromRecipe();
+                        mainView.UpdateProcessDisplay();
+                    }
+                    await Task.Delay(200); // 초기화 명령 처리 대기
+                    return true;
+
+                case CommandType.WaitForParameterStabilization:
+                    // 파라미터가 목표값에 도달할 때까지 대기
+                    if (command.Parameters.Length > 0 && command.Parameters[0] is ProcessModule pmStabilize)
+                    {
+                        int stabilizationTimeout = 60000; // 최대 60초 대기
+                        int elapsed = 0;
+                        int pollInterval = 500; // 0.5초마다 확인
+
+                        while (!pmStabilize.Parameters.IsStable && elapsed < stabilizationTimeout)
+                        {
+                            // Stop 요청 확인
+                            if (stopRequested)
+                            {
+                                return true; // 정상 종료로 처리하고 상위에서 중단 처리
+                            }
+
+                            await Task.Delay(pollInterval);
+                            elapsed += pollInterval;
+                        }
+
+                        if (elapsed >= stabilizationTimeout)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"파라미터 안정화 타임아웃: {pmStabilize.Type}");
+                            // 타임아웃이어도 계속 진행 (경고만 출력)
+                        }
+                    }
                     return true;
 
                 // === 실제 하드웨어 명령 처리 ===

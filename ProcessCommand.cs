@@ -22,6 +22,8 @@ namespace IonImplationEtherCAT
         UnloadWaferFromPM,  // PM에서 웨이퍼 언로드
         WaitForProcessComplete, // PM 공정 완료 대기
         LoadWaferToPM,      // PM에 웨이퍼 로드
+        InitializeParameters,   // 파라미터 상승 시작 (공정 전 안정화)
+        WaitForParameterStabilization, // 파라미터 안정화 대기 (목표값 도달까지)
 
         // === 실제 하드웨어 명령 ===
         // 축 제어

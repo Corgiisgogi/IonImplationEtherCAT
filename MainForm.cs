@@ -40,6 +40,9 @@ namespace IonImplationEtherCAT
             recipeView = new RecipeView();
             logView = new LogView();
 
+            // MainView에 RecipeView 참조 설정
+            mainView.SetRecipeView(recipeView);
+
             // 처음 보여줄 화면 설정
             ShowView(mainView);
             
@@ -58,19 +61,32 @@ namespace IonImplationEtherCAT
         }
 
         /// <summary>
-        /// 로그인과 연결이 모두 완료되었을 때 모든 버튼 활성화
+        /// 로그인과 연결 상태에 따라 버튼 활성화
+        /// - 레시피 관련: 로그인만 하면 활성화
+        /// - 장비 제어: 로그인 + 연결 시 활성화
         /// </summary>
         private void ActivateAllButtons()
         {
-            if (IsLogined && IsConnected)
+            // 레시피 설정은 로그인만 하면 사용 가능
+            if (IsLogined)
             {
                 recipeView.ActivateToggle(true);
-                mainView.ActivateButtons(true);
+                mainView.ActivateRecipeButtons(true);
             }
             else
             {
                 recipeView.ActivateToggle(false);
-                mainView.ActivateButtons(false);
+                mainView.ActivateRecipeButtons(false);
+            }
+
+            // 장비 제어는 로그인 + 연결이 모두 필요
+            if (IsLogined && IsConnected)
+            {
+                mainView.ActivateEquipmentButtons(true);
+            }
+            else
+            {
+                mainView.ActivateEquipmentButtons(false);
             }
         }
 
