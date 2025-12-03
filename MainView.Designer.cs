@@ -785,7 +785,7 @@
             this.tblLayoutPanelPM2Progress.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblLayoutPanelPM2Progress.ColumnCount = 2;
             this.tblLayoutPanelPM2Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.8595F));
-            this.tblLayoutPanelPM2Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 178F));
+            this.tblLayoutPanelPM2Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 175F));
             this.tblLayoutPanelPM2Progress.Controls.Add(this.progressBarPM2, 1, 0);
             this.tblLayoutPanelPM2Progress.Controls.Add(this.lblPM2Progress, 0, 0);
             this.tblLayoutPanelPM2Progress.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -798,7 +798,7 @@
             // 
             // progressBarPM2
             // 
-            this.progressBarPM2.Location = new System.Drawing.Point(65, 4);
+            this.progressBarPM2.Location = new System.Drawing.Point(68, 4);
             this.progressBarPM2.Name = "progressBarPM2";
             this.progressBarPM2.Size = new System.Drawing.Size(163, 23);
             this.progressBarPM2.TabIndex = 5;
@@ -810,7 +810,7 @@
             this.lblPM2Progress.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPM2Progress.Location = new System.Drawing.Point(4, 1);
             this.lblPM2Progress.Name = "lblPM2Progress";
-            this.lblPM2Progress.Size = new System.Drawing.Size(54, 30);
+            this.lblPM2Progress.Size = new System.Drawing.Size(57, 30);
             this.lblPM2Progress.TabIndex = 5;
             this.lblPM2Progress.Text = "progress";
             this.lblPM2Progress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
