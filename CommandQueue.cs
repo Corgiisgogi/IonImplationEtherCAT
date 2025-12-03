@@ -479,12 +479,14 @@ namespace IonImplationEtherCAT
                         var controller = mainView.GetEtherCATController();
                         if (controller != null)
                         {
+                            string targetName = HardwarePositionMap.GetUDPositionName(udPos);
                             bool success = await controller.MoveUDAxis(udPos);
                             if (!success)
                             {
-                                LogManager.Instance.Alarm($"UD축 이동 실패 (목표: {udPos})", "TM");
+                                LogManager.Instance.Alarm($"UD축 이동 실패 (목표: {targetName})", "TM");
                                 return false;
                             }
+                            LogManager.Instance.AddLog("", $"UD축 이동 완료 → {targetName}", "TM", LogCategory.Hardware, false);
                             await Task.Delay(AXIS_MOVE_SETTLE_DELAY); // 안정화 대기
                         }
                     }
@@ -496,12 +498,14 @@ namespace IonImplationEtherCAT
                         var controller = mainView.GetEtherCATController();
                         if (controller != null)
                         {
+                            string targetName = HardwarePositionMap.GetLRPositionName(lrPos);
                             bool success = await controller.MoveLRAxis(lrPos);
                             if (!success)
                             {
-                                LogManager.Instance.Alarm($"LR축 이동 실패 (목표: {lrPos})", "TM");
+                                LogManager.Instance.Alarm($"LR축 이동 실패 (목표: {targetName})", "TM");
                                 return false;
                             }
+                            LogManager.Instance.AddLog("", $"LR축 이동 완료 → {targetName}", "TM", LogCategory.Hardware, false);
                             await Task.Delay(AXIS_MOVE_SETTLE_DELAY); // 안정화 대기
                         }
                     }
@@ -582,6 +586,7 @@ namespace IonImplationEtherCAT
                     {
                         var controller = mainView.GetEtherCATController();
                         controller?.EnableSuction();
+                        LogManager.Instance.AddLog("", "웨이퍼 흡착 ON", "TM", LogCategory.Hardware, false);
                     }
                     await Task.Delay(SUCTION_ENABLE_DELAY); // 흡착 안정화 대기
                     return true;
@@ -590,6 +595,7 @@ namespace IonImplationEtherCAT
                     {
                         var controller = mainView.GetEtherCATController();
                         controller?.DisableSuction();
+                        LogManager.Instance.AddLog("", "웨이퍼 흡착 OFF", "TM", LogCategory.Hardware, false);
                     }
                     await Task.Delay(SUCTION_DISABLE_DELAY); // 흡착 해제 대기
                     return true;
@@ -598,6 +604,7 @@ namespace IonImplationEtherCAT
                     {
                         var controller = mainView.GetEtherCATController();
                         controller?.EnableExhaust();
+                        LogManager.Instance.AddLog("", "웨이퍼 배기 ON", "TM", LogCategory.Hardware, false);
                     }
                     await Task.Delay(EXHAUST_ENABLE_DELAY); // 배기 동작 대기
                     return true;
@@ -606,6 +613,7 @@ namespace IonImplationEtherCAT
                     {
                         var controller = mainView.GetEtherCATController();
                         controller?.DisableExhaust();
+                        LogManager.Instance.AddLog("", "웨이퍼 배기 OFF", "TM", LogCategory.Hardware, false);
                     }
                     await Task.Delay(EXHAUST_DISABLE_DELAY); // 배기 해제 대기
                     return true;
@@ -617,6 +625,7 @@ namespace IonImplationEtherCAT
                         {
                             controller.SetServoUD(true);
                             controller.SetServoLR(true);
+                            LogManager.Instance.AddLog("", "서보 ON (UD/LR)", "TM", LogCategory.Hardware, false);
                         }
                     }
                     await Task.Delay(SERVO_ON_DELAY); // 서보 ON 안정화 대기
@@ -629,6 +638,7 @@ namespace IonImplationEtherCAT
                         {
                             controller.SetServoUD(false);
                             controller.SetServoLR(false);
+                            LogManager.Instance.AddLog("", "서보 OFF (UD/LR)", "TM", LogCategory.Hardware, false);
                         }
                     }
                     await Task.Delay(SERVO_OFF_DELAY); // 서보 OFF 안정화 대기

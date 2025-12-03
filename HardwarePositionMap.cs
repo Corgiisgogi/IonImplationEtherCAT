@@ -134,6 +134,65 @@ namespace IonImplationEtherCAT
             }
         }
 
+        /// <summary>
+        /// LR(좌우) 좌표로 위치 이름 가져오기
+        /// </summary>
+        /// <param name="lrPosition">LR 좌표</param>
+        /// <returns>위치 이름 (예: "FOUP A", "PM1" 등)</returns>
+        public static string GetLRPositionName(long lrPosition)
+        {
+            const long tolerance = 5000; // 허용 오차
+
+            if (System.Math.Abs(lrPosition - LR_FOUP_A) < tolerance)
+                return "FOUP A";
+            if (System.Math.Abs(lrPosition - LR_FOUP_B) < tolerance)
+                return "FOUP B";
+            if (System.Math.Abs(lrPosition - LR_PM1) < tolerance)
+                return "PM1";
+            if (System.Math.Abs(lrPosition - LR_PM2) < tolerance)
+                return "PM2";
+            if (System.Math.Abs(lrPosition - LR_PM3) < tolerance)
+                return "PM3";
+
+            return $"LR:{lrPosition}";
+        }
+
+        /// <summary>
+        /// UD(상하) 좌표로 위치 이름 가져오기
+        /// </summary>
+        /// <param name="udPosition">UD 좌표</param>
+        /// <returns>위치 이름 (예: "FOUP A 1층 안착", "PM 상승" 등)</returns>
+        public static string GetUDPositionName(long udPosition)
+        {
+            const long tolerance = 5000; // 허용 오차
+
+            // PM 위치 확인
+            if (System.Math.Abs(udPosition - PM_UD_SEATING) < tolerance)
+                return "PM 안착 위치";
+            if (System.Math.Abs(udPosition - PM_UD_LIFTED) < tolerance)
+                return "PM 상승 위치";
+
+            // FOUP 슬롯 위치 확인 (안착)
+            for (int i = 0; i < FOUP_A_UD_SEATING.Length; i++)
+            {
+                if (System.Math.Abs(udPosition - FOUP_A_UD_SEATING[i]) < tolerance)
+                    return $"FOUP {i + 1}층 안착 위치";
+            }
+
+            // FOUP 슬롯 위치 확인 (상승)
+            for (int i = 0; i < FOUP_A_UD_LIFTED.Length; i++)
+            {
+                if (System.Math.Abs(udPosition - FOUP_A_UD_LIFTED[i]) < tolerance)
+                    return $"FOUP {i + 1}층 상승 위치";
+            }
+
+            // 원점 근처
+            if (System.Math.Abs(udPosition) < tolerance)
+                return "원점";
+
+            return $"UD:{udPosition}";
+        }
+
         #endregion
     }
 }
