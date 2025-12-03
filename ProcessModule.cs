@@ -165,17 +165,6 @@ namespace IonImplationEtherCAT
                 Parameters.TargetHV = IonRecipe?.Voltage ?? IonRecipe?.TargetHV ?? 100.0;
                 // Dose = 레시피에서 설정한 Dose 값 그대로 사용 (ions/cm²)
                 Parameters.TargetDose = IonRecipe?.Dose ?? 0;
-
-                // 디버그 로그
-                System.Diagnostics.Debug.WriteLine($"[{Type}] InitializeParametersFromRecipe:");
-                System.Diagnostics.Debug.WriteLine($"  - IonRecipe null? {IonRecipe == null}");
-                if (IonRecipe != null)
-                {
-                    System.Diagnostics.Debug.WriteLine($"  - Recipe.Dose: {IonRecipe.Dose}");
-                    System.Diagnostics.Debug.WriteLine($"  - Recipe.Voltage: {IonRecipe.Voltage}");
-                }
-                System.Diagnostics.Debug.WriteLine($"  - TargetDose: {Parameters.TargetDose}");
-                System.Diagnostics.Debug.WriteLine($"  - TargetHV: {Parameters.TargetHV}");
             }
             else // PM3
             {
@@ -188,17 +177,6 @@ namespace IonImplationEtherCAT
                     : AnnealRecipe?.TargetPressure ?? 1E-6;
                 Parameters.TargetHV = 0;           // 어닐링은 HV 없음
                 Parameters.TargetDose = 0;         // 어닐링은 Dose 없음
-
-                // 디버그 로그
-                System.Diagnostics.Debug.WriteLine($"[{Type}] InitializeParametersFromRecipe:");
-                System.Diagnostics.Debug.WriteLine($"  - AnnealRecipe null? {AnnealRecipe == null}");
-                if (AnnealRecipe != null)
-                {
-                    System.Diagnostics.Debug.WriteLine($"  - Recipe.Temperature: {AnnealRecipe.Temperature}");
-                    System.Diagnostics.Debug.WriteLine($"  - Recipe.Vacuum: {AnnealRecipe.Vacuum}");
-                }
-                System.Diagnostics.Debug.WriteLine($"  - TargetTemperature: {Parameters.TargetTemperature}");
-                System.Diagnostics.Debug.WriteLine($"  - TargetPressure: {Parameters.TargetPressure}");
             }
             Parameters.StartRising();
         }

@@ -31,9 +31,9 @@ namespace IonImplationEtherCAT
                 {
                     Directory.CreateDirectory(RecipeFolderPath);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    System.Diagnostics.Debug.WriteLine($"레시피 폴더 생성 실패: {ex.Message}");
+                    // 폴더 생성 실패 시 무시
                 }
             }
         }
@@ -56,12 +56,10 @@ namespace IonImplationEtherCAT
 
                 File.WriteAllText(filePath, json);
 
-                System.Diagnostics.Debug.WriteLine($"레시피 저장 완료: {filePath}");
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                System.Diagnostics.Debug.WriteLine($"레시피 저장 실패: {ex.Message}");
                 return false;
             }
         }
@@ -79,7 +77,6 @@ namespace IonImplationEtherCAT
 
                 if (!File.Exists(filePath))
                 {
-                    System.Diagnostics.Debug.WriteLine($"레시피 파일 없음, 새 레시피 생성: {filePath}");
                     return new RecipeSet();
                 }
 
@@ -87,12 +84,10 @@ namespace IonImplationEtherCAT
                 var serializer = new JavaScriptSerializer();
                 RecipeSet recipe = serializer.Deserialize<RecipeSet>(json);
 
-                System.Diagnostics.Debug.WriteLine($"레시피 불러오기 완료: {filePath}");
                 return recipe ?? new RecipeSet();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                System.Diagnostics.Debug.WriteLine($"레시피 불러오기 실패: {ex.Message}");
                 return new RecipeSet();
             }
         }
@@ -125,9 +120,8 @@ namespace IonImplationEtherCAT
                 }
                 return false;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                System.Diagnostics.Debug.WriteLine($"레시피 삭제 실패: {ex.Message}");
                 return false;
             }
         }

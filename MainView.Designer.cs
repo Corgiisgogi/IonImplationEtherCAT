@@ -1130,8 +1130,8 @@
             // 
             this.btnManualControl.BackColor = System.Drawing.Color.LightSteelBlue;
             this.btnManualControl.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnManualControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.btnManualControl.Location = new System.Drawing.Point(1143, 480);
+            this.btnManualControl.Font = new System.Drawing.Font("나눔고딕", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnManualControl.Location = new System.Drawing.Point(1142, 466);
             this.btnManualControl.Name = "btnManualControl";
             this.btnManualControl.Size = new System.Drawing.Size(214, 43);
             this.btnManualControl.TabIndex = 6;

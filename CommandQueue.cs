@@ -147,7 +147,6 @@ namespace IonImplationEtherCAT
                 // Stop 요청이 있으면 현재 명령 완료 후 중단
                 if (stopRequested)
                 {
-                    System.Diagnostics.Debug.WriteLine("Stop 요청으로 워크플로우 중단");
                     commands.Clear();
                     isExecuting = false;
                     return;
@@ -159,7 +158,6 @@ namespace IonImplationEtherCAT
                 if (!success)
                 {
                     // 명령 실패 시 워크플로우 중단
-                    System.Diagnostics.Debug.WriteLine($"명령 실패로 워크플로우 중단: {command.Description}");
                     commands.Clear();
                     isExecuting = false;
                     mainView.ShowErrorMessage($"명령 실패: {command.Description}");
@@ -172,7 +170,6 @@ namespace IonImplationEtherCAT
                 // 각 명령 완료 후 Stop 요청 확인
                 if (stopRequested)
                 {
-                    System.Diagnostics.Debug.WriteLine("명령 완료 후 Stop 요청으로 워크플로우 중단");
                     commands.Clear();
                     isExecuting = false;
                     return;
@@ -436,11 +433,7 @@ namespace IonImplationEtherCAT
                             elapsed += pollInterval;
                         }
 
-                        if (elapsed >= stabilizationTimeout)
-                        {
-                            System.Diagnostics.Debug.WriteLine($"파라미터 안정화 타임아웃: {pmStabilize.Type}");
-                            // 타임아웃이어도 계속 진행 (경고만 출력)
-                        }
+                        // 타임아웃이어도 계속 진행
                     }
                     return true;
 
@@ -702,7 +695,6 @@ namespace IonImplationEtherCAT
                 return HardwarePositionMap.LR_FOUP_B;
 
             // 매칭되는 위치가 없으면 PM1 위치 반환 (기본값)
-            System.Diagnostics.Debug.WriteLine($"경고: 알 수 없는 각도 {angle}, PM1 위치 반환");
             return HardwarePositionMap.LR_PM1;
         }
     }

@@ -172,56 +172,6 @@ namespace IonImplationEtherCAT
         }
 
         /// <summary>
-        /// 저장 버튼 클릭 - CSV 내보내기
-        /// </summary>
-        private void btnSave_Click(object sender, EventArgs e)
-        {
-            using (SaveFileDialog sfd = new SaveFileDialog())
-            {
-                sfd.Filter = "CSV 파일 (*.csv)|*.csv";
-                sfd.FileName = $"alarms_{DateTime.Now:yyyyMMdd_HHmmss}.csv";
-                sfd.InitialDirectory = LogManager.Instance.GetLogFolderPath();
-
-                if (sfd.ShowDialog() == DialogResult.OK)
-                {
-                    var alarms = LogManager.Instance.GetAllAlarms();
-                    if (LogManager.Instance.SaveToCSV(sfd.FileName, alarms))
-                    {
-                        MessageBox.Show("알람 이력이 저장되었습니다.", "저장 완료", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else
-                    {
-                        MessageBox.Show("저장에 실패했습니다.", "저장 실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// 불러오기 버튼 클릭 - CSV 불러오기
-        /// </summary>
-        private void btnLoad_Click(object sender, EventArgs e)
-        {
-            using (OpenFileDialog ofd = new OpenFileDialog())
-            {
-                ofd.Filter = "CSV 파일 (*.csv)|*.csv";
-                ofd.InitialDirectory = LogManager.Instance.GetLogFolderPath();
-
-                if (ofd.ShowDialog() == DialogResult.OK)
-                {
-                    if (LogManager.Instance.LoadFromCSV(ofd.FileName))
-                    {
-                        MessageBox.Show("알람 이력을 불러왔습니다.", "불러오기 완료", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
-                    else
-                    {
-                        MessageBox.Show("불러오기에 실패했습니다.", "불러오기 실패", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// 컨트롤 해제 시 이벤트 구독 해제
         /// </summary>
         protected override void Dispose(bool disposing)

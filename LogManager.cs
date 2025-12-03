@@ -79,9 +79,9 @@ namespace IonImplationEtherCAT
                 {
                     Directory.CreateDirectory(_logFolderPath);
                 }
-                catch (Exception ex)
+                catch (Exception)
                 {
-                    System.Diagnostics.Debug.WriteLine($"로그 폴더 생성 실패: {ex.Message}");
+                    // 폴더 생성 실패 시 무시
                 }
             }
         }
@@ -120,8 +120,6 @@ namespace IonImplationEtherCAT
 
             // 이벤트 발생
             OnLogAdded?.Invoke(entry);
-
-            System.Diagnostics.Debug.WriteLine($"[LOG] {entry.Time:HH:mm:ss} [{category}] {description}");
         }
 
         /// <summary>일반 로그 추가 (간편 버전)</summary>
@@ -165,8 +163,6 @@ namespace IonImplationEtherCAT
 
             // 이벤트 발생
             OnLogAdded?.Invoke(entry);
-
-            System.Diagnostics.Debug.WriteLine($"[WARNING] {entry.Time:HH:mm:ss} {description}");
         }
 
         #endregion
@@ -191,8 +187,6 @@ namespace IonImplationEtherCAT
 
             // 이벤트 발생
             OnAlarmRestored?.Invoke(alarm);
-
-            System.Diagnostics.Debug.WriteLine($"[ALARM RESTORED] {alarm.Description}");
 
             return true;
         }
@@ -279,9 +273,9 @@ namespace IonImplationEtherCAT
                     writer.WriteLine(entry.ToCSVLine());
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                System.Diagnostics.Debug.WriteLine($"로그 파일 저장 실패: {ex.Message}");
+                // 파일 저장 실패 시 무시
             }
         }
 
@@ -302,9 +296,9 @@ namespace IonImplationEtherCAT
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                System.Diagnostics.Debug.WriteLine($"로그 파일 저장 실패: {ex.Message}");
+                // 파일 저장 실패 시 무시
             }
         }
 
@@ -327,12 +321,10 @@ namespace IonImplationEtherCAT
                     }
                 }
 
-                System.Diagnostics.Debug.WriteLine($"로그 내보내기 완료: {filePath}");
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                System.Diagnostics.Debug.WriteLine($"로그 내보내기 실패: {ex.Message}");
                 return false;
             }
         }
@@ -377,12 +369,10 @@ namespace IonImplationEtherCAT
                     _logs.Sort((a, b) => a.Time.CompareTo(b.Time));
                 }
 
-                System.Diagnostics.Debug.WriteLine($"로그 불러오기 완료: {filePath}");
                 return true;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                System.Diagnostics.Debug.WriteLine($"로그 불러오기 실패: {ex.Message}");
                 return false;
             }
         }

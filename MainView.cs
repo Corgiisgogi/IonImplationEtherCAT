@@ -564,25 +564,19 @@ namespace IonImplationEtherCAT
         public void LoadRecipesFromRecipeView()
         {
             if (recipeView == null)
-            {
-                System.Diagnostics.Debug.WriteLine("RecipeView가 설정되지 않았습니다.");
                 return;
-            }
 
             // RecipeView에서 현재 레시피 세트 가져오기
             RecipeSet recipeSet = recipeView.GetCurrentRecipeSet();
 
             // PM1에 레시피 적용
             processModuleA.IonRecipe = recipeSet.PM1Recipe;
-            System.Diagnostics.Debug.WriteLine($"PM1 레시피 로드: Dose={processModuleA.IonRecipe.Dose}, Voltage={processModuleA.IonRecipe.Voltage}");
 
             // PM2에 레시피 적용
             processModuleB.IonRecipe = recipeSet.PM2Recipe;
-            System.Diagnostics.Debug.WriteLine($"PM2 레시피 로드: Dose={processModuleB.IonRecipe.Dose}, Voltage={processModuleB.IonRecipe.Voltage}");
 
             // PM3에 레시피 적용
             processModuleC.AnnealRecipe = recipeSet.PM3Recipe;
-            System.Diagnostics.Debug.WriteLine($"PM3 레시피 로드: Temperature={processModuleC.AnnealRecipe.Temperature}, Vacuum={processModuleC.AnnealRecipe.Vacuum}");
         }
 
         private void btnRecipeA_Click(object sender, EventArgs e)
@@ -1353,22 +1347,6 @@ namespace IonImplationEtherCAT
         }
 
         /// <summary>
-        /// PM1 공정 완료 대기 (하위 호환성)
-        /// </summary>
-        private async Task WaitForPM1Complete()
-        {
-            await WaitForPMComplete(processModuleA);
-        }
-
-        /// <summary>
-        /// PM3 공정 완료 대기 (하위 호환성)
-        /// </summary>
-        private async Task WaitForPM3Complete()
-        {
-            await WaitForPMComplete(processModuleC);
-        }
-
-        /// <summary>
         /// PM3가 사용 가능할 때까지 대기 (Idle 또는 언로드 준비 완료)
         /// </summary>
         private async Task WaitForPM3Available()
@@ -1379,66 +1357,6 @@ namespace IonImplationEtherCAT
 
             // PM3 공정 완료 대기
             await WaitForPMComplete(processModuleC);
-        }
-
-        /// <summary>
-        /// 웨이퍼 이송 및 공정 시작 시퀀스 (기존 단일 웨이퍼 테스트용)
-        /// </summary>
-        private async Task StartWaferTransferAndProcess()
-        {
-            // RecipeView에서 최신 레시피 로드
-            LoadRecipesFromRecipeView();
-
-            // 맨 위 웨이퍼 슬롯 찾기
-            int waferSlot = GetTopWaferSlotFromFoupA();
-            if (waferSlot < 0)
-            {
-                MessageBox.Show("FOUP A에 웨이퍼가 없습니다.", "오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            // 명령 큐 초기화
-            commandQueue.Clear();
-
-            // 1. FOUP A로 이동
-            commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, "FOUP A로 회전", ANGLE_FOUP_A));
-
-            // 2. 암 확장
-            commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendArm, "암 확장"));
-
-            // 3. FOUP A에서 웨이퍼 제거 (ResultWafer에 저장됨)
-            commandQueue.Enqueue(new ProcessCommand(CommandType.RemoveWaferFromFoup, "FOUP A 웨이퍼 제거", foupA, waferSlot));
-
-            // 4. 웨이퍼 픽업 (이전 명령의 ResultWafer 사용)
-            commandQueue.Enqueue(new ProcessCommand(CommandType.PickWafer, "웨이퍼 픽업"));
-
-            // 5. 암 수축
-            commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축"));
-
-            // 6. PM1로 회전
-            commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, "PM1로 회전", ANGLE_PM1));
-
-            // 7. 암 확장
-            commandQueue.Enqueue(new ProcessCommand(CommandType.ExtendArm, "암 확장"));
-
-            // 8. 웨이퍼 배치 (PM1에 로드됨)
-            commandQueue.Enqueue(new ProcessCommand(CommandType.PlaceWafer, "웨이퍼 배치", processModuleA));
-
-            // 9. 암 수축
-            commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축"));
-
-            // 10. 공정 시작 (파라미터 안정화 후 시간 카운트 시작)
-            commandQueue.Enqueue(new ProcessCommand(CommandType.StartProcess, "공정 시작", processModuleA));
-
-            // 명령 큐 실행
-            await commandQueue.ExecuteAsync();
-
-            // 공정 타이머 시작
-            processTimer.Start();
-            UpdateProcessDisplay();
-            
-            MessageBox.Show($"공정 A가 시작되었습니다.\n공정 시간: {processModuleA.processTime}초",
-                "공정 시작", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         /// <summary>
@@ -1702,6 +1620,12 @@ namespace IonImplationEtherCAT
             // 모든 웨이퍼 제거
             foupB.UnloadWafers();
             UpdateFoupBDisplay();
+
+            // 로그 기록
+            LogManager.Instance.AddLog("웨이퍼 이동",
+                "FOUP B의 모든 웨이퍼 S/W 제거",
+                "FOUP B", LogCategory.Transfer, false);
+
             MessageBox.Show("FOUP B의 모든 웨이퍼가 제거되었습니다.", "제거 완료", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
