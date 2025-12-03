@@ -39,7 +39,10 @@ namespace IonImplationEtherCAT
         /// <summary>알람 여부 (true=AlarmView+LogView, false=LogView만)</summary>
         public bool IsAlarm { get; set; }
 
-        /// <summary>복구됨 여부 (Alarm만 해당)</summary>
+        /// <summary>워닝 여부 (true=AlarmView+LogView에 노란색으로 표시)</summary>
+        public bool IsWarning { get; set; }
+
+        /// <summary>복구됨 여부 (Alarm/Warning 해당)</summary>
         public bool IsRestored { get; set; }
 
         /// <summary>기본 생성자</summary>
@@ -51,6 +54,7 @@ namespace IonImplationEtherCAT
             Location = "";
             Category = LogCategory.System;
             IsAlarm = false;
+            IsWarning = false;
             IsRestored = false;
         }
 
@@ -63,13 +67,14 @@ namespace IonImplationEtherCAT
             Location = location ?? "";
             Category = category;
             IsAlarm = isAlarm;
+            IsWarning = false;
             IsRestored = false;
         }
 
         /// <summary>CSV 헤더 반환</summary>
         public static string GetCSVHeader()
         {
-            return "Time,Job,Description,Location,Category,IsAlarm,IsRestored";
+            return "Time,Job,Description,Location,Category,IsAlarm,IsWarning,IsRestored";
         }
 
         /// <summary>CSV 형식 문자열 반환</summary>
@@ -80,7 +85,7 @@ namespace IonImplationEtherCAT
             string escapedDesc = EscapeCSV(Description);
             string escapedLoc = EscapeCSV(Location);
 
-            return $"{Time:yyyy-MM-dd HH:mm:ss},{escapedJob},{escapedDesc},{escapedLoc},{Category},{IsAlarm},{IsRestored}";
+            return $"{Time:yyyy-MM-dd HH:mm:ss},{escapedJob},{escapedDesc},{escapedLoc},{Category},{IsAlarm},{IsWarning},{IsRestored}";
         }
 
         /// <summary>CSV 라인에서 LogEntry 파싱</summary>
@@ -103,7 +108,9 @@ namespace IonImplationEtherCAT
                     Location = parts[3],
                     Category = (LogCategory)Enum.Parse(typeof(LogCategory), parts[4]),
                     IsAlarm = bool.Parse(parts[5]),
-                    IsRestored = bool.Parse(parts[6])
+                    // 기존 CSV 호환성: IsWarning 필드가 없으면 false
+                    IsWarning = parts.Length > 7 ? bool.Parse(parts[6]) : false,
+                    IsRestored = parts.Length > 7 ? bool.Parse(parts[7]) : bool.Parse(parts[6])
                 };
 
                 return entry;

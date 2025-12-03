@@ -147,6 +147,11 @@ namespace IonImplationEtherCAT
             // 시뮬레이션에서는 no-op (UI 상태는 MainView에서 관리)
         }
 
+        public void SetTowerLampIndividual(bool red, bool yellow, bool green)
+        {
+            // 시뮬레이션에서는 no-op (UI 상태는 MainView에서 관리)
+        }
+
         #endregion
     }
 }

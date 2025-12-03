@@ -127,6 +127,14 @@ namespace IonImplationEtherCAT
         /// <param name="state">램프 상태</param>
         void SetTowerLamp(TowerLampState state);
 
+        /// <summary>
+        /// 타워 램프 개별 제어 (각 색상 독립적으로 ON/OFF 가능)
+        /// </summary>
+        /// <param name="red">적색 램프 ON/OFF</param>
+        /// <param name="yellow">황색 램프 ON/OFF</param>
+        /// <param name="green">녹색 램프 ON/OFF</param>
+        void SetTowerLampIndividual(bool red, bool yellow, bool green);
+
         #endregion
     }
 }

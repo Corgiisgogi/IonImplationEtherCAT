@@ -38,14 +38,14 @@ namespace IonImplationEtherCAT
         /// <summary>로그 폴더 경로</summary>
         public string LogFolderPath => _logFolderPath;
 
-        /// <summary>활성 알람 존재 여부</summary>
+        /// <summary>활성 알람/워닝 존재 여부</summary>
         public bool HasActiveAlarms
         {
             get
             {
                 lock (_lockObject)
                 {
-                    return _logs.Any(l => l.IsAlarm && !l.IsRestored);
+                    return _logs.Any(l => (l.IsAlarm || l.IsWarning) && !l.IsRestored);
                 }
             }
         }
@@ -136,16 +136,49 @@ namespace IonImplationEtherCAT
             AddLog(job, description, location, LogCategory.Error, true);
         }
 
+        /// <summary>워닝 로그 추가 (AlarmView에 노란색으로 표시)</summary>
+        /// <param name="description">상세 설명</param>
+        /// <param name="location">발생 위치</param>
+        /// <param name="job">작업/공정 정보</param>
+        /// <param name="isRestored">처음부터 해결된 상태로 표시 (기본: false)</param>
+        public void Warning(string description, string location, string job = "", bool isRestored = false)
+        {
+            var entry = new LogEntry
+            {
+                Time = DateTime.Now,
+                Job = job ?? "",
+                Description = description ?? "",
+                Location = location ?? "",
+                Category = LogCategory.Warning,
+                IsAlarm = false,
+                IsWarning = true,
+                IsRestored = isRestored
+            };
+
+            lock (_lockObject)
+            {
+                _logs.Add(entry);
+            }
+
+            // 실시간 파일 저장
+            AppendToLogFile(entry);
+
+            // 이벤트 발생
+            OnLogAdded?.Invoke(entry);
+
+            System.Diagnostics.Debug.WriteLine($"[WARNING] {entry.Time:HH:mm:ss} {description}");
+        }
+
         #endregion
 
         #region 알람 복구
 
-        /// <summary>알람 복구</summary>
-        /// <param name="alarm">복구할 알람</param>
+        /// <summary>알람/워닝 복구</summary>
+        /// <param name="alarm">복구할 알람/워닝</param>
         /// <returns>복구 성공 여부</returns>
         public bool RestoreAlarm(LogEntry alarm)
         {
-            if (alarm == null || !alarm.IsAlarm)
+            if (alarm == null || (!alarm.IsAlarm && !alarm.IsWarning))
                 return false;
 
             lock (_lockObject)
@@ -164,15 +197,15 @@ namespace IonImplationEtherCAT
             return true;
         }
 
-        /// <summary>모든 활성 알람 복구</summary>
-        /// <returns>복구된 알람 수</returns>
+        /// <summary>모든 활성 알람/워닝 복구</summary>
+        /// <returns>복구된 알람/워닝 수</returns>
         public int RestoreAllAlarms()
         {
             int count = 0;
 
             lock (_lockObject)
             {
-                foreach (var alarm in _logs.Where(l => l.IsAlarm && !l.IsRestored))
+                foreach (var alarm in _logs.Where(l => (l.IsAlarm || l.IsWarning) && !l.IsRestored))
                 {
                     alarm.IsRestored = true;
                     OnAlarmRestored?.Invoke(alarm);
@@ -201,21 +234,21 @@ namespace IonImplationEtherCAT
             }
         }
 
-        /// <summary>활성 알람만 반환 (IsAlarm=true && IsRestored=false)</summary>
+        /// <summary>활성 알람/워닝만 반환 (IsRestored=false)</summary>
         public List<LogEntry> GetActiveAlarms()
         {
             lock (_lockObject)
             {
-                return _logs.Where(l => l.IsAlarm && !l.IsRestored).ToList();
+                return _logs.Where(l => (l.IsAlarm || l.IsWarning) && !l.IsRestored).ToList();
             }
         }
 
-        /// <summary>모든 알람 반환 (복구된 것 포함)</summary>
+        /// <summary>모든 알람/워닝 반환 (복구된 것 포함)</summary>
         public List<LogEntry> GetAllAlarms()
         {
             lock (_lockObject)
             {
-                return _logs.Where(l => l.IsAlarm).ToList();
+                return _logs.Where(l => l.IsAlarm || l.IsWarning).ToList();
             }
         }
 

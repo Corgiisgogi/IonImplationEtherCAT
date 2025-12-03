@@ -395,27 +395,36 @@ namespace IonImplationEtherCAT
         /// <summary>
         /// PM에 웨이퍼 로드
         /// </summary>
-        public void LoadWafer(Wafer wafer)
+        /// <param name="wafer">로드할 웨이퍼</param>
+        /// <param name="fromLocation">출발 위치 (예: "FOUP A", "TM")</param>
+        public void LoadWafer(Wafer wafer, string fromLocation = "")
         {
             CurrentWafer = wafer;
             isWaferLoaded = true;
 
-            // 웨이퍼 로드 로그
-            LogManager.Instance.AddLog($"웨이퍼 이동", $"웨이퍼 로드 완료", Type.ToString(), LogCategory.Transfer, false);
+            // 웨이퍼 로드 로그 (출발지 → 목적지 형식)
+            string desc = string.IsNullOrEmpty(fromLocation)
+                ? $"{Type} 웨이퍼 로드 완료"
+                : $"{fromLocation} → {Type} 웨이퍼 이동 완료";
+            LogManager.Instance.AddLog("웨이퍼 이동", desc, Type.ToString(), LogCategory.Transfer, false);
         }
 
         /// <summary>
         /// PM에서 웨이퍼 언로드
         /// </summary>
-        public Wafer UnloadWafer()
+        /// <param name="toLocation">목적지 위치 (예: "PM3", "FOUP B")</param>
+        public Wafer UnloadWafer(string toLocation = "")
         {
             Wafer wafer = CurrentWafer;
             CurrentWafer = null;
             isWaferLoaded = false;
             IsUnloadRequested = false; // 언로드 요청 플래그 리셋
 
-            // 웨이퍼 언로드 로그
-            LogManager.Instance.AddLog($"웨이퍼 이동", $"웨이퍼 언로드 완료", Type.ToString(), LogCategory.Transfer, false);
+            // 웨이퍼 언로드 로그 (출발지 → 목적지 형식)
+            string desc = string.IsNullOrEmpty(toLocation)
+                ? $"{Type} 웨이퍼 언로드 완료"
+                : $"{Type} → {toLocation} 웨이퍼 이동 완료";
+            LogManager.Instance.AddLog("웨이퍼 이동", desc, Type.ToString(), LogCategory.Transfer, false);
 
             return wafer;
         }

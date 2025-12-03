@@ -29,9 +29,11 @@
         private void InitializeComponent()
         {
             this.panelPM1 = new System.Windows.Forms.Panel();
+            this.lblPM1onPmlabel = new System.Windows.Forms.Label();
             this.panelPM1Door = new System.Windows.Forms.Panel();
             this.picBoxPM1Lamp = new System.Windows.Forms.PictureBox();
             this.panelPM1Status = new System.Windows.Forms.Panel();
+            this.lblPm1Caption = new System.Windows.Forms.Label();
             this.lblPM1Status = new System.Windows.Forms.Label();
             this.tblLayoutPanelPM1Progress = new System.Windows.Forms.TableLayoutPanel();
             this.progressBarPM1 = new System.Windows.Forms.ProgressBar();
@@ -54,9 +56,11 @@
             this.panelFoupAWafer2 = new System.Windows.Forms.Panel();
             this.panelFoupAWafer1 = new System.Windows.Forms.Panel();
             this.panelPM2 = new System.Windows.Forms.Panel();
+            this.lblPM2onPmlabel = new System.Windows.Forms.Label();
             this.panelPM2Door = new System.Windows.Forms.Panel();
             this.picBoxPM2Lamp = new System.Windows.Forms.PictureBox();
             this.panelPM3 = new System.Windows.Forms.Panel();
+            this.lblPM3onPmlabel = new System.Windows.Forms.Label();
             this.panelPM3Door = new System.Windows.Forms.Panel();
             this.picBoxPM3Lamp = new System.Windows.Forms.PictureBox();
             this.btnFoupALoadSW = new System.Windows.Forms.Button();
@@ -79,6 +83,7 @@
             this.panelFoupBWafer2 = new System.Windows.Forms.Panel();
             this.panelFoupBWafer1 = new System.Windows.Forms.Panel();
             this.panelPM2Status = new System.Windows.Forms.Panel();
+            this.lblPm2Caption = new System.Windows.Forms.Label();
             this.lblPM2Status = new System.Windows.Forms.Label();
             this.tblLayoutPanelPM2Progress = new System.Windows.Forms.TableLayoutPanel();
             this.progressBarPM2 = new System.Windows.Forms.ProgressBar();
@@ -95,6 +100,7 @@
             this.picBoxPM2Status = new System.Windows.Forms.PictureBox();
             this.lblPM2 = new System.Windows.Forms.Label();
             this.panelPM3Status = new System.Windows.Forms.Panel();
+            this.lblPm3Caption = new System.Windows.Forms.Label();
             this.lblPM3Status = new System.Windows.Forms.Label();
             this.tblLayoutPanelPM3Progress = new System.Windows.Forms.TableLayoutPanel();
             this.progressBarPM3 = new System.Windows.Forms.ProgressBar();
@@ -107,13 +113,8 @@
             this.picBoxPM3Status = new System.Windows.Forms.PictureBox();
             this.lblPM3 = new System.Windows.Forms.Label();
             this.btnAllProcess = new System.Windows.Forms.Button();
+            this.btnManualControl = new System.Windows.Forms.Button();
             this.btnAllStop = new System.Windows.Forms.Button();
-            this.lblPm1Caption = new System.Windows.Forms.Label();
-            this.lblPm2Caption = new System.Windows.Forms.Label();
-            this.lblPm3Caption = new System.Windows.Forms.Label();
-            this.lblPM1onPmlabel = new System.Windows.Forms.Label();
-            this.lblPM2onPmlabel = new System.Windows.Forms.Label();
-            this.lblPM3onPmlabel = new System.Windows.Forms.Label();
             this.panelPM1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxPM1Lamp)).BeginInit();
             this.panelPM1Status.SuspendLayout();
@@ -149,6 +150,16 @@
             this.panelPM1.Size = new System.Drawing.Size(148, 195);
             this.panelPM1.TabIndex = 0;
             // 
+            // lblPM1onPmlabel
+            // 
+            this.lblPM1onPmlabel.AutoSize = true;
+            this.lblPM1onPmlabel.Font = new System.Drawing.Font("나눔고딕", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblPM1onPmlabel.Location = new System.Drawing.Point(27, 3);
+            this.lblPM1onPmlabel.Name = "lblPM1onPmlabel";
+            this.lblPM1onPmlabel.Size = new System.Drawing.Size(75, 31);
+            this.lblPM1onPmlabel.TabIndex = 9;
+            this.lblPM1onPmlabel.Text = "PM1";
+            // 
             // panelPM1Door
             // 
             this.panelPM1Door.BackColor = System.Drawing.SystemColors.ControlDarkDark;
@@ -183,6 +194,17 @@
             this.panelPM1Status.Size = new System.Drawing.Size(243, 276);
             this.panelPM1Status.TabIndex = 1;
             // 
+            // lblPm1Caption
+            // 
+            this.lblPm1Caption.AutoSize = true;
+            this.lblPm1Caption.Font = new System.Drawing.Font("나눔고딕", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblPm1Caption.Location = new System.Drawing.Point(76, 11);
+            this.lblPm1Caption.Name = "lblPm1Caption";
+            this.lblPm1Caption.Size = new System.Drawing.Size(113, 17);
+            this.lblPm1Caption.TabIndex = 7;
+            this.lblPm1Caption.Text = "Ion Implation 1";
+            this.lblPm1Caption.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // lblPM1Status
             // 
             this.lblPM1Status.AutoSize = true;
@@ -199,7 +221,7 @@
             this.tblLayoutPanelPM1Progress.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblLayoutPanelPM1Progress.ColumnCount = 2;
             this.tblLayoutPanelPM1Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.8595F));
-            this.tblLayoutPanelPM1Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 174F));
+            this.tblLayoutPanelPM1Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 175F));
             this.tblLayoutPanelPM1Progress.Controls.Add(this.progressBarPM1, 1, 0);
             this.tblLayoutPanelPM1Progress.Controls.Add(this.lblPM1Progress, 0, 0);
             this.tblLayoutPanelPM1Progress.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -212,7 +234,7 @@
             // 
             // progressBarPM1
             // 
-            this.progressBarPM1.Location = new System.Drawing.Point(69, 4);
+            this.progressBarPM1.Location = new System.Drawing.Point(68, 4);
             this.progressBarPM1.Name = "progressBarPM1";
             this.progressBarPM1.Size = new System.Drawing.Size(163, 23);
             this.progressBarPM1.TabIndex = 5;
@@ -224,7 +246,7 @@
             this.lblPM1Progress.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPM1Progress.Location = new System.Drawing.Point(4, 1);
             this.lblPM1Progress.Name = "lblPM1Progress";
-            this.lblPM1Progress.Size = new System.Drawing.Size(58, 30);
+            this.lblPM1Progress.Size = new System.Drawing.Size(57, 30);
             this.lblPM1Progress.TabIndex = 5;
             this.lblPM1Progress.Text = "progress";
             this.lblPM1Progress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -440,6 +462,16 @@
             this.panelPM2.Size = new System.Drawing.Size(195, 148);
             this.panelPM2.TabIndex = 1;
             // 
+            // lblPM2onPmlabel
+            // 
+            this.lblPM2onPmlabel.AutoSize = true;
+            this.lblPM2onPmlabel.Font = new System.Drawing.Font("나눔고딕", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblPM2onPmlabel.Location = new System.Drawing.Point(59, 3);
+            this.lblPM2onPmlabel.Name = "lblPM2onPmlabel";
+            this.lblPM2onPmlabel.Size = new System.Drawing.Size(75, 31);
+            this.lblPM2onPmlabel.TabIndex = 10;
+            this.lblPM2onPmlabel.Text = "PM2";
+            // 
             // panelPM2Door
             // 
             this.panelPM2Door.BackColor = System.Drawing.SystemColors.ControlDarkDark;
@@ -470,6 +502,16 @@
             this.panelPM3.Name = "panelPM3";
             this.panelPM3.Size = new System.Drawing.Size(148, 195);
             this.panelPM3.TabIndex = 0;
+            // 
+            // lblPM3onPmlabel
+            // 
+            this.lblPM3onPmlabel.AutoSize = true;
+            this.lblPM3onPmlabel.Font = new System.Drawing.Font("나눔고딕", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblPM3onPmlabel.Location = new System.Drawing.Point(44, 3);
+            this.lblPM3onPmlabel.Name = "lblPM3onPmlabel";
+            this.lblPM3onPmlabel.Size = new System.Drawing.Size(75, 31);
+            this.lblPM3onPmlabel.TabIndex = 10;
+            this.lblPM3onPmlabel.Text = "PM3";
             // 
             // panelPM3Door
             // 
@@ -716,6 +758,17 @@
             this.panelPM2Status.Size = new System.Drawing.Size(243, 276);
             this.panelPM2Status.TabIndex = 1;
             // 
+            // lblPm2Caption
+            // 
+            this.lblPm2Caption.AutoSize = true;
+            this.lblPm2Caption.Font = new System.Drawing.Font("나눔고딕", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblPm2Caption.Location = new System.Drawing.Point(79, 11);
+            this.lblPm2Caption.Name = "lblPm2Caption";
+            this.lblPm2Caption.Size = new System.Drawing.Size(113, 17);
+            this.lblPm2Caption.TabIndex = 8;
+            this.lblPm2Caption.Text = "Ion Implation 2";
+            this.lblPm2Caption.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // lblPM2Status
             // 
             this.lblPM2Status.AutoSize = true;
@@ -732,7 +785,7 @@
             this.tblLayoutPanelPM2Progress.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblLayoutPanelPM2Progress.ColumnCount = 2;
             this.tblLayoutPanelPM2Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.8595F));
-            this.tblLayoutPanelPM2Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 177F));
+            this.tblLayoutPanelPM2Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 178F));
             this.tblLayoutPanelPM2Progress.Controls.Add(this.progressBarPM2, 1, 0);
             this.tblLayoutPanelPM2Progress.Controls.Add(this.lblPM2Progress, 0, 0);
             this.tblLayoutPanelPM2Progress.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -745,7 +798,7 @@
             // 
             // progressBarPM2
             // 
-            this.progressBarPM2.Location = new System.Drawing.Point(66, 4);
+            this.progressBarPM2.Location = new System.Drawing.Point(65, 4);
             this.progressBarPM2.Name = "progressBarPM2";
             this.progressBarPM2.Size = new System.Drawing.Size(163, 23);
             this.progressBarPM2.TabIndex = 5;
@@ -757,7 +810,7 @@
             this.lblPM2Progress.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPM2Progress.Location = new System.Drawing.Point(4, 1);
             this.lblPM2Progress.Name = "lblPM2Progress";
-            this.lblPM2Progress.Size = new System.Drawing.Size(55, 30);
+            this.lblPM2Progress.Size = new System.Drawing.Size(54, 30);
             this.lblPM2Progress.TabIndex = 5;
             this.lblPM2Progress.Text = "progress";
             this.lblPM2Progress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -917,6 +970,17 @@
             this.panelPM3Status.Size = new System.Drawing.Size(243, 276);
             this.panelPM3Status.TabIndex = 1;
             // 
+            // lblPm3Caption
+            // 
+            this.lblPm3Caption.AutoSize = true;
+            this.lblPm3Caption.Font = new System.Drawing.Font("나눔고딕", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.lblPm3Caption.Location = new System.Drawing.Point(76, 11);
+            this.lblPm3Caption.Name = "lblPm3Caption";
+            this.lblPm3Caption.Size = new System.Drawing.Size(79, 17);
+            this.lblPm3Caption.TabIndex = 8;
+            this.lblPm3Caption.Text = "Annealing";
+            this.lblPm3Caption.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // lblPM3Status
             // 
             this.lblPM3Status.AutoSize = true;
@@ -933,7 +997,7 @@
             this.tblLayoutPanelPM3Progress.CellBorderStyle = System.Windows.Forms.TableLayoutPanelCellBorderStyle.Single;
             this.tblLayoutPanelPM3Progress.ColumnCount = 2;
             this.tblLayoutPanelPM3Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 26.8595F));
-            this.tblLayoutPanelPM3Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 176F));
+            this.tblLayoutPanelPM3Progress.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 177F));
             this.tblLayoutPanelPM3Progress.Controls.Add(this.progressBarPM3, 1, 0);
             this.tblLayoutPanelPM3Progress.Controls.Add(this.lblPM3Progress, 0, 0);
             this.tblLayoutPanelPM3Progress.Dock = System.Windows.Forms.DockStyle.Bottom;
@@ -946,7 +1010,7 @@
             // 
             // progressBarPM3
             // 
-            this.progressBarPM3.Location = new System.Drawing.Point(67, 4);
+            this.progressBarPM3.Location = new System.Drawing.Point(66, 4);
             this.progressBarPM3.Name = "progressBarPM3";
             this.progressBarPM3.Size = new System.Drawing.Size(160, 23);
             this.progressBarPM3.TabIndex = 5;
@@ -958,7 +1022,7 @@
             this.lblPM3Progress.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.999999F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblPM3Progress.Location = new System.Drawing.Point(4, 1);
             this.lblPM3Progress.Name = "lblPM3Progress";
-            this.lblPM3Progress.Size = new System.Drawing.Size(56, 30);
+            this.lblPM3Progress.Size = new System.Drawing.Size(55, 30);
             this.lblPM3Progress.TabIndex = 5;
             this.lblPM3Progress.Text = "progress";
             this.lblPM3Progress.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -1062,6 +1126,19 @@
             this.btnAllProcess.UseVisualStyleBackColor = false;
             this.btnAllProcess.Click += new System.EventHandler(this.btnAllProcess_Click);
             // 
+            // btnManualControl
+            // 
+            this.btnManualControl.BackColor = System.Drawing.Color.LightSteelBlue;
+            this.btnManualControl.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnManualControl.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.btnManualControl.Location = new System.Drawing.Point(1143, 480);
+            this.btnManualControl.Name = "btnManualControl";
+            this.btnManualControl.Size = new System.Drawing.Size(214, 43);
+            this.btnManualControl.TabIndex = 6;
+            this.btnManualControl.Text = "수동 제어";
+            this.btnManualControl.UseVisualStyleBackColor = false;
+            this.btnManualControl.Click += new System.EventHandler(this.btnManualControl_Click);
+            // 
             // btnAllStop
             // 
             this.btnAllStop.BackColor = System.Drawing.SystemColors.ActiveBorder;
@@ -1075,74 +1152,12 @@
             this.btnAllStop.UseVisualStyleBackColor = false;
             this.btnAllStop.Click += new System.EventHandler(this.btnAllStop_Click);
             // 
-            // lblPm1Caption
-            // 
-            this.lblPm1Caption.AutoSize = true;
-            this.lblPm1Caption.Font = new System.Drawing.Font("나눔고딕", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblPm1Caption.Location = new System.Drawing.Point(76, 11);
-            this.lblPm1Caption.Name = "lblPm1Caption";
-            this.lblPm1Caption.Size = new System.Drawing.Size(113, 17);
-            this.lblPm1Caption.TabIndex = 7;
-            this.lblPm1Caption.Text = "Ion Implation 1";
-            this.lblPm1Caption.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblPm2Caption
-            // 
-            this.lblPm2Caption.AutoSize = true;
-            this.lblPm2Caption.Font = new System.Drawing.Font("나눔고딕", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblPm2Caption.Location = new System.Drawing.Point(79, 11);
-            this.lblPm2Caption.Name = "lblPm2Caption";
-            this.lblPm2Caption.Size = new System.Drawing.Size(113, 17);
-            this.lblPm2Caption.TabIndex = 8;
-            this.lblPm2Caption.Text = "Ion Implation 2";
-            this.lblPm2Caption.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblPm3Caption
-            // 
-            this.lblPm3Caption.AutoSize = true;
-            this.lblPm3Caption.Font = new System.Drawing.Font("나눔고딕", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblPm3Caption.Location = new System.Drawing.Point(76, 11);
-            this.lblPm3Caption.Name = "lblPm3Caption";
-            this.lblPm3Caption.Size = new System.Drawing.Size(79, 17);
-            this.lblPm3Caption.TabIndex = 8;
-            this.lblPm3Caption.Text = "Annealing";
-            this.lblPm3Caption.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // lblPM1onPmlabel
-            // 
-            this.lblPM1onPmlabel.AutoSize = true;
-            this.lblPM1onPmlabel.Font = new System.Drawing.Font("나눔고딕", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblPM1onPmlabel.Location = new System.Drawing.Point(27, 3);
-            this.lblPM1onPmlabel.Name = "lblPM1onPmlabel";
-            this.lblPM1onPmlabel.Size = new System.Drawing.Size(75, 31);
-            this.lblPM1onPmlabel.TabIndex = 9;
-            this.lblPM1onPmlabel.Text = "PM1";
-            // 
-            // lblPM2onPmlabel
-            // 
-            this.lblPM2onPmlabel.AutoSize = true;
-            this.lblPM2onPmlabel.Font = new System.Drawing.Font("나눔고딕", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblPM2onPmlabel.Location = new System.Drawing.Point(59, 3);
-            this.lblPM2onPmlabel.Name = "lblPM2onPmlabel";
-            this.lblPM2onPmlabel.Size = new System.Drawing.Size(75, 31);
-            this.lblPM2onPmlabel.TabIndex = 10;
-            this.lblPM2onPmlabel.Text = "PM2";
-            // 
-            // lblPM3onPmlabel
-            // 
-            this.lblPM3onPmlabel.AutoSize = true;
-            this.lblPM3onPmlabel.Font = new System.Drawing.Font("나눔고딕", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.lblPM3onPmlabel.Location = new System.Drawing.Point(44, 3);
-            this.lblPM3onPmlabel.Name = "lblPM3onPmlabel";
-            this.lblPM3onPmlabel.Size = new System.Drawing.Size(75, 31);
-            this.lblPM3onPmlabel.TabIndex = 10;
-            this.lblPM3onPmlabel.Text = "PM3";
-            // 
             // MainView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.btnAllStop);
+            this.Controls.Add(this.btnManualControl);
             this.Controls.Add(this.btnAllProcess);
             this.Controls.Add(this.panelMainControl);
             this.Controls.Add(this.panelPM3Status);
@@ -1254,6 +1269,7 @@
         private System.Windows.Forms.PictureBox picBoxPM3Status;
         private System.Windows.Forms.Label lblPM3;
         private System.Windows.Forms.Button btnAllProcess;
+        private System.Windows.Forms.Button btnManualControl;
         private System.Windows.Forms.Button btnAllStop;
         private System.Windows.Forms.PictureBox picBoxPM1Lamp;
         private System.Windows.Forms.Panel panelPM1Door;

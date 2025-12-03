@@ -64,6 +64,12 @@
     </Compile>
     <Compile Include="HardwarePositionMap.cs" />
     <Compile Include="IEtherCATController.cs" />
+    <Compile Include="ManualControlForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ManualControlForm.Designer.cs">
+      <DependentUpon>ManualControlForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="LogView.cs">
       <SubType>UserControl</SubType>
     </Compile>

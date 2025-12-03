@@ -291,7 +291,7 @@ namespace IonImplationEtherCAT
                     // 배치된 웨이퍼를 파라미터로 저장 (다음 명령에서 사용 가능)
                     if (command.Parameters.Length > 0 && command.Parameters[0] is ProcessModule pm)
                     {
-                        pm.LoadWafer(placedWafer);
+                        pm.LoadWafer(placedWafer, "TM");  // TM에서 PM으로 이동
                     }
                     await Task.Delay(WAFER_PLACE_DELAY); // 배치 동작 완료 대기
                     return true;
@@ -305,6 +305,12 @@ namespace IonImplationEtherCAT
                         // 제거된 웨이퍼를 다음 명령에서 사용할 수 있도록 임시 저장
                         command.ResultWafer = removedWafer;
                         mainView.UpdateFoupDisplays();
+
+                        // FOUP에서 웨이퍼 꺼내기 로그
+                        string foupName = !string.IsNullOrEmpty(foup.Name) ? foup.Name : "FOUP";
+                        LogManager.Instance.AddLog("웨이퍼 이동",
+                            $"{foupName} (슬롯 {slotIndex + 1}) → TM 웨이퍼 이동 완료",
+                            foupName, LogCategory.Transfer, false);
                     }
                     await Task.Delay(FOUP_WAFER_DELAY); // FOUP 웨이퍼 제거 대기
                     return true;
@@ -335,6 +341,12 @@ namespace IonImplationEtherCAT
                             foupAdd.LoadWafer(slotIndexAdd);
                         }
                         mainView.UpdateFoupDisplays();
+
+                        // FOUP에 웨이퍼 넣기 로그
+                        string foupAddName = !string.IsNullOrEmpty(foupAdd.Name) ? foupAdd.Name : "FOUP";
+                        LogManager.Instance.AddLog("웨이퍼 이동",
+                            $"TM → {foupAddName} (슬롯 {slotIndexAdd + 1}) 웨이퍼 이동 완료",
+                            foupAddName, LogCategory.Transfer, false);
                     }
                     await Task.Delay(FOUP_WAFER_DELAY); // FOUP 웨이퍼 추가 대기
                     return true;
@@ -362,7 +374,7 @@ namespace IonImplationEtherCAT
                 case CommandType.UnloadWaferFromPM:
                     if (command.Parameters.Length > 0 && command.Parameters[0] is ProcessModule pmUnload)
                     {
-                        Wafer unloadedWafer = pmUnload.UnloadWafer();
+                        Wafer unloadedWafer = pmUnload.UnloadWafer("TM");  // PM에서 TM으로 이동
                         command.ResultWafer = unloadedWafer;
                         mainView.UpdateProcessDisplay();
                     }
@@ -387,7 +399,7 @@ namespace IonImplationEtherCAT
                         Wafer waferToLoad = previousCommand?.ResultWafer;
                         if (waferToLoad != null)
                         {
-                            pmLoad.LoadWafer(waferToLoad);
+                            pmLoad.LoadWafer(waferToLoad, "TM");  // TM에서 PM으로 이동
                             mainView.UpdateProcessDisplay();
                         }
                     }

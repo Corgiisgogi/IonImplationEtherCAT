@@ -12,6 +12,9 @@ namespace IonImplationEtherCAT
     /// </summary>
     public class Foup
     {
+        // FOUP 이름 (A 또는 B)
+        public string Name { get; set; }
+
         // 웨이퍼 슬롯 (5개) - Wafer 객체 배열로 변경
         public Wafer[] WaferSlots { get; set; }
 
@@ -48,8 +51,9 @@ namespace IonImplationEtherCAT
             }
         }
 
-        public Foup()
+        public Foup(string name = "")
         {
+            Name = name;
             // 5개의 웨이퍼 슬롯 초기화 (모두 비어있음)
             WaferSlots = new Wafer[5];
             for (int i = 0; i < 5; i++)

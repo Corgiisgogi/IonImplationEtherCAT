@@ -64,6 +64,9 @@ namespace IonImplationEtherCAT
         // 타워 램프 상태
         private TowerLampState currentTowerLampState = TowerLampState.Off;
 
+        // 수동 제어 폼 인스턴스
+        private ManualControlForm manualControlForm;
+
         public MainView()
         {
             InitializeComponent();
@@ -74,8 +77,8 @@ namespace IonImplationEtherCAT
             processModuleC = new ProcessModule(ProcessModule.ModuleType.PM3, 35);
             
             // FOUP 객체 생성
-            foupA = new Foup();
-            foupB = new Foup();
+            foupA = new Foup("FOUP A");
+            foupB = new Foup("FOUP B");
             
             // Transfer Module 객체 생성 및 초기화
             transferModule = new TransferModule();
@@ -130,11 +133,10 @@ namespace IonImplationEtherCAT
             if (processModuleA.ModuleState == ProcessModule.State.Running)
             {
                 processModuleA.UpdateProcess(1);
-                UpdateProcessDisplay();
             }
             else
             {
-                // Idle/Stopped 상태에서 파라미터 하강 애니메이션
+                // Idle/Stopped/Stopping 상태에서 파라미터 하강 애니메이션
                 processModuleA.UpdateParametersWhenIdle();
             }
 
@@ -142,11 +144,10 @@ namespace IonImplationEtherCAT
             if (processModuleB.ModuleState == ProcessModule.State.Running)
             {
                 processModuleB.UpdateProcess(1);
-                UpdateProcessDisplay();
             }
             else
             {
-                // Idle/Stopped 상태에서 파라미터 하강 애니메이션
+                // Idle/Stopped/Stopping 상태에서 파라미터 하강 애니메이션
                 processModuleB.UpdateParametersWhenIdle();
             }
 
@@ -154,13 +155,15 @@ namespace IonImplationEtherCAT
             if (processModuleC.ModuleState == ProcessModule.State.Running)
             {
                 processModuleC.UpdateProcess(1);
-                UpdateProcessDisplay();
             }
             else
             {
-                // Idle/Stopped 상태에서 파라미터 하강 애니메이션
+                // Idle/Stopped/Stopping 상태에서 파라미터 하강 애니메이션
                 processModuleC.UpdateParametersWhenIdle();
             }
+
+            // 모든 PM 상태 표시 업데이트 (항상 실행 - Running/Stopping/Idle 모든 상태 반영)
+            UpdateProcessDisplay();
 
             // 모든 PM 파라미터 표시 업데이트 (항상 실행 - 애니메이션용)
             UpdateAllPMParameters();
@@ -501,6 +504,13 @@ namespace IonImplationEtherCAT
             btnFoupBUnloadSW.Enabled = activate;
             btnAllProcess.Enabled = activate;
             btnAllStop.Enabled = activate;
+            btnManualControl.Enabled = activate;
+
+            // Non-Modal 수동 제어 폼이 열려있으면 컨트롤 비활성화
+            if (manualControlForm != null && !manualControlForm.IsDisposed)
+            {
+                manualControlForm.SetControlsEnabled(activate);
+            }
 
             // 연결 시 황색(대기), 연결 해제 시 OFF
             UpdateTowerLamp(activate ? TowerLampState.Yellow : TowerLampState.Off);
@@ -677,6 +687,32 @@ namespace IonImplationEtherCAT
                     MessageBoxIcon.Information
                 );
             }
+        }
+
+        /// <summary>
+        /// 수동 제어 버튼 클릭 이벤트 - ManualControlForm 열기
+        /// </summary>
+        private void btnManualControl_Click(object sender, EventArgs e)
+        {
+            // 이미 열려있는 폼이 있으면 활성화
+            if (manualControlForm != null && !manualControlForm.IsDisposed)
+            {
+                manualControlForm.Focus();
+                return;
+            }
+
+            // EtherCAT 컨트롤러 가져오기
+            var controller = GetEtherCATController();
+            if (controller == null)
+            {
+                MessageBox.Show("EtherCAT 연결이 필요합니다.", "알림", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Non-Modal 방식으로 폼 열기
+            manualControlForm = new ManualControlForm(controller);
+            manualControlForm.FormClosed += (s, args) => manualControlForm = null;
+            manualControlForm.Show();
         }
 
         private async void btnAllProcess_Click(object sender, EventArgs e)
@@ -924,9 +960,6 @@ namespace IonImplationEtherCAT
 
                 // 황색 램프 (중단 - 대기)
                 UpdateTowerLamp(TowerLampState.Yellow);
-
-                // 공정 중단 로그
-                LogManager.Instance.AddLog($"자동 공정", "사용자에 의해 공정 중단됨", "System", LogCategory.Warning, false);
 
                 // Stop 버튼에서 이미 메시지를 표시했으므로 여기서는 표시하지 않음
             }
@@ -1413,6 +1446,18 @@ namespace IonImplationEtherCAT
         /// </summary>
         private async Task ReturnTMToHomeAsync()
         {
+            // TM이 웨이퍼를 들고 있으면 폐기 처리
+            if (transferModule.HasWafer)
+            {
+                LogManager.Instance.Warning(
+                    "TM이 들고 있던 웨이퍼 폐기 처리",
+                    "TM",
+                    "공정 정지",
+                    isRestored: true);
+                transferModule.HasWafer = false;
+                transferModule.CurrentWafer = null;
+            }
+
             // 1. 실린더가 전진해있으면 후진
             if (transferModule.IsArmExtended || transferModule.CurrentExtension > 0)
             {
@@ -1480,25 +1525,8 @@ namespace IonImplationEtherCAT
             bool anyStopped = false;
             bool wasExecuting = commandQueue.IsExecuting;
 
-            // TM이 명령 실행 중이면 현재 명령 완료까지 대기
-            if (wasExecuting)
-            {
-                // CommandQueue에 Stop 요청 (현재 명령 완료 후 중단)
-                commandQueue.RequestStop();
-
-                // 현재 명령 완료까지 대기 (최대 30초)
-                int timeout = 30000;
-                int elapsed = 0;
-                int pollInterval = 100;
-
-                while (commandQueue.IsExecuting && elapsed < timeout)
-                {
-                    await Task.Delay(pollInterval);
-                    elapsed += pollInterval;
-                }
-            }
-
-            // processModuleA (PM1) 공정 중지 (Stopping 상태로 전환)
+            // ========== PM 공정 즉시 중지 (Stopping 상태로 전환) ==========
+            // processModuleA (PM1) 공정 중지
             if (processModuleA.ModuleState != ProcessModule.State.Idle ||
                 processModuleA.Parameters.IsRising ||
                 processModuleA.Parameters.IsStable)
@@ -1508,10 +1536,9 @@ namespace IonImplationEtherCAT
                 progressBarPM1.Value = 0;
                 anyStopped = true;
             }
-            // Idle 상태여도 IsUnloadRequested는 무조건 초기화
             processModuleA.IsUnloadRequested = false;
 
-            // processModuleB (PM2) 공정 중지 (Stopping 상태로 전환)
+            // processModuleB (PM2) 공정 중지
             if (processModuleB.ModuleState != ProcessModule.State.Idle ||
                 processModuleB.Parameters.IsRising ||
                 processModuleB.Parameters.IsStable)
@@ -1521,10 +1548,9 @@ namespace IonImplationEtherCAT
                 progressBarPM2.Value = 0;
                 anyStopped = true;
             }
-            // Idle 상태여도 IsUnloadRequested는 무조건 초기화
             processModuleB.IsUnloadRequested = false;
 
-            // processModuleC (PM3) 공정 중지 (Stopping 상태로 전환)
+            // processModuleC (PM3) 공정 중지
             if (processModuleC.ModuleState != ProcessModule.State.Idle ||
                 processModuleC.Parameters.IsRising ||
                 processModuleC.Parameters.IsStable)
@@ -1536,6 +1562,9 @@ namespace IonImplationEtherCAT
             }
             // Idle 상태여도 IsUnloadRequested는 무조건 초기화
             processModuleC.IsUnloadRequested = false;
+
+            // Stopping 상태를 UI에 즉시 반영 (하드웨어 초기화 전)
+            UpdateProcessDisplay();
 
             // 명령 큐 완전 중지 및 초기화
             commandQueue.Stop();
@@ -1569,6 +1598,13 @@ namespace IonImplationEtherCAT
             {
                 // 황색 램프 (중단 - 대기)
                 UpdateTowerLamp(TowerLampState.Yellow);
+
+                // 공정 중단 Warning 로깅 (복구된 상태로)
+                LogManager.Instance.Warning(
+                    "사용자에 의해 공정이 중단되었습니다.",
+                    "System",
+                    "공정 정지",
+                    isRestored: true);
 
                 MessageBox.Show("실행 중인 모든 공정과 워크플로우가 중지 및 초기화되었습니다.",
                     "공정 중지", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1606,6 +1642,12 @@ namespace IonImplationEtherCAT
             // 모든 웨이퍼 장착
             foupA.LoadWafers();
             UpdateFoupADisplay();
+
+            // 로그 기록
+            LogManager.Instance.AddLog("웨이퍼 이동",
+                $"FOUP A에 웨이퍼 {foupA.WaferCount}개 S/W 장착",
+                "FOUP A", LogCategory.Transfer, false);
+
             MessageBox.Show($"FOUP A에 웨이퍼 {foupA.WaferCount}개가 장착되었습니다.", "장착 완료", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -1620,6 +1662,12 @@ namespace IonImplationEtherCAT
             // 모든 웨이퍼 제거
             foupA.UnloadWafers();
             UpdateFoupADisplay();
+
+            // 로그 기록
+            LogManager.Instance.AddLog("웨이퍼 이동",
+                "FOUP A의 모든 웨이퍼 S/W 제거",
+                "FOUP A", LogCategory.Transfer, false);
+
             MessageBox.Show("FOUP A의 모든 웨이퍼가 제거되었습니다.", "제거 완료", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -1634,6 +1682,12 @@ namespace IonImplationEtherCAT
             // 모든 웨이퍼 장착
             foupB.LoadWafers();
             UpdateFoupBDisplay();
+
+            // 로그 기록
+            LogManager.Instance.AddLog("웨이퍼 이동",
+                $"FOUP B에 웨이퍼 {foupB.WaferCount}개 S/W 장착",
+                "FOUP B", LogCategory.Transfer, false);
+
             MessageBox.Show($"FOUP B에 웨이퍼 {foupB.WaferCount}개가 장착되었습니다.", "장착 완료", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 

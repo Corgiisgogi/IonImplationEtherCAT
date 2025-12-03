@@ -28,11 +28,12 @@ namespace IonImplationEtherCAT
         }
 
         /// <summary>
-        /// 새 로그 추가 시 호출
+        /// 새 로그 추가 시 호출 (알람 및 워닝 모두 표시)
         /// </summary>
         private void OnLogAdded(LogEntry entry)
         {
-            if (!entry.IsAlarm)
+            // 알람 또는 워닝만 표시
+            if (!entry.IsAlarm && !entry.IsWarning)
                 return;
 
             if (InvokeRequired)
@@ -98,7 +99,7 @@ namespace IonImplationEtherCAT
         }
 
         /// <summary>
-        /// DataGridView에 알람 행 추가
+        /// DataGridView에 알람/워닝 행 추가
         /// </summary>
         private void AddAlarmRow(LogEntry alarm)
         {
@@ -112,12 +113,18 @@ namespace IonImplationEtherCAT
 
             _displayedAlarms.Add(alarm);
 
-            // 색상 설정
+            // 색상 설정 (복구 여부 및 알람/워닝 구분)
             if (alarm.IsRestored)
             {
-                // 복구된 알람: 회색
-                dgvAlarms.Rows[rowIndex].DefaultCellStyle.BackColor = Color.LightGray;
-                dgvAlarms.Rows[rowIndex].DefaultCellStyle.ForeColor = Color.DarkGray;
+                // 복구된 알람/워닝: 하얀색 바탕, 검은색 글씨 (일반 로그처럼)
+                dgvAlarms.Rows[rowIndex].DefaultCellStyle.BackColor = Color.White;
+                dgvAlarms.Rows[rowIndex].DefaultCellStyle.ForeColor = Color.Black;
+            }
+            else if (alarm.IsWarning)
+            {
+                // 활성 워닝: 노란색
+                dgvAlarms.Rows[rowIndex].DefaultCellStyle.BackColor = Color.LightYellow;
+                dgvAlarms.Rows[rowIndex].DefaultCellStyle.ForeColor = Color.Black;
             }
             else
             {

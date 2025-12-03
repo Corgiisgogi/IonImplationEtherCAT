@@ -339,6 +339,18 @@ namespace IonImplationEtherCAT
             etherCAT.Digital_Output(DO_TOWER_GREEN, state == TowerLampState.Green);
         }
 
+        /// <summary>
+        /// 타워 램프 개별 제어 (각 색상 독립적으로 ON/OFF 가능)
+        /// </summary>
+        public void SetTowerLampIndividual(bool red, bool yellow, bool green)
+        {
+            if (etherCAT == null) return;
+
+            etherCAT.Digital_Output(DO_TOWER_RED, red);
+            etherCAT.Digital_Output(DO_TOWER_YELLOW, yellow);
+            etherCAT.Digital_Output(DO_TOWER_GREEN, green);
+        }
+
         #endregion
     }
 }

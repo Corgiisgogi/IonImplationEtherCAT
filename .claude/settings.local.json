@@ -8,7 +8,8 @@
       "Bash(\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe\" IonImplationEtherCAT.sln /p:Configuration=Debug /verbosity:minimal)",
       "Bash(\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe\" IonImplationEtherCAT.csproj -property:Configuration=Debug -verbosity:minimal)",
       "Bash(\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe\" IonImplationEtherCAT.sln -property:Configuration=Debug -verbosity:minimal)",
-      "Bash(\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe\" \"C:\\Users\\User\\source\\repos\\Corgiisgogi\\IonImplationEtherCAT\\IonImplationEtherCAT.sln\" -property:Configuration=Debug -verbosity:minimal)"
+      "Bash(\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe\" \"C:\\Users\\User\\source\\repos\\Corgiisgogi\\IonImplationEtherCAT\\IonImplationEtherCAT.sln\" -property:Configuration=Debug -verbosity:minimal)",
+      "Bash(\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\MSBuild.exe\" \"D:\\2504110113 박재민\\2504110113_Final2025\\IonImplationEtherCAT\\IonImplationEtherCAT.sln\" -property:Configuration=Debug -verbosity:minimal)"
     ],
     "deny": [],
     "ask": []
