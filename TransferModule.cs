@@ -104,9 +104,16 @@ namespace IonImplationEtherCAT
 
         /// <summary>
         /// 목표 회전 각도 설정 (애니메이션)
+        /// 경계 제한: MIN_ROTATION_ANGLE ~ MAX_ROTATION_ANGLE 범위 내로 제한
         /// </summary>
         public void SetTargetRotation(float angle)
         {
+            // 경계 제한 적용
+            if (angle < MIN_ROTATION_ANGLE)
+                angle = MIN_ROTATION_ANGLE;
+            else if (angle > MAX_ROTATION_ANGLE)
+                angle = MAX_ROTATION_ANGLE;
+
             TargetRotationAngle = angle;
             if (Math.Abs(CurrentRotationAngle - TargetRotationAngle) > 0.1f)
             {
@@ -116,9 +123,16 @@ namespace IonImplationEtherCAT
 
         /// <summary>
         /// 즉시 회전 (애니메이션 없음)
+        /// 경계 제한: MIN_ROTATION_ANGLE ~ MAX_ROTATION_ANGLE 범위 내로 제한
         /// </summary>
         public void RotateImmediate(float angle)
         {
+            // 경계 제한 적용
+            if (angle < MIN_ROTATION_ANGLE)
+                angle = MIN_ROTATION_ANGLE;
+            else if (angle > MAX_ROTATION_ANGLE)
+                angle = MAX_ROTATION_ANGLE;
+
             CurrentRotationAngle = angle;
             TargetRotationAngle = angle;
             UpdatePositionsAfterRotation();
@@ -147,26 +161,37 @@ namespace IonImplationEtherCAT
                 while (counterClockwiseDiff > 0) counterClockwiseDiff -= 360f;
                 while (counterClockwiseDiff <= -360f) counterClockwiseDiff += 360f;
 
-                // 경계 체크: 반시계 방향(-) 이동 시 MIN_ROTATION_ANGLE을 넘는지 확인
+                // 경계 체크: 양방향 모두 확인
+                bool canGoClockwise = CanRotateClockwise(CurrentRotationAngle, TargetRotationAngle);
                 bool canGoCounterClockwise = CanRotateCounterClockwise(CurrentRotationAngle, TargetRotationAngle);
 
                 // 방향 결정
                 float finalDiff;
-                if (!canGoCounterClockwise)
-                {
-                    // 반시계 방향 불가 → 시계 방향 강제
-                    finalDiff = clockwiseDiff;
-                }
-                else if (clockwiseDiff == 0)
+                if (clockwiseDiff == 0)
                 {
                     // 이미 목표 도달
                     finalDiff = 0;
                 }
-                else
+                else if (canGoClockwise && canGoCounterClockwise)
                 {
                     // 둘 다 가능하면 짧은 경로 선택
                     finalDiff = (Math.Abs(clockwiseDiff) <= Math.Abs(counterClockwiseDiff))
                                 ? clockwiseDiff : counterClockwiseDiff;
+                }
+                else if (canGoClockwise)
+                {
+                    // 시계 방향만 가능
+                    finalDiff = clockwiseDiff;
+                }
+                else if (canGoCounterClockwise)
+                {
+                    // 반시계 방향만 가능
+                    finalDiff = counterClockwiseDiff;
+                }
+                else
+                {
+                    // 둘 다 불가능 (이론상 발생하면 안 됨)
+                    finalDiff = 0;
                 }
 
                 if (Math.Abs(finalDiff) > 0.1f)
@@ -303,6 +328,18 @@ namespace IonImplationEtherCAT
                 CurrentRotationAngle -= 360f;
             while (CurrentRotationAngle < MIN_ROTATION_ANGLE)
                 CurrentRotationAngle += 360f;
+        }
+
+        /// <summary>
+        /// 시계 방향 회전이 가능한지 확인 (경계를 넘지 않는지)
+        /// 시계 방향으로 회전 시 MAX_ROTATION_ANGLE(305°)을 넘으면 불가
+        /// </summary>
+        private bool CanRotateClockwise(float fromAngle, float toAngle)
+        {
+            // 시계 방향: 각도가 증가하는 방향
+            // from <= to 면 직접 도달 가능 (경계 안 넘음)
+            // from > to 면 305°를 넘어야 하므로 불가
+            return fromAngle <= toAngle;
         }
 
         /// <summary>

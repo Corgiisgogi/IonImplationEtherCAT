@@ -234,6 +234,11 @@ namespace IonImplationEtherCAT
                     picBoxPM1Lamp.BackgroundImage = Properties.Resources.LampOn;
                     etherCATController?.SetPMLamp(ProcessModule.ModuleType.PM1, true);
                     break;
+                case ProcessModule.State.Stopping:
+                    picBoxPM1Status.BackgroundImage = Properties.Resources.StatusYellow;  // 정지 중 (주황색 리소스 없음)
+                    picBoxPM1Lamp.BackgroundImage = Properties.Resources.LampOff;
+                    etherCATController?.SetPMLamp(ProcessModule.ModuleType.PM1, false);
+                    break;
             }
         }
 
@@ -290,6 +295,11 @@ namespace IonImplationEtherCAT
                     picBoxPM2Lamp.BackgroundImage = Properties.Resources.LampOn;
                     etherCATController?.SetPMLamp(ProcessModule.ModuleType.PM2, true);
                     break;
+                case ProcessModule.State.Stopping:
+                    picBoxPM2Status.BackgroundImage = Properties.Resources.StatusYellow;  // 정지 중 (주황색 리소스 없음)
+                    picBoxPM2Lamp.BackgroundImage = Properties.Resources.LampOff;
+                    etherCATController?.SetPMLamp(ProcessModule.ModuleType.PM2, false);
+                    break;
             }
         }
 
@@ -345,6 +355,11 @@ namespace IonImplationEtherCAT
                     picBoxPM3Status.BackgroundImage = Properties.Resources.StatusRed;
                     picBoxPM3Lamp.BackgroundImage = Properties.Resources.LampOn;
                     etherCATController?.SetPMLamp(ProcessModule.ModuleType.PM3, true);
+                    break;
+                case ProcessModule.State.Stopping:
+                    picBoxPM3Status.BackgroundImage = Properties.Resources.StatusYellow;  // 정지 중 (주황색 리소스 없음)
+                    picBoxPM3Lamp.BackgroundImage = Properties.Resources.LampOff;
+                    etherCATController?.SetPMLamp(ProcessModule.ModuleType.PM3, false);
                     break;
             }
         }
@@ -833,7 +848,10 @@ namespace IonImplationEtherCAT
                     await Task.Delay(500);
                 }
 
-                // 실제 모드에서는 안전 종료 시퀀스 실행
+                // UI 애니메이션 Task (실제/시뮬레이션 모두 실행)
+                Task animationTask = ReturnTMToHomeAsync();
+
+                // 실제 모드에서는 안전 종료 시퀀스 실행 (하드웨어 + 애니메이션 병렬)
                 if (IsRealMode())
                 {
                     commandQueue.Clear();
@@ -849,7 +867,15 @@ namespace IonImplationEtherCAT
                     commandQueue.Enqueue(new ProcessCommand(CommandType.HomeLRAxis, "LR 원점복귀"));
                     // 6. 서보 모터 OFF
                     commandQueue.Enqueue(new ProcessCommand(CommandType.ServoOff, "서보 모터 OFF"));
-                    await commandQueue.ExecuteAsync();
+
+                    // 하드웨어와 애니메이션 병렬 실행
+                    Task hardwareTask = commandQueue.ExecuteAsync();
+                    await Task.WhenAll(hardwareTask, animationTask);
+                }
+                else
+                {
+                    // 시뮬레이션 모드에서는 애니메이션만 실행
+                    await animationTask;
                 }
 
                 // 황색 램프 (공정 완료 - 대기)
@@ -867,6 +893,9 @@ namespace IonImplationEtherCAT
             catch (OperationCanceledException)
             {
                 // 워크플로우가 중단됨 - 안전 종료 시퀀스 실행
+                // UI 애니메이션 Task (실제/시뮬레이션 모두 실행)
+                Task cancelAnimationTask = ReturnTMToHomeAsync();
+
                 if (IsRealMode())
                 {
                     commandQueue.Clear();
@@ -882,7 +911,15 @@ namespace IonImplationEtherCAT
                     commandQueue.Enqueue(new ProcessCommand(CommandType.HomeLRAxis, "LR 원점복귀"));
                     // 6. 서보 모터 OFF
                     commandQueue.Enqueue(new ProcessCommand(CommandType.ServoOff, "서보 모터 OFF"));
-                    await commandQueue.ExecuteAsync();
+
+                    // 하드웨어와 애니메이션 병렬 실행
+                    Task cancelHardwareTask = commandQueue.ExecuteAsync();
+                    await Task.WhenAll(cancelHardwareTask, cancelAnimationTask);
+                }
+                else
+                {
+                    // 시뮬레이션 모드에서는 애니메이션만 실행
+                    await cancelAnimationTask;
                 }
 
                 // 황색 램프 (중단 - 대기)
@@ -898,6 +935,9 @@ namespace IonImplationEtherCAT
                 // 오류 발생 - 적색 램프
                 UpdateTowerLamp(TowerLampState.Red);
 
+                // UI 애니메이션 Task (실제/시뮬레이션 모두 실행)
+                Task errorAnimationTask = ReturnTMToHomeAsync();
+
                 // 실제 모드에서는 안전 종료 시퀀스 실행
                 if (IsRealMode())
                 {
@@ -908,7 +948,15 @@ namespace IonImplationEtherCAT
                     commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "UD 원점복귀"));
                     commandQueue.Enqueue(new ProcessCommand(CommandType.HomeLRAxis, "LR 원점복귀"));
                     commandQueue.Enqueue(new ProcessCommand(CommandType.ServoOff, "서보 모터 OFF"));
-                    await commandQueue.ExecuteAsync();
+
+                    // 하드웨어와 애니메이션 병렬 실행
+                    Task errorHardwareTask = commandQueue.ExecuteAsync();
+                    await Task.WhenAll(errorHardwareTask, errorAnimationTask);
+                }
+                else
+                {
+                    // 시뮬레이션 모드에서는 애니메이션만 실행
+                    await errorAnimationTask;
                 }
 
                 ShowErrorMessage($"공정 중 오류 발생:\n{ex.Message}");
@@ -1450,13 +1498,12 @@ namespace IonImplationEtherCAT
                 }
             }
 
-            // processModuleA (PM1) 공정 중지 및 완전 초기화
+            // processModuleA (PM1) 공정 중지 (Stopping 상태로 전환)
             if (processModuleA.ModuleState != ProcessModule.State.Idle ||
                 processModuleA.Parameters.IsRising ||
                 processModuleA.Parameters.IsStable)
             {
-                processModuleA.StopProcess();
-                processModuleA.ModuleState = ProcessModule.State.Idle;
+                processModuleA.StopProcess();  // Stopping 상태로 전환
                 processModuleA.elapsedTime = 0;
                 progressBarPM1.Value = 0;
                 anyStopped = true;
@@ -1464,13 +1511,12 @@ namespace IonImplationEtherCAT
             // Idle 상태여도 IsUnloadRequested는 무조건 초기화
             processModuleA.IsUnloadRequested = false;
 
-            // processModuleB (PM2) 공정 중지 및 완전 초기화
+            // processModuleB (PM2) 공정 중지 (Stopping 상태로 전환)
             if (processModuleB.ModuleState != ProcessModule.State.Idle ||
                 processModuleB.Parameters.IsRising ||
                 processModuleB.Parameters.IsStable)
             {
-                processModuleB.StopProcess();
-                processModuleB.ModuleState = ProcessModule.State.Idle;
+                processModuleB.StopProcess();  // Stopping 상태로 전환
                 processModuleB.elapsedTime = 0;
                 progressBarPM2.Value = 0;
                 anyStopped = true;
@@ -1478,13 +1524,12 @@ namespace IonImplationEtherCAT
             // Idle 상태여도 IsUnloadRequested는 무조건 초기화
             processModuleB.IsUnloadRequested = false;
 
-            // processModuleC (PM3) 공정 중지 및 완전 초기화
+            // processModuleC (PM3) 공정 중지 (Stopping 상태로 전환)
             if (processModuleC.ModuleState != ProcessModule.State.Idle ||
                 processModuleC.Parameters.IsRising ||
                 processModuleC.Parameters.IsStable)
             {
-                processModuleC.StopProcess();
-                processModuleC.ModuleState = ProcessModule.State.Idle;
+                processModuleC.StopProcess();  // Stopping 상태로 전환
                 processModuleC.elapsedTime = 0;
                 progressBarPM3.Value = 0;
                 anyStopped = true;
@@ -1511,6 +1556,11 @@ namespace IonImplationEtherCAT
             {
                 await InitializeHardwareAsync(showMessage: false);
             }
+
+            // 하드웨어 초기화 완료 후 Stopping → Idle 전환
+            processModuleA.CompleteStop();
+            processModuleB.CompleteStop();
+            processModuleC.CompleteStop();
 
             UpdateProcessDisplay();
 

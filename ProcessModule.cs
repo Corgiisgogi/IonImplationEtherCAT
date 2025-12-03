@@ -14,6 +14,7 @@ namespace IonImplationEtherCAT
             Idle,
             Running,
             Paused,
+            Stopping,  // 정지 중 (하드웨어 초기화 완료 전)
             Stoped,
             Error
         };
@@ -220,11 +221,25 @@ namespace IonImplationEtherCAT
 
         public void StopProcess()
         {
-            ModuleState = State.Stoped;
+            if (ModuleState == State.Idle)
+                return;  // Idle일 때는 변화 없음
+
+            ModuleState = State.Stopping;  // Stoped 대신 Stopping으로
             elapsedTime = 0;
             IsUnloadRequested = false;
             CompletedTime = null; // 완료 시간 초기화
             Parameters.StartFalling(); // 파라미터 하강 시작
+        }
+
+        /// <summary>
+        /// 하드웨어 초기화 완료 후 Stopping → Idle 전환
+        /// </summary>
+        public void CompleteStop()
+        {
+            if (ModuleState == State.Stopping)
+            {
+                ModuleState = State.Idle;
+            }
         }
 
         // 이전에 기록한 공정 단계 (중복 로그 방지)
@@ -366,11 +381,11 @@ namespace IonImplationEtherCAT
         }
 
         /// <summary>
-        /// Idle/Stopped 상태에서 파라미터 애니메이션 업데이트 (상승/하강 모두)
+        /// Idle/Stopped/Stopping 상태에서 파라미터 애니메이션 업데이트 (상승/하강 모두)
         /// </summary>
         public void UpdateParametersWhenIdle()
         {
-            if ((ModuleState == State.Idle || ModuleState == State.Stoped) &&
+            if ((ModuleState == State.Idle || ModuleState == State.Stoped || ModuleState == State.Stopping) &&
                 (Parameters.IsFalling || Parameters.IsRising))
             {
                 Parameters.Update(1.0); // 1초 단위로 업데이트
