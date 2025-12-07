@@ -545,11 +545,6 @@ namespace IonImplationEtherCAT
                    processModuleC.ModuleState == ProcessModule.State.Paused;
         }
 
-        private void LoadSW()
-        {
-
-        }
-
         /// <summary>
         /// RecipeView 참조 설정
         /// </summary>

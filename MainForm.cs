@@ -45,9 +45,19 @@ namespace IonImplationEtherCAT
 
             // 처음 보여줄 화면 설정
             ShowView(mainView);
-            
+
             // 초기에는 Connect 버튼 비활성화 (로그인 필요)
             btnConnect.Enabled = false;
+
+            // Alert 패널 이벤트 설정
+            LogManager.Instance.OnLogAdded += OnAlarmAdded;
+            LogManager.Instance.OnAlarmRestored += OnAlarmRestored;
+            panelAlartContainer.Click += PanelAlartContainer_Click;
+            panelAlartContainer.Cursor = Cursors.Hand;
+            this.FormClosing += MainForm_FormClosing;
+
+            // 초기 Alert 패널 상태 설정
+            UpdateAlertPanel();
         }
 
         /// <summary>
@@ -295,5 +305,88 @@ namespace IonImplationEtherCAT
         {
             ShowView(logView);
         }
+
+        #region Alert 패널 관련 메서드
+
+        /// <summary>
+        /// Alert 패널 상태 업데이트 (Alarm/Warning 발생 시 색상 및 텍스트 변경)
+        /// </summary>
+        private void UpdateAlertPanel()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(UpdateAlertPanel));
+                return;
+            }
+
+            var activeAlarms = LogManager.Instance.GetActiveAlarms();
+
+            if (activeAlarms.Count == 0)
+            {
+                // 정상 상태
+                panelAlartContainer.BackColor = SystemColors.ButtonHighlight;
+                lblAlartContent.Text = "None";
+                lblAlartContent.ForeColor = Color.Gray;
+            }
+            else
+            {
+                // Alarm과 Warning 분류
+                int alarmCount = activeAlarms.Count(a => a.IsAlarm);
+
+                if (alarmCount > 0)
+                {
+                    // Alarm 우선 (빨강)
+                    panelAlartContainer.BackColor = Color.LightCoral;
+                    lblAlartContent.ForeColor = Color.DarkRed;
+                }
+                else
+                {
+                    // Warning만 있음 (노랑)
+                    panelAlartContainer.BackColor = Color.LightYellow;
+                    lblAlartContent.ForeColor = Color.DarkOrange;
+                }
+
+                // 텍스트 표시
+                lblAlartContent.Text = $"{activeAlarms.Count}건 발생";
+            }
+        }
+
+        /// <summary>
+        /// 새 로그 추가 시 호출 (Alarm/Warning인 경우 패널 업데이트)
+        /// </summary>
+        private void OnAlarmAdded(LogEntry entry)
+        {
+            if (entry.IsAlarm || entry.IsWarning)
+            {
+                UpdateAlertPanel();
+            }
+        }
+
+        /// <summary>
+        /// Alarm 복구 시 호출 (패널 업데이트)
+        /// </summary>
+        private void OnAlarmRestored(LogEntry entry)
+        {
+            UpdateAlertPanel();
+        }
+
+        /// <summary>
+        /// Alert 패널 클릭 시 AlarmView로 이동
+        /// </summary>
+        private void PanelAlartContainer_Click(object sender, EventArgs e)
+        {
+            ShowView(alarmView);
+        }
+
+        /// <summary>
+        /// 폼 종료 시 이벤트 구독 해제
+        /// </summary>
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            LogManager.Instance.OnLogAdded -= OnAlarmAdded;
+            LogManager.Instance.OnAlarmRestored -= OnAlarmRestored;
+        }
+
+        #endregion
     }
 }
