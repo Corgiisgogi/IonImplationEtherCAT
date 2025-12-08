@@ -23,6 +23,11 @@ namespace IonImplationEtherCAT
         public double TargetPressure { get; set; }      // 목표 압력 (Torr)
         public double TargetHV { get; set; }            // 가속 전압 HV (kV) - Voltage 값 사용
 
+        // 허용 편차 (목표값의 ±%)
+        public double TemperatureTolerance { get; set; }  // 온도 허용 편차 (±%)
+        public double PressureTolerance { get; set; }     // 압력 허용 편차 (±%)
+        public double HVTolerance { get; set; }           // HV 허용 편차 (±%)
+
         public IonImplantRecipe()
         {
             IonGas = "";
@@ -38,6 +43,11 @@ namespace IonImplationEtherCAT
             TargetTemperature = 800.0;      // 600-1000°C 범위
             TargetPressure = 1E-5;          // 진공 상태 (Torr)
             TargetHV = 100.0;               // 가속 전압 (kV)
+
+            // 기본 허용 편차
+            TemperatureTolerance = 5.0;     // ±5%
+            PressureTolerance = 10.0;       // ±10%
+            HVTolerance = 3.0;              // ±3%
         }
     }
 
@@ -56,6 +66,10 @@ namespace IonImplationEtherCAT
         public double TargetTemperature { get; set; }   // 목표 온도 (°C)
         public double TargetPressure { get; set; }      // 목표 압력 (Torr)
 
+        // 허용 편차 (목표값의 ±%)
+        public double TemperatureTolerance { get; set; }  // 온도 허용 편차 (±%)
+        public double PressureTolerance { get; set; }     // 압력 허용 편차 (±%)
+
         public AnnealingRecipe()
         {
             Vacuum = 1E-6;              // 기본 진공 레벨
@@ -64,6 +78,10 @@ namespace IonImplationEtherCAT
             // 시뮬레이션 목표값 = UI 입력값 사용
             TargetTemperature = 950.0;
             TargetPressure = 1E-6;
+
+            // 기본 허용 편차
+            TemperatureTolerance = 5.0;     // ±5%
+            PressureTolerance = 10.0;       // ±10%
         }
     }
 

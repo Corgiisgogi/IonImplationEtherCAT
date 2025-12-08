@@ -15,6 +15,9 @@ namespace IonImplationEtherCAT
         {
             InitializeComponent();
             SubscribeToLogManager();
+
+            // 시작 시 이전 세션의 알람 로드 (LogManager 싱글톤이 이미 로그를 로드한 상태)
+            RefreshAlarms();
         }
 
         /// <summary>

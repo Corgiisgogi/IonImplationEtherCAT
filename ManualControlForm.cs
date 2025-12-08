@@ -98,7 +98,9 @@ namespace IonImplationEtherCAT
             btnUDMove.Enabled = false;
             try
             {
-                await controller.MoveUDAxis((long)numUD.Value);
+                long targetPos = (long)numUD.Value;
+                LogManager.Instance.AddLog("수동제어", $"UD축 이동 → {targetPos}", "TM", LogCategory.Hardware, false);
+                await controller.MoveUDAxis(targetPos);
             }
             finally
             {
@@ -112,7 +114,9 @@ namespace IonImplationEtherCAT
             btnLRMove.Enabled = false;
             try
             {
-                await controller.MoveLRAxis((long)numLR.Value);
+                long targetPos = (long)numLR.Value;
+                LogManager.Instance.AddLog("수동제어", $"LR축 이동 → {targetPos}", "TM", LogCategory.Hardware, false);
+                await controller.MoveLRAxis(targetPos);
             }
             finally
             {
@@ -130,8 +134,10 @@ namespace IonImplationEtherCAT
             btnHomeUD.Enabled = false;
             try
             {
+                LogManager.Instance.AddLog("수동제어", "UD축 원점복귀 시작", "TM", LogCategory.Hardware, false);
                 await controller.HomeUDAxis();
                 numUD.Value = 0;
+                LogManager.Instance.AddLog("수동제어", "UD축 원점복귀 완료", "TM", LogCategory.Hardware, false);
             }
             finally
             {
@@ -145,8 +151,10 @@ namespace IonImplationEtherCAT
             btnHomeLR.Enabled = false;
             try
             {
+                LogManager.Instance.AddLog("수동제어", "LR축 원점복귀 시작", "TM", LogCategory.Hardware, false);
                 await controller.HomeLRAxis();
                 numLR.Value = 0;
+                LogManager.Instance.AddLog("수동제어", "LR축 원점복귀 완료", "TM", LogCategory.Hardware, false);
             }
             finally
             {
@@ -162,10 +170,12 @@ namespace IonImplationEtherCAT
             btnHomeLR.Enabled = false;
             try
             {
+                LogManager.Instance.AddLog("수동제어", "전체 원점복귀 시작", "TM", LogCategory.Hardware, false);
                 await controller.HomeUDAxis();
                 await controller.HomeLRAxis();
                 numUD.Value = 0;
                 numLR.Value = 0;
+                LogManager.Instance.AddLog("수동제어", "전체 원점복귀 완료", "TM", LogCategory.Hardware, false);
             }
             finally
             {
@@ -182,21 +192,25 @@ namespace IonImplationEtherCAT
         private void btnServoUDOn_Click(object sender, EventArgs e)
         {
             controller?.SetServoUD(true);
+            LogManager.Instance.AddLog("수동제어", "UD축 서보 ON", "TM", LogCategory.Hardware, false);
         }
 
         private void btnServoUDOff_Click(object sender, EventArgs e)
         {
             controller?.SetServoUD(false);
+            LogManager.Instance.AddLog("수동제어", "UD축 서보 OFF", "TM", LogCategory.Hardware, false);
         }
 
         private void btnServoLROn_Click(object sender, EventArgs e)
         {
             controller?.SetServoLR(true);
+            LogManager.Instance.AddLog("수동제어", "LR축 서보 ON", "TM", LogCategory.Hardware, false);
         }
 
         private void btnServoLROff_Click(object sender, EventArgs e)
         {
             controller?.SetServoLR(false);
+            LogManager.Instance.AddLog("수동제어", "LR축 서보 OFF", "TM", LogCategory.Hardware, false);
         }
 
         #endregion
@@ -206,31 +220,37 @@ namespace IonImplationEtherCAT
         private void btnCylinderExtend_Click(object sender, EventArgs e)
         {
             controller?.ExtendCylinder();
+            LogManager.Instance.AddLog("수동제어", "실린더 전진", "TM", LogCategory.Hardware, false);
         }
 
         private void btnCylinderRetract_Click(object sender, EventArgs e)
         {
             controller?.RetractCylinder();
+            LogManager.Instance.AddLog("수동제어", "실린더 후진", "TM", LogCategory.Hardware, false);
         }
 
         private void btnSuctionOn_Click(object sender, EventArgs e)
         {
             controller?.EnableSuction();
+            LogManager.Instance.AddLog("수동제어", "흡착 ON", "TM", LogCategory.Hardware, false);
         }
 
         private void btnSuctionOff_Click(object sender, EventArgs e)
         {
             controller?.DisableSuction();
+            LogManager.Instance.AddLog("수동제어", "흡착 OFF", "TM", LogCategory.Hardware, false);
         }
 
         private void btnExhaustOn_Click(object sender, EventArgs e)
         {
             controller?.EnableExhaust();
+            LogManager.Instance.AddLog("수동제어", "배기 ON", "TM", LogCategory.Hardware, false);
         }
 
         private void btnExhaustOff_Click(object sender, EventArgs e)
         {
             controller?.DisableExhaust();
+            LogManager.Instance.AddLog("수동제어", "배기 OFF", "TM", LogCategory.Hardware, false);
         }
 
         #endregion
@@ -240,31 +260,37 @@ namespace IonImplationEtherCAT
         private void btnPM1DoorOpen_Click(object sender, EventArgs e)
         {
             controller?.OpenPMDoor(ProcessModule.ModuleType.PM1);
+            LogManager.Instance.AddLog("수동제어", "PM1 문 열기", "PM1", LogCategory.Hardware, false);
         }
 
         private void btnPM1DoorClose_Click(object sender, EventArgs e)
         {
             controller?.ClosePMDoor(ProcessModule.ModuleType.PM1);
+            LogManager.Instance.AddLog("수동제어", "PM1 문 닫기", "PM1", LogCategory.Hardware, false);
         }
 
         private void btnPM2DoorOpen_Click(object sender, EventArgs e)
         {
             controller?.OpenPMDoor(ProcessModule.ModuleType.PM2);
+            LogManager.Instance.AddLog("수동제어", "PM2 문 열기", "PM2", LogCategory.Hardware, false);
         }
 
         private void btnPM2DoorClose_Click(object sender, EventArgs e)
         {
             controller?.ClosePMDoor(ProcessModule.ModuleType.PM2);
+            LogManager.Instance.AddLog("수동제어", "PM2 문 닫기", "PM2", LogCategory.Hardware, false);
         }
 
         private void btnPM3DoorOpen_Click(object sender, EventArgs e)
         {
             controller?.OpenPMDoor(ProcessModule.ModuleType.PM3);
+            LogManager.Instance.AddLog("수동제어", "PM3 문 열기", "PM3", LogCategory.Hardware, false);
         }
 
         private void btnPM3DoorClose_Click(object sender, EventArgs e)
         {
             controller?.ClosePMDoor(ProcessModule.ModuleType.PM3);
+            LogManager.Instance.AddLog("수동제어", "PM3 문 닫기", "PM3", LogCategory.Hardware, false);
         }
 
         #endregion
@@ -274,31 +300,37 @@ namespace IonImplationEtherCAT
         private void btnPM1LampOn_Click(object sender, EventArgs e)
         {
             controller?.SetPMLamp(ProcessModule.ModuleType.PM1, true);
+            LogManager.Instance.AddLog("수동제어", "PM1 램프 ON", "PM1", LogCategory.Hardware, false);
         }
 
         private void btnPM1LampOff_Click(object sender, EventArgs e)
         {
             controller?.SetPMLamp(ProcessModule.ModuleType.PM1, false);
+            LogManager.Instance.AddLog("수동제어", "PM1 램프 OFF", "PM1", LogCategory.Hardware, false);
         }
 
         private void btnPM2LampOn_Click(object sender, EventArgs e)
         {
             controller?.SetPMLamp(ProcessModule.ModuleType.PM2, true);
+            LogManager.Instance.AddLog("수동제어", "PM2 램프 ON", "PM2", LogCategory.Hardware, false);
         }
 
         private void btnPM2LampOff_Click(object sender, EventArgs e)
         {
             controller?.SetPMLamp(ProcessModule.ModuleType.PM2, false);
+            LogManager.Instance.AddLog("수동제어", "PM2 램프 OFF", "PM2", LogCategory.Hardware, false);
         }
 
         private void btnPM3LampOn_Click(object sender, EventArgs e)
         {
             controller?.SetPMLamp(ProcessModule.ModuleType.PM3, true);
+            LogManager.Instance.AddLog("수동제어", "PM3 램프 ON", "PM3", LogCategory.Hardware, false);
         }
 
         private void btnPM3LampOff_Click(object sender, EventArgs e)
         {
             controller?.SetPMLamp(ProcessModule.ModuleType.PM3, false);
+            LogManager.Instance.AddLog("수동제어", "PM3 램프 OFF", "PM3", LogCategory.Hardware, false);
         }
 
         #endregion
@@ -309,36 +341,42 @@ namespace IonImplationEtherCAT
         {
             towerRedOn = true;
             UpdateTowerLamp();
+            LogManager.Instance.AddLog("수동제어", "타워램프 적색 ON", "System", LogCategory.Hardware, false);
         }
 
         private void btnTowerRedOff_Click(object sender, EventArgs e)
         {
             towerRedOn = false;
             UpdateTowerLamp();
+            LogManager.Instance.AddLog("수동제어", "타워램프 적색 OFF", "System", LogCategory.Hardware, false);
         }
 
         private void btnTowerYellowOn_Click(object sender, EventArgs e)
         {
             towerYellowOn = true;
             UpdateTowerLamp();
+            LogManager.Instance.AddLog("수동제어", "타워램프 황색 ON", "System", LogCategory.Hardware, false);
         }
 
         private void btnTowerYellowOff_Click(object sender, EventArgs e)
         {
             towerYellowOn = false;
             UpdateTowerLamp();
+            LogManager.Instance.AddLog("수동제어", "타워램프 황색 OFF", "System", LogCategory.Hardware, false);
         }
 
         private void btnTowerGreenOn_Click(object sender, EventArgs e)
         {
             towerGreenOn = true;
             UpdateTowerLamp();
+            LogManager.Instance.AddLog("수동제어", "타워램프 녹색 ON", "System", LogCategory.Hardware, false);
         }
 
         private void btnTowerGreenOff_Click(object sender, EventArgs e)
         {
             towerGreenOn = false;
             UpdateTowerLamp();
+            LogManager.Instance.AddLog("수동제어", "타워램프 녹색 OFF", "System", LogCategory.Hardware, false);
         }
 
         private void btnTowerAllOff_Click(object sender, EventArgs e)
@@ -347,6 +385,7 @@ namespace IonImplationEtherCAT
             towerYellowOn = false;
             towerGreenOn = false;
             UpdateTowerLamp();
+            LogManager.Instance.AddLog("수동제어", "타워램프 전체 OFF", "System", LogCategory.Hardware, false);
         }
 
         private void UpdateTowerLamp()

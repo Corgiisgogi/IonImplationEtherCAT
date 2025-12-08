@@ -20,6 +20,7 @@ namespace IonImplationEtherCAT
         AddWaferToFoup,     // FOUP에 웨이퍼 추가
         Delay,              // 지연
         UnloadWaferFromPM,  // PM에서 웨이퍼 언로드
+        ResetPMProgress,    // PM 진행률 초기화 (웨이퍼 언로드 + 문 닫힘 후)
         WaitForProcessComplete, // PM 공정 완료 대기
         LoadWaferToPM,      // PM에 웨이퍼 로드
         InitializeParameters,   // 파라미터 상승 시작 (공정 전 안정화)

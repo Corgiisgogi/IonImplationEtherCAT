@@ -55,6 +55,9 @@ namespace IonImplationEtherCAT
         // Stop 진행 중 플래그 (버튼 비활성화용)
         private bool isStopping;
 
+        // 알람 발생 후 재초기화 필요 플래그 (FOUP 재로드 전까지 공정 시작 불가)
+        private bool needsReinitialization;
+
         // EtherCAT 컨트롤러 참조
         private IEtherCATController etherCATController;
 
@@ -122,6 +125,10 @@ namespace IonImplationEtherCAT
             // FOUP 상태 초기화
             UpdateFoupADisplay();
             UpdateFoupBDisplay();
+
+            // 알람 이벤트 연결
+            LogManager.Instance.OnAlarmRestored += OnAlarmRestored;
+            LogManager.Instance.OnAlarmRaised += OnAlarmRaised;
         }
 
         /// <summary>
@@ -182,6 +189,40 @@ namespace IonImplationEtherCAT
 
             // PM3(C챔버) 상태 업데이트
             UpdatePM3Display();
+        }
+
+        /// <summary>
+        /// PM 진행률 바 초기화 (웨이퍼 언로드 + 문 닫힘 후 호출)
+        /// </summary>
+        public void ResetPMProgressBar(ProcessModule pm)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => ResetPMProgressBarInternal(pm)));
+            }
+            else
+            {
+                ResetPMProgressBarInternal(pm);
+            }
+        }
+
+        private void ResetPMProgressBarInternal(ProcessModule pm)
+        {
+            if (pm == processModuleA)
+            {
+                progressBarPM1.Value = 0;
+                lblPM1Progress.Text = $"0s / {pm.processTime}s";
+            }
+            else if (pm == processModuleB)
+            {
+                progressBarPM2.Value = 0;
+                lblPM2Progress.Text = $"0s / {pm.processTime}s";
+            }
+            else if (pm == processModuleC)
+            {
+                progressBarPM3.Value = 0;
+                lblPM3Progress.Text = $"0s / {pm.processTime}s";
+            }
         }
 
         /// <summary>
@@ -381,6 +422,7 @@ namespace IonImplationEtherCAT
                 lblPM1PressureValue.Text = "-";
                 lblPM1AVValue.Text = "-";
                 lblPM1DoseValue.Text = "-";
+                ResetPM1ParameterColors();
                 return;
             }
 
@@ -389,6 +431,11 @@ namespace IonImplationEtherCAT
             lblPM1PressureValue.Text = p.GetPressureDisplay();
             lblPM1AVValue.Text = p.GetHVDisplay();
             lblPM1DoseValue.Text = p.GetDoseDisplay();
+
+            // 이탈 시 라벨 색상 변경
+            lblPM1TemperatureValue.ForeColor = GetParameterLabelColor(p, "Temperature");
+            lblPM1PressureValue.ForeColor = GetParameterLabelColor(p, "Pressure");
+            lblPM1AVValue.ForeColor = GetParameterLabelColor(p, "HV");
         }
 
         /// <summary>
@@ -403,6 +450,7 @@ namespace IonImplationEtherCAT
                 lblPM2PressureValue.Text = "-";
                 lblPM2AVValue.Text = "-";
                 lblPM2DoseValue.Text = "-";
+                ResetPM2ParameterColors();
                 return;
             }
 
@@ -411,6 +459,11 @@ namespace IonImplationEtherCAT
             lblPM2PressureValue.Text = p.GetPressureDisplay();
             lblPM2AVValue.Text = p.GetHVDisplay();
             lblPM2DoseValue.Text = p.GetDoseDisplay();
+
+            // 이탈 시 라벨 색상 변경
+            lblPM2TemperatureValue.ForeColor = GetParameterLabelColor(p, "Temperature");
+            lblPM2PressureValue.ForeColor = GetParameterLabelColor(p, "Pressure");
+            lblPM2AVValue.ForeColor = GetParameterLabelColor(p, "HV");
         }
 
         /// <summary>
@@ -423,12 +476,17 @@ namespace IonImplationEtherCAT
             {
                 lblTemperatureValue.Text = "-";
                 lblPressureValue.Text = "-";
+                ResetPM3ParameterColors();
                 return;
             }
 
             var p = processModuleC.Parameters;
             lblTemperatureValue.Text = p.GetTemperatureDisplay();
             lblPressureValue.Text = p.GetPressureDisplay();
+
+            // 이탈 시 라벨 색상 변경
+            lblTemperatureValue.ForeColor = GetParameterLabelColor(p, "Temperature");
+            lblPressureValue.ForeColor = GetParameterLabelColor(p, "Pressure");
         }
 
         /// <summary>
@@ -439,6 +497,162 @@ namespace IonImplationEtherCAT
             UpdatePM1Parameters();
             UpdatePM2Parameters();
             UpdatePM3Parameters();
+        }
+
+        /// <summary>
+        /// 파라미터 이탈 상태에 따른 라벨 색상 반환
+        /// </summary>
+        private System.Drawing.Color GetParameterLabelColor(ProcessParameters p, string paramName)
+        {
+            if (p.IsDeviated && p.DeviatedParameterName == paramName)
+            {
+                // Alarm: 빨강, Warning: 주황
+                return p.IsAlarmLevel ? System.Drawing.Color.Red : System.Drawing.Color.Orange;
+            }
+            return System.Drawing.SystemColors.ControlText; // 정상: 기본 색상
+        }
+
+        /// <summary>
+        /// PM1 파라미터 라벨 색상 초기화
+        /// </summary>
+        private void ResetPM1ParameterColors()
+        {
+            lblPM1TemperatureValue.ForeColor = System.Drawing.SystemColors.ControlText;
+            lblPM1PressureValue.ForeColor = System.Drawing.SystemColors.ControlText;
+            lblPM1AVValue.ForeColor = System.Drawing.SystemColors.ControlText;
+        }
+
+        /// <summary>
+        /// PM2 파라미터 라벨 색상 초기화
+        /// </summary>
+        private void ResetPM2ParameterColors()
+        {
+            lblPM2TemperatureValue.ForeColor = System.Drawing.SystemColors.ControlText;
+            lblPM2PressureValue.ForeColor = System.Drawing.SystemColors.ControlText;
+            lblPM2AVValue.ForeColor = System.Drawing.SystemColors.ControlText;
+        }
+
+        /// <summary>
+        /// PM3 파라미터 라벨 색상 초기화
+        /// </summary>
+        private void ResetPM3ParameterColors()
+        {
+            lblTemperatureValue.ForeColor = System.Drawing.SystemColors.ControlText;
+            lblPressureValue.ForeColor = System.Drawing.SystemColors.ControlText;
+        }
+
+        /// <summary>
+        /// 알람 복구 시 호출 - 해당 PM의 파라미터 정상화 및 대기 상태로 전환
+        /// </summary>
+        private void OnAlarmRestored(LogEntry entry)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action(() => OnAlarmRestored(entry)));
+                return;
+            }
+
+            // 발생 위치에 따라 해당 PM에 알람 복구 처리
+            switch (entry.Location)
+            {
+                case "PM1":
+                    processModuleA.OnAlarmRestored();
+                    break;
+                case "PM2":
+                    processModuleB.OnAlarmRestored();
+                    break;
+                case "PM3":
+                    processModuleC.OnAlarmRestored();
+                    break;
+            }
+
+            // 모든 알람이 복구되었으면 상태 초기화
+            if (!LogManager.Instance.HasActiveAlarms)
+            {
+                // 워크플로우 취소 플래그 리셋
+                isWorkflowCancelled = false;
+
+                // 명령 큐 알람 플래그 리셋
+                commandQueue.ResetAlarmStopFlag();
+                commandQueue.ResetStopFlag();
+
+                // 로그인 및 연결 상태에 따라 버튼 활성화
+                if (MainForm.IsLogined)
+                {
+                    ActivateRecipeButtons(true);
+                    if (MainForm.IsConnected)
+                    {
+                        ActivateEquipmentButtons(true);
+                        // 재초기화가 필요하면 Start 버튼 비활성화 유지
+                        if (!needsReinitialization)
+                        {
+                            btnAllProcess.Enabled = true;
+                        }
+                    }
+                }
+
+                // 황색 타워 램프 (대기 상태)
+                UpdateTowerLamp(TowerLampState.Yellow);
+
+                // UI 업데이트
+                UpdateProcessDisplay();
+
+                // 복구 완료 메시지
+                if (needsReinitialization)
+                {
+                    MessageBox.Show(
+                        "모든 알람이 복구되었습니다.\n\n공정을 처음부터 다시 시작하려면\nFOUP를 다시 로드해주세요.",
+                        "알람 복구 완료",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show(
+                        "모든 알람이 복구되었습니다.\n공정을 다시 시작할 수 있습니다.",
+                        "알람 복구 완료",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 알람 발생 시 호출 - 현재 명령 완료 후 즉시 중지
+        /// </summary>
+        private void OnAlarmRaised(LogEntry entry)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<LogEntry>(OnAlarmRaised), entry);
+                return;
+            }
+
+            // 워크플로우 취소 플래그 설정
+            isWorkflowCancelled = true;
+
+            // 재초기화 필요 플래그 설정 (FOUP 재로드 전까지 공정 시작 불가)
+            needsReinitialization = true;
+
+            // 명령 큐에 알람 중지 요청
+            commandQueue.RequestAlarmStop();
+
+            // 적색 타워 램프 점등
+            UpdateTowerLamp(TowerLampState.Red);
+
+            // Start 버튼 비활성화
+            btnAllProcess.Enabled = false;
+
+            // UI 업데이트
+            UpdateProcessDisplay();
+
+            // 알람 메시지 표시
+            MessageBox.Show(
+                $"알람 발생!\n\n위치: {entry.Location}\n내용: {entry.Description}\n\n" +
+                $"알람 복구 후 FOUP를 다시 로드해야 공정을 시작할 수 있습니다.",
+                "알람",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Error);
         }
 
         /// <summary>
@@ -683,6 +897,17 @@ namespace IonImplationEtherCAT
         /// </summary>
         private void btnManualControl_Click(object sender, EventArgs e)
         {
+            // 자동 공정 진행 중 확인
+            if (IsAutoProcessRunning())
+            {
+                MessageBox.Show(
+                    "자동 공정이 진행 중입니다.\n공정을 중지한 후 수동 제어를 사용해주세요.",
+                    "수동 제어 불가",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
             // 이미 열려있는 폼이 있으면 활성화
             if (manualControlForm != null && !manualControlForm.IsDisposed)
             {
@@ -704,12 +929,56 @@ namespace IonImplationEtherCAT
             manualControlForm.Show();
         }
 
+        /// <summary>
+        /// 자동 공정이 진행 중인지 확인
+        /// </summary>
+        private bool IsAutoProcessRunning()
+        {
+            // 명령 큐가 실행 중이거나
+            if (commandQueue.IsExecuting)
+                return true;
+
+            // PM 중 하나라도 Running 상태이면
+            if (processModuleA.ModuleState == ProcessModule.State.Running ||
+                processModuleB.ModuleState == ProcessModule.State.Running ||
+                processModuleC.ModuleState == ProcessModule.State.Running)
+                return true;
+
+            // TM이 동작 중이면
+            if (transferModule.State != TransferModule.TMState.Idle)
+                return true;
+
+            return false;
+        }
+
         private async void btnAllProcess_Click(object sender, EventArgs e)
         {
             // 명령 큐가 실행 중인지 확인
             if (commandQueue.IsExecuting)
             {
                 MessageBox.Show("명령이 실행 중입니다. 잠시 후 다시 시도해주세요.", "알림", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            // 활성 알람 확인
+            if (LogManager.Instance.HasActiveAlarms)
+            {
+                MessageBox.Show(
+                    "활성 알람이 있습니다.\n알람을 먼저 복구해주세요.",
+                    "공정 시작 불가",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 재초기화 필요 여부 확인
+            if (needsReinitialization)
+            {
+                MessageBox.Show(
+                    "알람 발생 후 재초기화가 필요합니다.\n\nFOUP A를 다시 로드하여 공정을 처음부터 시작해주세요.",
+                    "공정 시작 불가",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
                 return;
             }
 
@@ -803,6 +1072,10 @@ namespace IonImplationEtherCAT
                     // 취소 확인 (명령 큐가 실행 중이지 않을 때만)
                     if (isWorkflowCancelled && !commandQueue.IsExecuting)
                         throw new OperationCanceledException();
+
+                    // 알람 발생 시 즉시 중단
+                    if (LogManager.Instance.HasActiveAlarms)
+                        throw new OperationCanceledException("알람 발생으로 워크플로우가 중단되었습니다.");
 
                     // 정상 완료 조건: FOUP A 비어있고, 모든 PM 비어있고, TM도 웨이퍼 없음 (FOUP B 상태 무관)
                     if (foupA.IsEmpty &&
@@ -1148,6 +1421,9 @@ namespace IonImplationEtherCAT
                 // 10. 소스 PM 문 닫기
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ClosePMDoor, $"{pmName} 문 닫기", sourcePM));
 
+                // 11. 소스 PM 진행률 초기화 (공정 완전 종료)
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ResetPMProgress, $"{pmName} 진행률 초기화", sourcePM));
+
                 // 12. LR을 PM3 위치로 이동 + UI 애니메이션
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, "PM3로 회전 (UI)", ANGLE_PM3));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.MoveLRAxis, "PM3로 LR 이동", HardwarePositionMap.LR_PM3));
@@ -1195,6 +1471,9 @@ namespace IonImplationEtherCAT
                 commandQueue.Enqueue(new ProcessCommand(CommandType.UnloadWaferFromPM, $"{pmName} 웨이퍼 언로드", sourcePM));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.PickWafer, "웨이퍼 픽업"));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축"));
+
+                // 2-1. 소스 PM 진행률 초기화 (공정 완전 종료)
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ResetPMProgress, $"{pmName} 진행률 초기화", sourcePM));
 
                 // 3. PM3로 이동 및 배치
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, "PM3로 회전", ANGLE_PM3));
@@ -1266,6 +1545,9 @@ namespace IonImplationEtherCAT
                 // 10. PM3 문 닫기
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ClosePMDoor, "PM3 문 닫기", processModuleC));
 
+                // 11. PM3 진행률 초기화 (공정 완전 종료)
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ResetPMProgress, "PM3 진행률 초기화", processModuleC));
+
                 // 12. LR을 FOUP B 위치로 이동 + UI 애니메이션
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, "FOUP B로 회전 (UI)", ANGLE_FOUP_B));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.MoveLRAxis, "FOUP B로 LR 이동", HardwarePositionMap.LR_FOUP_B));
@@ -1306,6 +1588,9 @@ namespace IonImplationEtherCAT
                 commandQueue.Enqueue(new ProcessCommand(CommandType.UnloadWaferFromPM, "PM3 웨이퍼 언로드", processModuleC));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.PickWafer, "웨이퍼 픽업"));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractArm, "암 수축"));
+
+                // 2-1. PM3 진행률 초기화 (공정 완전 종료)
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ResetPMProgress, "PM3 진행률 초기화", processModuleC));
 
                 // 3. FOUP B로 이동 및 배치
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RotateTM, "FOUP B로 회전", ANGLE_FOUP_B));
@@ -1493,10 +1778,10 @@ namespace IonImplationEtherCAT
             etherCATController?.SetPMLamp(ProcessModule.ModuleType.PM2, false);
             etherCATController?.SetPMLamp(ProcessModule.ModuleType.PM3, false);
 
-            // 장비 초기화 (하드웨어 + 애니메이션 병렬 실행, 메시지 표시 안함)
+            // 장비 초기화 (하드웨어 + 애니메이션 병렬 실행)
             if (anyStopped || wasExecuting)
             {
-                await InitializeHardwareAsync(showMessage: false);
+                await StopHardwareAsync();
             }
 
             // 하드웨어 초기화 완료 후 Stopping → Idle 전환
@@ -1550,6 +1835,71 @@ namespace IonImplationEtherCAT
             {
                 MessageBox.Show("FOUP A가 이미 가득 찼습니다.", "알림", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
+            }
+
+            // 재초기화가 필요한 상태에서 로드하면 PM/TM 상태도 초기화
+            if (needsReinitialization)
+            {
+                // PM/TM에 웨이퍼가 남아있으면 경고 후 초기화
+                bool hasRemainingWafers = processModuleA.isWaferLoaded ||
+                                          processModuleB.isWaferLoaded ||
+                                          processModuleC.isWaferLoaded ||
+                                          transferModule.HasWafer;
+
+                if (hasRemainingWafers)
+                {
+                    var result = MessageBox.Show(
+                        "알람 발생 후 재초기화가 필요합니다.\n\n" +
+                        "PM 또는 TM에 웨이퍼가 남아있습니다.\n" +
+                        "모든 장비 상태를 초기화하고 공정을 처음부터 시작하시겠습니까?\n\n" +
+                        "(취소 시 웨이퍼 손실이 발생할 수 있습니다)",
+                        "재초기화 확인",
+                        MessageBoxButtons.OKCancel,
+                        MessageBoxIcon.Warning);
+
+                    if (result == DialogResult.Cancel)
+                        return;
+
+                    // PM 상태 초기화 (웨이퍼 제거)
+                    processModuleA.ModuleState = ProcessModule.State.Idle;
+                    processModuleA.isWaferLoaded = false;
+                    processModuleA.IsUnloadRequested = false;
+                    processModuleA.elapsedTime = 0;
+                    processModuleA.Parameters.Reset();
+
+                    processModuleB.ModuleState = ProcessModule.State.Idle;
+                    processModuleB.isWaferLoaded = false;
+                    processModuleB.IsUnloadRequested = false;
+                    processModuleB.elapsedTime = 0;
+                    processModuleB.Parameters.Reset();
+
+                    processModuleC.ModuleState = ProcessModule.State.Idle;
+                    processModuleC.isWaferLoaded = false;
+                    processModuleC.IsUnloadRequested = false;
+                    processModuleC.elapsedTime = 0;
+                    processModuleC.Parameters.Reset();
+
+                    // TM 상태 초기화
+                    transferModule.HasWafer = false;
+
+                    // FOUP B도 초기화 (새로 시작하므로)
+                    foupB.UnloadWafers();
+                    UpdateFoupBDisplay();
+
+                    // UI 업데이트
+                    UpdateProcessDisplay();
+
+                    LogManager.Instance.Log("알람 복구 후 장비 상태 초기화 완료", "System", LogCategory.System);
+                }
+
+                // 재초기화 플래그 해제
+                needsReinitialization = false;
+
+                // 알람이 없고 연결되어 있으면 Start 버튼 활성화
+                if (!LogManager.Instance.HasActiveAlarms && MainForm.IsConnected && MainForm.IsLogined)
+                {
+                    btnAllProcess.Enabled = true;
+                }
             }
 
             // 모든 웨이퍼 장착
@@ -1992,6 +2342,55 @@ namespace IonImplationEtherCAT
 
             // 라벨 업데이트
             UpdateProcessDisplay();
+
+            // 시작 시 활성 알람 확인 (이전 세션에서 저장된 알람)
+            CheckActiveAlarmsOnStartup();
+        }
+
+        /// <summary>
+        /// 시작 시 활성 알람 확인 (로그 파일에서 불러온 알람)
+        /// </summary>
+        private void CheckActiveAlarmsOnStartup()
+        {
+            if (LogManager.Instance.HasActiveAlarms)
+            {
+                var activeAlarms = LogManager.Instance.GetActiveAlarms();
+                int alarmCount = activeAlarms.Count(a => a.IsAlarm);
+                int warningCount = activeAlarms.Count(a => a.IsWarning);
+
+                // 알람이 있으면 Start 버튼 비활성화 및 타워 램프 적색
+                if (alarmCount > 0)
+                {
+                    isWorkflowCancelled = true;
+                    commandQueue.RequestAlarmStop();
+                    UpdateTowerLamp(TowerLampState.Red);
+                    btnAllProcess.Enabled = false;
+
+                    MessageBox.Show(
+                        $"이전 세션에서 복구되지 않은 알람이 {alarmCount}건 있습니다.\n" +
+                        $"알람을 복구하기 전까지 공정을 시작할 수 없습니다.\n\n" +
+                        $"[알람 탭에서 복구해주세요]",
+                        "활성 알람 존재",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning
+                    );
+
+                    LogManager.Instance.Log(
+                        $"시작 시 활성 알람 {alarmCount}건 감지됨",
+                        "MainView",
+                        LogCategory.System
+                    );
+                }
+                else if (warningCount > 0)
+                {
+                    // 경고만 있는 경우 알림만 표시
+                    LogManager.Instance.Log(
+                        $"시작 시 활성 경고 {warningCount}건 감지됨",
+                        "MainView",
+                        LogCategory.System
+                    );
+                }
+            }
         }
 
         /// <summary>
@@ -2085,59 +2484,250 @@ namespace IonImplationEtherCAT
         /// </summary>
         public async Task InitializeHardwareAsync(bool showMessage = true)
         {
+            // 초기화 진행 다이얼로그 생성 및 표시
+            InitializationProgressForm progressForm = null;
+
+            if (showMessage)
+            {
+                progressForm = new InitializationProgressForm();
+                progressForm.Show(this.ParentForm);
+                progressForm.SetTotalSteps(IsRealMode() ? 11 : 1);
+            }
+
             // UI 애니메이션 Task (실제/시뮬레이션 모두 실행)
             Task animationTask = ReturnTMToHomeAsync();
+
+            // 초기화 시작 로그
+            LogManager.Instance.AddLog("초기화", "장비 초기화 시작", "System", LogCategory.System, false);
 
             if (!IsRealMode())
             {
                 // 시뮬레이션 모드에서는 애니메이션만 실행
+                progressForm?.NextStep("시뮬레이션 모드 - TM 원점 복귀");
                 await animationTask;
+
+                LogManager.Instance.AddLog("초기화", "시뮬레이션 모드 초기화 완료", "System", LogCategory.System, false);
+                progressForm?.SetComplete();
+                await Task.Delay(1000);
+                progressForm?.Close();
                 return;
             }
 
             try
             {
-                commandQueue.Clear();
-
                 // 1. 서보 모터 ON (원점복귀를 위해 먼저 켜야 함)
+                progressForm?.NextStep("서보 모터 ON");
+                LogManager.Instance.AddLog("초기화", "서보 모터 ON", "TM", LogCategory.Hardware, false);
+                commandQueue.Clear();
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ServoOn, "서보 모터 ON"));
+                await commandQueue.ExecuteAsync();
 
                 // 2. 실린더 후진 (축 이동 전 안전 확보)
+                progressForm?.NextStep("실린더 후진 (안전 확보)");
+                LogManager.Instance.AddLog("초기화", "실린더 후진", "TM", LogCategory.Hardware, false);
+                commandQueue.Clear();
                 commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
+                await commandQueue.ExecuteAsync();
 
-                // 3. TM 원점복귀 (UD → LR 순서)
+                // 3. TM 상하축 원점복귀
+                progressForm?.NextStep("TM 상하축(UD) 원점복귀");
+                LogManager.Instance.AddLog("초기화", "TM 상하축(UD) 원점복귀 시작", "TM", LogCategory.Hardware, false);
+                commandQueue.Clear();
                 commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "TM 상하축(UD) 원점복귀"));
+                await commandQueue.ExecuteAsync();
+
+                // 4. TM 좌우축 원점복귀
+                progressForm?.NextStep("TM 좌우축(LR) 원점복귀");
+                LogManager.Instance.AddLog("초기화", "TM 좌우축(LR) 원점복귀 시작", "TM", LogCategory.Hardware, false);
+                commandQueue.Clear();
                 commandQueue.Enqueue(new ProcessCommand(CommandType.HomeLRAxis, "TM 좌우축(LR) 원점복귀"));
+                await commandQueue.ExecuteAsync();
 
-                // 4. 서보 모터 OFF (원점복귀 완료 후)
+                // 5. 서보 모터 OFF (원점복귀 완료 후)
+                progressForm?.NextStep("서보 모터 OFF");
+                LogManager.Instance.AddLog("초기화", "서보 모터 OFF", "TM", LogCategory.Hardware, false);
+                commandQueue.Clear();
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ServoOff, "서보 모터 OFF"));
+                await commandQueue.ExecuteAsync();
 
-                // 5. PM1 램프 OFF 및 문 강제 닫기
+                // 6. PM1 램프 OFF 및 문 강제 닫기
+                progressForm?.NextStep("PM1 초기화 (램프 OFF, 문 닫기)");
+                LogManager.Instance.AddLog("초기화", "PM1 램프 OFF", "PM1", LogCategory.Hardware, false);
+                commandQueue.Clear();
                 commandQueue.Enqueue(new ProcessCommand(CommandType.SetPMLampOff, "PM1 램프 OFF", processModuleA));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ForceClosePMDoor, "PM1 문 강제 닫기", processModuleA));
+                await commandQueue.ExecuteAsync();
 
-                // 6. PM2 램프 OFF 및 문 강제 닫기
+                // 7. PM2 램프 OFF 및 문 강제 닫기
+                progressForm?.NextStep("PM2 초기화 (램프 OFF, 문 닫기)");
+                LogManager.Instance.AddLog("초기화", "PM2 램프 OFF", "PM2", LogCategory.Hardware, false);
+                commandQueue.Clear();
                 commandQueue.Enqueue(new ProcessCommand(CommandType.SetPMLampOff, "PM2 램프 OFF", processModuleB));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ForceClosePMDoor, "PM2 문 강제 닫기", processModuleB));
+                await commandQueue.ExecuteAsync();
 
-                // 7. PM3 램프 OFF 및 문 강제 닫기
+                // 8. PM3 램프 OFF 및 문 강제 닫기
+                progressForm?.NextStep("PM3 초기화 (램프 OFF, 문 닫기)");
+                LogManager.Instance.AddLog("초기화", "PM3 램프 OFF", "PM3", LogCategory.Hardware, false);
+                commandQueue.Clear();
                 commandQueue.Enqueue(new ProcessCommand(CommandType.SetPMLampOff, "PM3 램프 OFF", processModuleC));
                 commandQueue.Enqueue(new ProcessCommand(CommandType.ForceClosePMDoor, "PM3 문 강제 닫기", processModuleC));
+                await commandQueue.ExecuteAsync();
 
-                // 하드웨어 초기화와 애니메이션을 병렬 실행
-                Task hardwareTask = commandQueue.ExecuteAsync();
-                await Task.WhenAll(hardwareTask, animationTask);
+                // TM 애니메이션 완료 대기
+                progressForm?.NextStep("TM UI 애니메이션 완료 대기");
+                await animationTask;
 
-                if (showMessage)
-                {
-                    MessageBox.Show("실제 장비 초기화가 완료되었습니다.\n- 서보 모터: ON → 실린더 후진 → 원점복귀 → OFF\n- TM 원점복귀: 완료 (UD → LR)\n- PM 램프: 모두 OFF\n- PM 문: 모두 닫힘",
-                        "장비 초기화 완료", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+                // 초기화 완료 로그
+                LogManager.Instance.AddLog("초기화", "장비 초기화 완료", "System", LogCategory.System, false);
+
+                progressForm?.SetComplete();
+                await Task.Delay(1500);
+                progressForm?.Close();
             }
             catch (Exception ex)
             {
+                LogManager.Instance.Alarm($"장비 초기화 오류: {ex.Message}", "System");
+                progressForm?.SetError(ex.Message);
+                await Task.Delay(2000);
+                progressForm?.Close();
+
                 MessageBox.Show($"장비 초기화 중 오류 발생:\n{ex.Message}",
                     "초기화 오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        /// <summary>
+        /// 장비 정지 시퀀스 (STOP 버튼용)
+        /// - 진행 다이얼로그 표시
+        /// - 실린더 후진
+        /// - TM 원점복귀 (UD → LR 순서)
+        /// - 서보 모터 OFF
+        /// - 모든 PM 램프 OFF
+        /// - 모든 PM 문 강제 닫기
+        /// </summary>
+        private async Task StopHardwareAsync()
+        {
+            // 정지 진행 다이얼로그 생성 및 표시
+            InitializationProgressForm progressForm = new InitializationProgressForm();
+            progressForm.SetTitle("장비 정지", "장비 정지 진행 중...");
+            progressForm.Show(this.ParentForm);
+            progressForm.SetTotalSteps(IsRealMode() ? 13 : 1);
+
+            // UI 애니메이션 Task (실제/시뮬레이션 모두 실행)
+            Task animationTask = ReturnTMToHomeAsync();
+
+            // 정지 시작 로그
+            LogManager.Instance.AddLog("정지", "장비 정지 시작", "System", LogCategory.System, false);
+
+            if (!IsRealMode())
+            {
+                // 시뮬레이션 모드에서는 애니메이션만 실행
+                progressForm.NextStep("시뮬레이션 모드 - TM 원점 복귀");
+                await animationTask;
+
+                LogManager.Instance.AddLog("정지", "시뮬레이션 모드 정지 완료", "System", LogCategory.System, false);
+                progressForm.SetStopComplete();
+                await Task.Delay(1000);
+                progressForm.Close();
+                return;
+            }
+
+            try
+            {
+                // 1. 서보 모터 ON (원점복귀를 위해 먼저 켜야 함)
+                progressForm.NextStep("서보 모터 ON");
+                LogManager.Instance.AddLog("정지", "서보 모터 ON", "TM", LogCategory.Hardware, false);
+                commandQueue.Clear();
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ServoOn, "서보 모터 ON"));
+                await commandQueue.ExecuteAsync();
+
+                // 2. 실린더 후진 (축 이동 전 안전 확보)
+                progressForm.NextStep("실린더 후진 (안전 확보)");
+                LogManager.Instance.AddLog("정지", "실린더 후진", "TM", LogCategory.Hardware, false);
+                commandQueue.Clear();
+                commandQueue.Enqueue(new ProcessCommand(CommandType.RetractCylinder, "실린더 후진"));
+                await commandQueue.ExecuteAsync();
+
+                // 3. TM 상하축 원점복귀
+                progressForm.NextStep("TM 상하축(UD) 원점복귀");
+                LogManager.Instance.AddLog("정지", "TM 상하축(UD) 원점복귀 시작", "TM", LogCategory.Hardware, false);
+                commandQueue.Clear();
+                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeUDAxis, "TM 상하축(UD) 원점복귀"));
+                await commandQueue.ExecuteAsync();
+
+                // 4. TM 좌우축 원점복귀
+                progressForm.NextStep("TM 좌우축(LR) 원점복귀");
+                LogManager.Instance.AddLog("정지", "TM 좌우축(LR) 원점복귀 시작", "TM", LogCategory.Hardware, false);
+                commandQueue.Clear();
+                commandQueue.Enqueue(new ProcessCommand(CommandType.HomeLRAxis, "TM 좌우축(LR) 원점복귀"));
+                await commandQueue.ExecuteAsync();
+
+                // 5. 흡착 OFF (TM 원점복귀 후)
+                progressForm.NextStep("흡착 OFF");
+                LogManager.Instance.AddLog("정지", "흡착 OFF", "TM", LogCategory.Hardware, false);
+                commandQueue.Clear();
+                commandQueue.Enqueue(new ProcessCommand(CommandType.DisableSuction, "흡착 OFF"));
+                await commandQueue.ExecuteAsync();
+
+                // 6. 배기 OFF
+                progressForm.NextStep("배기 OFF");
+                LogManager.Instance.AddLog("정지", "배기 OFF", "TM", LogCategory.Hardware, false);
+                commandQueue.Clear();
+                commandQueue.Enqueue(new ProcessCommand(CommandType.DisableExhaust, "배기 OFF"));
+                await commandQueue.ExecuteAsync();
+
+                // 7. 서보 모터 OFF (원점복귀 완료 후)
+                progressForm.NextStep("서보 모터 OFF");
+                LogManager.Instance.AddLog("정지", "서보 모터 OFF", "TM", LogCategory.Hardware, false);
+                commandQueue.Clear();
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ServoOff, "서보 모터 OFF"));
+                await commandQueue.ExecuteAsync();
+
+                // 8. PM1 램프 OFF 및 문 강제 닫기
+                progressForm.NextStep("PM1 정지 (램프 OFF, 문 닫기)");
+                LogManager.Instance.AddLog("정지", "PM1 램프 OFF", "PM1", LogCategory.Hardware, false);
+                commandQueue.Clear();
+                commandQueue.Enqueue(new ProcessCommand(CommandType.SetPMLampOff, "PM1 램프 OFF", processModuleA));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ForceClosePMDoor, "PM1 문 강제 닫기", processModuleA));
+                await commandQueue.ExecuteAsync();
+
+                // 9. PM2 램프 OFF 및 문 강제 닫기
+                progressForm.NextStep("PM2 정지 (램프 OFF, 문 닫기)");
+                LogManager.Instance.AddLog("정지", "PM2 램프 OFF", "PM2", LogCategory.Hardware, false);
+                commandQueue.Clear();
+                commandQueue.Enqueue(new ProcessCommand(CommandType.SetPMLampOff, "PM2 램프 OFF", processModuleB));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ForceClosePMDoor, "PM2 문 강제 닫기", processModuleB));
+                await commandQueue.ExecuteAsync();
+
+                // 10. PM3 램프 OFF 및 문 강제 닫기
+                progressForm.NextStep("PM3 정지 (램프 OFF, 문 닫기)");
+                LogManager.Instance.AddLog("정지", "PM3 램프 OFF", "PM3", LogCategory.Hardware, false);
+                commandQueue.Clear();
+                commandQueue.Enqueue(new ProcessCommand(CommandType.SetPMLampOff, "PM3 램프 OFF", processModuleC));
+                commandQueue.Enqueue(new ProcessCommand(CommandType.ForceClosePMDoor, "PM3 문 강제 닫기", processModuleC));
+                await commandQueue.ExecuteAsync();
+
+                // TM 애니메이션 완료 대기
+                progressForm.NextStep("TM UI 애니메이션 완료 대기");
+                await animationTask;
+
+                // 정지 완료 로그
+                LogManager.Instance.AddLog("정지", "장비 정지 완료", "System", LogCategory.System, false);
+
+                progressForm.SetStopComplete();
+                await Task.Delay(1000);
+                progressForm.Close();
+            }
+            catch (Exception ex)
+            {
+                LogManager.Instance.Alarm($"장비 정지 오류: {ex.Message}", "System");
+                progressForm.SetError(ex.Message);
+                await Task.Delay(2000);
+                progressForm.Close();
+
+                MessageBox.Show($"장비 정지 중 오류 발생:\n{ex.Message}",
+                    "정지 오류", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

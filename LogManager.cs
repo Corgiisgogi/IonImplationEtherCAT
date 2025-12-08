@@ -60,6 +60,9 @@ namespace IonImplationEtherCAT
         /// <summary>알람 복구 시 발생</summary>
         public event Action<LogEntry> OnAlarmRestored;
 
+        /// <summary>알람 발생 시 발생 (즉시 중지 필요)</summary>
+        public event Action<LogEntry> OnAlarmRaised;
+
         /// <summary>로그 파일 로드 완료 시 발생</summary>
         public event Action OnLogsLoaded;
 
@@ -128,10 +131,24 @@ namespace IonImplationEtherCAT
             AddLog("", description, location, category, false);
         }
 
-        /// <summary>알람 로그 추가 (간편 버전)</summary>
+        /// <summary>알람 로그 추가 (간편 버전) - 즉시 중지 이벤트 발생</summary>
         public void Alarm(string description, string location, string job = "")
         {
-            AddLog(job, description, location, LogCategory.Error, true);
+            var entry = new LogEntry(job, description, location, LogCategory.Error, true);
+
+            lock (_lockObject)
+            {
+                _logs.Add(entry);
+            }
+
+            // 실시간 파일 저장
+            AppendToLogFile(entry);
+
+            // 로그 추가 이벤트
+            OnLogAdded?.Invoke(entry);
+
+            // 알람 발생 이벤트 (즉시 중지용)
+            OnAlarmRaised?.Invoke(entry);
         }
 
         /// <summary>워닝 로그 추가 (AlarmView에 노란색으로 표시)</summary>

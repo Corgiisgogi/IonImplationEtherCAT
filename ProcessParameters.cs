@@ -79,6 +79,22 @@ namespace IonImplationEtherCAT
 
         #endregion
 
+        #region 파라미터 이탈 상태
+
+        /// <summary>파라미터가 이탈된 상태인지</summary>
+        public bool IsDeviated { get; set; }
+
+        /// <summary>이탈된 파라미터 이름 (Temperature, Pressure, HV)</summary>
+        public string DeviatedParameterName { get; set; }
+
+        /// <summary>Alarm 수준 이탈인지 (true: Alarm/10%초과, false: Warning/5~10%)</summary>
+        public bool IsAlarmLevel { get; set; }
+
+        /// <summary>이탈 시 저장된 원래 목표값 대비 편차 (%)</summary>
+        public double DeviationPercent { get; set; }
+
+        #endregion
+
         /// <summary>
         /// 생성자 - 기준값으로 초기화
         /// </summary>
@@ -105,6 +121,12 @@ namespace IonImplationEtherCAT
             IsRising = false;
             IsFalling = false;
             IsStable = false;
+
+            // 이탈 상태 초기화
+            IsDeviated = false;
+            DeviatedParameterName = null;
+            IsAlarmLevel = false;
+            DeviationPercent = 0;
         }
 
         /// <summary>
@@ -535,6 +557,120 @@ namespace IonImplationEtherCAT
                 return "0 ions/cm2";
             }
             return $"{CurrentDose:E2} ions/cm2";
+        }
+
+        #endregion
+
+        #region 파라미터 이탈 시뮬레이션
+
+        /// <summary>
+        /// 1% 확률로 파라미터 이탈 시뮬레이션
+        /// </summary>
+        /// <param name="tempTolerance">온도 허용 편차 (%)</param>
+        /// <param name="pressureTolerance">압력 허용 편차 (%)</param>
+        /// <param name="hvTolerance">HV 허용 편차 (%)</param>
+        /// <param name="isAnnealing">어닐링 공정 여부 (true면 HV 이탈 없음)</param>
+        /// <returns>이탈 발생 시 (파라미터명, 이탈값, 목표값, 편차%), 없으면 null</returns>
+        public (string ParameterName, double DeviatedValue, double TargetValue, double DeviationPercent)?
+            SimulateParameterDeviation(double tempTolerance, double pressureTolerance, double hvTolerance, bool isAnnealing)
+        {
+            // 이미 이탈 상태면 추가 이탈 없음
+            if (IsDeviated) return null;
+
+            // 0.33% 확률 체크 (기존 1%의 1/3)
+            if (random.NextDouble() > 0.0033) return null;
+
+            // 파라미터 유형 선택 (온도:40%, 압력:30%, HV:30%)
+            // 어닐링이면 HV 제외 (온도:57%, 압력:43%)
+            double typeRoll = random.NextDouble();
+            double tempThreshold = isAnnealing ? 0.57 : 0.4;
+            double pressureThreshold = isAnnealing ? 1.0 : 0.7;
+
+            // 이탈 심각도 결정 (50% Warning, 50% Alarm)
+            bool isAlarm = random.NextDouble() > 0.5;
+
+            // 이탈 편차 계산 (Warning: 허용범위+2~5%, Alarm: 허용범위+7~15%)
+            double extraDeviation;
+            if (isAlarm)
+            {
+                extraDeviation = 7 + random.NextDouble() * 8; // 7~15% 추가
+            }
+            else
+            {
+                extraDeviation = 2 + random.NextDouble() * 3; // 2~5% 추가
+            }
+
+            // 방향 결정 (50% 상승, 50% 하강)
+            int sign = random.Next(2) == 0 ? 1 : -1;
+
+            string paramName;
+            double deviatedValue, targetValue, deviationPercent;
+
+            if (typeRoll < tempThreshold)
+            {
+                // 온도 이탈
+                paramName = "Temperature";
+                targetValue = TargetTemperature;
+                deviationPercent = tempTolerance + extraDeviation;
+                deviatedValue = targetValue * (1 + sign * deviationPercent / 100);
+                CurrentTemperature = deviatedValue;
+            }
+            else if (typeRoll < pressureThreshold)
+            {
+                // 압력 이탈 (로그 스케일 고려)
+                paramName = "Pressure";
+                targetValue = TargetPressure;
+                deviationPercent = pressureTolerance + extraDeviation;
+                // 압력은 배수로 이탈 (상승 방향만 - 진공 손실)
+                double multiplier = 1 + (deviationPercent / 100) * 10; // 10배 더 민감
+                deviatedValue = targetValue * multiplier;
+                CurrentPressure = deviatedValue;
+            }
+            else
+            {
+                // HV 이탈 (어닐링 아닐 때만)
+                paramName = "HV";
+                targetValue = TargetHV;
+                deviationPercent = hvTolerance + extraDeviation;
+                deviatedValue = targetValue * (1 + sign * deviationPercent / 100);
+                CurrentHV = deviatedValue;
+            }
+
+            // 이탈 상태 저장
+            IsDeviated = true;
+            DeviatedParameterName = paramName;
+            IsAlarmLevel = isAlarm;
+            DeviationPercent = deviationPercent;
+
+            return (paramName, deviatedValue, targetValue, deviationPercent);
+        }
+
+        /// <summary>
+        /// 이탈된 파라미터를 목표 범위 내로 복구
+        /// </summary>
+        public void RestoreToNormal()
+        {
+            if (!IsDeviated) return;
+
+            // 이탈된 파라미터를 목표값으로 복구
+            switch (DeviatedParameterName)
+            {
+                case "Temperature":
+                    CurrentTemperature = TargetTemperature;
+                    break;
+                case "Pressure":
+                    CurrentPressure = TargetPressure;
+                    break;
+                case "HV":
+                    CurrentHV = TargetHV;
+                    break;
+            }
+
+            // 이탈 상태 초기화
+            IsDeviated = false;
+            DeviatedParameterName = null;
+            IsAlarmLevel = false;
+            DeviationPercent = 0;
         }
 
         #endregion

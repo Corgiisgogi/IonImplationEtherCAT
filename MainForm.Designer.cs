@@ -243,6 +243,7 @@
             this.textBoxPw.Font = new System.Drawing.Font("굴림", 11F);
             this.textBoxPw.Location = new System.Drawing.Point(51, 77);
             this.textBoxPw.Name = "textBoxPw";
+            this.textBoxPw.PasswordChar = '*';
             this.textBoxPw.Size = new System.Drawing.Size(128, 24);
             this.textBoxPw.TabIndex = 5;
             // 
@@ -476,7 +477,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "MainForm";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.Text = "Form1";
+            this.Text = "이온 주입 시뮬레이션";
             this.panelFooter.ResumeLayout(false);
             this.panelHeader.ResumeLayout(false);
             this.panelLoginContainer.ResumeLayout(false);

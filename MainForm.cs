@@ -100,29 +100,6 @@ namespace IonImplationEtherCAT
             }
         }
 
-        /// <summary>
-        /// 연결 상태에 따라 상태 표시 패널의 색상 변경
-        /// </summary>
-        private void UpdateStatusPanelColors(bool connected)
-        {
-            if (connected)
-            {
-                // 연결됨 - 초록색으로 변경
-                panelTmStatusView.BackColor = Color.LimeGreen;
-                panelPm1StatusView.BackColor = Color.LimeGreen;
-                panelPm2StatusView.BackColor = Color.LimeGreen;
-                panelPm3StatusView.BackColor = Color.LimeGreen;
-            }
-            else
-            {
-                // 연결 해제 - 회색으로 변경
-                panelTmStatusView.BackColor = Color.DarkGray;
-                panelPm1StatusView.BackColor = Color.DarkGray;
-                panelPm2StatusView.BackColor = Color.DarkGray;
-                panelPm3StatusView.BackColor = Color.DarkGray;
-            }
-        }
-
         private async void btnConnect_Click(object sender, EventArgs e)
         {
             if (!IsConnected)
@@ -144,8 +121,8 @@ namespace IonImplationEtherCAT
                     btnConnect.Text = "Disconnect";
                     lblSlaveStatus.Text = "Connected";
 
-                    // 상태 패널 색상 변경 (초록색 - 정상 작동)
-                    UpdateStatusPanelColors(true);
+                    // 상태 패널 색상 변경 (초록색 - 정상 작동, 알람 고려)
+                    UpdateStatusPanelsForAlarms();
 
                     // MainView에 컨트롤러 전달
                     mainView.SetEtherCATController(etherCATController);
@@ -168,8 +145,8 @@ namespace IonImplationEtherCAT
                     btnConnect.Text = "Disconnect";
                     lblSlaveStatus.Text = "Simulation";
 
-                    // 상태 패널 색상 변경 (노란색 - 시뮬레이션)
-                    UpdateStatusPanelColors(true);
+                    // 상태 패널 색상 변경 (알람 고려)
+                    UpdateStatusPanelsForAlarms();
 
                     // MainView에 컨트롤러 전달
                     mainView.SetEtherCATController(etherCATController);
@@ -215,8 +192,8 @@ namespace IonImplationEtherCAT
                 lblEtherCatStatus.Text = "-";
                 lblSlaveStatus.Text = "-";
 
-                // 상태 패널 색상 변경 (회색 - 연결 해제)
-                UpdateStatusPanelColors(false);
+                // 상태 패널 색상 변경 (회색 - 연결 해제, 알람 고려)
+                UpdateStatusPanelsForAlarms();
 
                 MessageBox.Show("연결이 해제되었습니다.\n모든 장비 상태가 초기화되었습니다.", "연결 해제", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
@@ -359,6 +336,7 @@ namespace IonImplationEtherCAT
             if (entry.IsAlarm || entry.IsWarning)
             {
                 UpdateAlertPanel();
+                UpdateStatusPanelsForAlarms();
             }
         }
 
@@ -368,6 +346,7 @@ namespace IonImplationEtherCAT
         private void OnAlarmRestored(LogEntry entry)
         {
             UpdateAlertPanel();
+            UpdateStatusPanelsForAlarms();
         }
 
         /// <summary>
@@ -385,6 +364,70 @@ namespace IonImplationEtherCAT
         {
             LogManager.Instance.OnLogAdded -= OnAlarmAdded;
             LogManager.Instance.OnAlarmRestored -= OnAlarmRestored;
+        }
+
+        #endregion
+
+        #region 위치별 알람 패널 색상 관련
+
+        /// <summary>
+        /// 위치별 알람 상태에 따라 상태 패널 색상 업데이트
+        /// </summary>
+        private void UpdateStatusPanelsForAlarms()
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new Action(UpdateStatusPanelsForAlarms));
+                return;
+            }
+
+            var activeAlarms = LogManager.Instance.GetActiveAlarms();
+
+            // TM 패널 색상 결정
+            panelTmStatusView.BackColor = GetPanelColorForLocation(activeAlarms, "TM");
+
+            // PM1 패널 색상 결정
+            panelPm1StatusView.BackColor = GetPanelColorForLocation(activeAlarms, "PM1");
+
+            // PM2 패널 색상 결정
+            panelPm2StatusView.BackColor = GetPanelColorForLocation(activeAlarms, "PM2");
+
+            // PM3 패널 색상 결정
+            panelPm3StatusView.BackColor = GetPanelColorForLocation(activeAlarms, "PM3");
+        }
+
+        /// <summary>
+        /// 특정 위치의 알람 상태에 따른 패널 색상 반환
+        /// </summary>
+        /// <param name="activeAlarms">활성 알람 목록</param>
+        /// <param name="location">위치 (TM, PM1, PM2, PM3)</param>
+        /// <returns>해당 위치의 알람 상태에 따른 색상</returns>
+        private Color GetPanelColorForLocation(List<LogEntry> activeAlarms, string location)
+        {
+            // 해당 위치의 활성 알람 필터링
+            var locationAlarms = activeAlarms.Where(a =>
+                a.Location != null &&
+                a.Location.Equals(location, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            if (locationAlarms.Count == 0)
+            {
+                // 해당 위치에 알람 없음 - 기본 색상 (연결 상태에 따라)
+                return IsConnected ? Color.LimeGreen : Color.DarkGray;
+            }
+
+            // Alarm(긴급) 여부 확인
+            bool hasAlarm = locationAlarms.Any(a => a.IsAlarm);
+
+            if (hasAlarm)
+            {
+                // 긴급 알람 - 빨간색
+                return Color.Red;
+            }
+            else
+            {
+                // Warning만 있음 - 노란색
+                return Color.Yellow;
+            }
         }
 
         #endregion

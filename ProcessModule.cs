@@ -234,6 +234,12 @@ namespace IonImplationEtherCAT
                 bool isAnnealing = (Type == ModuleType.PM3);
                 Parameters.UpdatePhased(elapsedTime, processTime, isAnnealing, timeIncrement);
 
+                // === 파라미터 이탈 시뮬레이션 (안정화 구간에서만) ===
+                if (elapsedTime >= 10 && elapsedTime < processTime - 10)
+                {
+                    SimulateParameterDeviation(isAnnealing);
+                }
+
                 // 단계별 로그 출력
                 LogProcessStep(elapsedTime, processTime);
 
@@ -452,6 +458,119 @@ namespace IonImplationEtherCAT
         public void SetLamp(bool on)
         {
             etherCATController?.SetPMLamp(this.Type, on);
+        }
+
+        #endregion
+
+        #region 파라미터 이탈 시뮬레이션
+
+        /// <summary>
+        /// 파라미터 이탈 시뮬레이션 및 알람 발생
+        /// </summary>
+        /// <param name="isAnnealing">어닐링 공정 여부</param>
+        private void SimulateParameterDeviation(bool isAnnealing)
+        {
+            // 허용 편차값 가져오기
+            double tempTolerance, pressureTolerance, hvTolerance;
+
+            if (isAnnealing)
+            {
+                tempTolerance = AnnealRecipe?.TemperatureTolerance ?? 5.0;
+                pressureTolerance = AnnealRecipe?.PressureTolerance ?? 10.0;
+                hvTolerance = 0; // 어닐링은 HV 없음
+            }
+            else
+            {
+                tempTolerance = IonRecipe?.TemperatureTolerance ?? 5.0;
+                pressureTolerance = IonRecipe?.PressureTolerance ?? 10.0;
+                hvTolerance = IonRecipe?.HVTolerance ?? 3.0;
+            }
+
+            // 이탈 시뮬레이션 실행
+            var deviation = Parameters.SimulateParameterDeviation(tempTolerance, pressureTolerance, hvTolerance, isAnnealing);
+
+            if (deviation.HasValue)
+            {
+                // 알람 발생 및 공정 상태 변경
+                RaiseParameterDeviationAlarm(deviation.Value);
+            }
+        }
+
+        /// <summary>
+        /// 파라미터 이탈 알람 발생 및 공정 상태 변경
+        /// </summary>
+        private void RaiseParameterDeviationAlarm((string ParameterName, double DeviatedValue, double TargetValue, double DeviationPercent) deviation)
+        {
+            string pmName = Type.ToString();
+            string paramDisplayName = GetParameterDisplayName(deviation.ParameterName);
+            string valueDisplay = FormatParameterValue(deviation.ParameterName, deviation.DeviatedValue);
+            string targetDisplay = FormatParameterValue(deviation.ParameterName, deviation.TargetValue);
+
+            string message = $"{paramDisplayName} 이탈: {valueDisplay} (목표: {targetDisplay}, 편차: {deviation.DeviationPercent:F1}%)";
+
+            if (Parameters.IsAlarmLevel)
+            {
+                // 심각한 이탈 - Alarm (빨간색) + 공정 Error
+                LogManager.Instance.Alarm(message, pmName, "파라미터 이탈");
+                ModuleState = State.Error;
+            }
+            else
+            {
+                // 경미한 이탈 - Warning (노란색) + 공정 Paused
+                LogManager.Instance.Warning(message, pmName, "파라미터 이탈");
+                ModuleState = State.Paused;
+            }
+        }
+
+        /// <summary>
+        /// 파라미터 표시 이름 반환
+        /// </summary>
+        private string GetParameterDisplayName(string paramName)
+        {
+            switch (paramName)
+            {
+                case "Temperature": return "온도";
+                case "Pressure": return "압력";
+                case "HV": return "가속전압";
+                default: return paramName;
+            }
+        }
+
+        /// <summary>
+        /// 파라미터 값 포맷팅
+        /// </summary>
+        private string FormatParameterValue(string paramName, double value)
+        {
+            switch (paramName)
+            {
+                case "Temperature": return $"{value:F1}°C";
+                case "Pressure": return value < 0.01 ? $"{value:E2} Torr" : $"{value:F2} Torr";
+                case "HV": return $"{value:F1} kV";
+                default: return value.ToString("F2");
+            }
+        }
+
+        /// <summary>
+        /// 알람 복구 시 호출 - 파라미터 정상화 및 대기 상태로 전환 (자동 재개 안함)
+        /// </summary>
+        public void OnAlarmRestored()
+        {
+            if (Parameters.IsDeviated)
+            {
+                // 파라미터를 목표 범위 내로 복구
+                Parameters.RestoreToNormal();
+            }
+
+            // Error/Paused → Idle (자동 재개 안함 - 사용자가 다시 Start 해야 함)
+            if (ModuleState == State.Paused || ModuleState == State.Error)
+            {
+                ModuleState = State.Idle;
+                elapsedTime = 0;
+                IsUnloadRequested = false;
+
+                // 복구 로그
+                LogManager.Instance.AddLog($"{Type} 공정", "알람 복구됨, 대기 상태로 전환", Type.ToString(), LogCategory.Process, false);
+            }
         }
 
         #endregion

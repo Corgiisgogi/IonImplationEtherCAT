@@ -17,9 +17,13 @@ namespace IonImplationEtherCAT
         // Stop 요청 플래그 - 현재 명령 완료 후 중단
         private bool stopRequested;
 
+        // 알람 발생으로 인한 즉시 중단 플래그
+        private bool alarmStopRequested;
+
         public bool IsExecuting => isExecuting;
         public int CommandCount => commands.Count;
         public bool IsStopRequested => stopRequested;
+        public bool IsAlarmStopRequested => alarmStopRequested;
 
         #region TM 각도-LR 위치 매핑 상수
 
@@ -42,17 +46,17 @@ namespace IonImplationEtherCAT
         private const int AXIS_MOVE_SETTLE_DELAY = 1000; // 축 이동 후 안정화
 
         // PM 문 제어
-        private const int PM_DOOR_OPEN_DELAY = 2500;    // 문 열림 대기
-        private const int PM_DOOR_CLOSE_DELAY = 2500;   // 문 닫힘 대기
+        private const int PM_DOOR_OPEN_DELAY = 1200;    // 문 열림 대기
+        private const int PM_DOOR_CLOSE_DELAY = 1200;   // 문 닫힘 대기
         private const int PM_LAMP_DELAY = 100;          // 램프 ON/OFF 대기
 
         // TM 실린더/흡착 제어
-        private const int CYLINDER_EXTEND_DELAY = 3000; // 실린더 전진 대기
-        private const int CYLINDER_RETRACT_DELAY = 3000;// 실린더 후진 대기
-        private const int SUCTION_ENABLE_DELAY = 1500;  // 흡착 ON 안정화
-        private const int SUCTION_DISABLE_DELAY = 1000;  // 흡착 OFF 대기
+        private const int CYLINDER_EXTEND_DELAY = 1500; // 실린더 전진 대기
+        private const int CYLINDER_RETRACT_DELAY = 1500;// 실린더 후진 대기
+        private const int SUCTION_ENABLE_DELAY = 800;  // 흡착 ON 안정화
+        private const int SUCTION_DISABLE_DELAY = 800;  // 흡착 OFF 대기
         private const int EXHAUST_ENABLE_DELAY = 1000;   // 배기 ON 대기
-        private const int EXHAUST_DISABLE_DELAY = 1500;  // 배기 OFF 대기
+        private const int EXHAUST_DISABLE_DELAY = 1200;  // 배기 OFF 대기
 
         // 웨이퍼 처리
         private const int WAFER_PICK_DELAY = 500;       // 웨이퍼 픽업 대기
@@ -131,6 +135,23 @@ namespace IonImplationEtherCAT
         }
 
         /// <summary>
+        /// 알람 발생으로 인한 즉시 중단 요청
+        /// </summary>
+        public void RequestAlarmStop()
+        {
+            alarmStopRequested = true;
+            stopRequested = true;
+        }
+
+        /// <summary>
+        /// 알람 Stop 플래그 리셋
+        /// </summary>
+        public void ResetAlarmStopFlag()
+        {
+            alarmStopRequested = false;
+        }
+
+        /// <summary>
         /// 명령 실행 시작
         /// </summary>
         public async Task ExecuteAsync()
@@ -140,12 +161,13 @@ namespace IonImplationEtherCAT
 
             isExecuting = true;
             stopRequested = false; // 실행 시작 시 stop 플래그 초기화
+            // alarmStopRequested는 외부에서 설정되므로 여기서 초기화하지 않음
             ProcessCommand previousCommand = null;
 
             while (commands.Count > 0 && isExecuting)
             {
-                // Stop 요청이 있으면 현재 명령 완료 후 중단
-                if (stopRequested)
+                // Stop 또는 알람 중지 요청 확인
+                if (stopRequested || alarmStopRequested)
                 {
                     commands.Clear();
                     isExecuting = false;
@@ -154,6 +176,14 @@ namespace IonImplationEtherCAT
 
                 var command = commands.Dequeue();
                 bool success = await ExecuteCommandAsync(command, previousCommand);
+
+                // 명령 실행 중 알람 발생 확인
+                if (alarmStopRequested)
+                {
+                    commands.Clear();
+                    isExecuting = false;
+                    return;
+                }
 
                 if (!success)
                 {
@@ -168,7 +198,7 @@ namespace IonImplationEtherCAT
                 previousCommand = command;
 
                 // 각 명령 완료 후 Stop 요청 확인
-                if (stopRequested)
+                if (stopRequested || alarmStopRequested)
                 {
                     commands.Clear();
                     isExecuting = false;
@@ -378,6 +408,14 @@ namespace IonImplationEtherCAT
                     await Task.Delay(WAFER_UNLOAD_DELAY); // 언로드 동작 완료 대기
                     return true;
 
+                case CommandType.ResetPMProgress:
+                    if (command.Parameters.Length > 0 && command.Parameters[0] is ProcessModule pmReset)
+                    {
+                        pmReset.elapsedTime = 0;
+                        mainView.ResetPMProgressBar(pmReset);
+                    }
+                    return true;
+
                 case CommandType.WaitForProcessComplete:
                     if (command.Parameters.Length > 0 && command.Parameters[0] is ProcessModule pmWait)
                     {
@@ -514,10 +552,12 @@ namespace IonImplationEtherCAT
                 case CommandType.OpenPMDoor:
                     if (command.Parameters.Length > 0 && command.Parameters[0] is ProcessModule pmOpenDoor)
                     {
+                        string pmName = GetPMName(pmOpenDoor.Type);
                         var controller = mainView.GetEtherCATController();
                         controller?.OpenPMDoor(pmOpenDoor.Type);
                         pmOpenDoor.IsDoorOpen = true;
                         mainView.UpdatePMDoorDisplay();
+                        LogManager.Instance.AddLog("", $"{pmName} 문 열림", pmName, LogCategory.Hardware, false);
                     }
                     await Task.Delay(PM_DOOR_OPEN_DELAY); // 문 열림 완료 대기
                     return true;
@@ -525,10 +565,12 @@ namespace IonImplationEtherCAT
                 case CommandType.ClosePMDoor:
                     if (command.Parameters.Length > 0 && command.Parameters[0] is ProcessModule pmCloseDoor)
                     {
+                        string pmName = GetPMName(pmCloseDoor.Type);
                         var controller = mainView.GetEtherCATController();
                         controller?.ClosePMDoor(pmCloseDoor.Type);
                         pmCloseDoor.IsDoorOpen = false;
                         mainView.UpdatePMDoorDisplay();
+                        LogManager.Instance.AddLog("", $"{pmName} 문 닫힘", pmName, LogCategory.Hardware, false);
                     }
                     await Task.Delay(PM_DOOR_CLOSE_DELAY); // 문 닫힘 완료 대기
                     return true;
@@ -536,6 +578,7 @@ namespace IonImplationEtherCAT
                 case CommandType.ForceClosePMDoor:
                     if (command.Parameters.Length > 0 && command.Parameters[0] is ProcessModule pmForceCloseDoor)
                     {
+                        string pmName = GetPMName(pmForceCloseDoor.Type);
                         var controller = mainView.GetEtherCATController();
                         if (controller is RealEtherCATController realController)
                         {
@@ -543,6 +586,7 @@ namespace IonImplationEtherCAT
                         }
                         pmForceCloseDoor.IsDoorOpen = false;
                         mainView.UpdatePMDoorDisplay();
+                        LogManager.Instance.AddLog("초기화", $"{pmName} 문 강제 닫힘", pmName, LogCategory.Hardware, false);
                         // 시뮬레이션에서도 대기 시간 적용
                     }
                     await Task.Delay(PM_DOOR_CLOSE_DELAY); // 문 닫힘 완료 대기
@@ -706,6 +750,24 @@ namespace IonImplationEtherCAT
 
             // 매칭되는 위치가 없으면 PM1 위치 반환 (기본값)
             return HardwarePositionMap.LR_PM1;
+        }
+
+        /// <summary>
+        /// PM 타입에서 PM 이름 문자열 반환
+        /// </summary>
+        private string GetPMName(ProcessModule.ModuleType type)
+        {
+            switch (type)
+            {
+                case ProcessModule.ModuleType.PM1:
+                    return "PM1";
+                case ProcessModule.ModuleType.PM2:
+                    return "PM2";
+                case ProcessModule.ModuleType.PM3:
+                    return "PM3";
+                default:
+                    return "PM";
+            }
         }
     }
 }
