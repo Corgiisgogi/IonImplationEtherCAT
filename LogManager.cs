@@ -50,6 +50,30 @@ namespace IonImplationEtherCAT
             }
         }
 
+        /// <summary>활성 알람(Error) 존재 여부 - 공정 완전 중지 필요</summary>
+        public bool HasActiveErrors
+        {
+            get
+            {
+                lock (_lockObject)
+                {
+                    return _logs.Any(l => l.IsAlarm && !l.IsRestored);
+                }
+            }
+        }
+
+        /// <summary>활성 워닝만 존재 여부 - 일시 정지 필요</summary>
+        public bool HasActiveWarnings
+        {
+            get
+            {
+                lock (_lockObject)
+                {
+                    return _logs.Any(l => l.IsWarning && !l.IsRestored);
+                }
+            }
+        }
+
         #endregion
 
         #region 이벤트
@@ -62,6 +86,9 @@ namespace IonImplationEtherCAT
 
         /// <summary>알람 발생 시 발생 (즉시 중지 필요)</summary>
         public event Action<LogEntry> OnAlarmRaised;
+
+        /// <summary>워닝 발생 시 발생 (일시 정지 필요)</summary>
+        public event Action<LogEntry> OnWarningRaised;
 
         /// <summary>로그 파일 로드 완료 시 발생</summary>
         public event Action OnLogsLoaded;
@@ -180,6 +207,12 @@ namespace IonImplationEtherCAT
 
             // 이벤트 발생
             OnLogAdded?.Invoke(entry);
+
+            // 워닝 발생 이벤트 (일시 정지용) - isRestored가 false인 경우에만
+            if (!isRestored)
+            {
+                OnWarningRaised?.Invoke(entry);
+            }
         }
 
         #endregion

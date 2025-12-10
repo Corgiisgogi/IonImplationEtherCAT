@@ -58,6 +58,12 @@ namespace IonImplationEtherCAT
         // 알람 발생 후 재초기화 필요 플래그 (FOUP 재로드 전까지 공정 시작 불가)
         private bool needsReinitialization;
 
+        // 워닝 발생으로 인한 워크플로우 일시정지 플래그
+        private bool isWorkflowPaused;
+
+        // 워크플로우가 재개를 기다리는 중인지 (Resume 대기)
+        private bool isWaitingForResume;
+
         // EtherCAT 컨트롤러 참조
         private IEtherCATController etherCATController;
 
@@ -129,6 +135,7 @@ namespace IonImplationEtherCAT
             // 알람 이벤트 연결
             LogManager.Instance.OnAlarmRestored += OnAlarmRestored;
             LogManager.Instance.OnAlarmRaised += OnAlarmRaised;
+            LogManager.Instance.OnWarningRaised += OnWarningRaised;
         }
 
         /// <summary>
@@ -542,7 +549,7 @@ namespace IonImplationEtherCAT
         }
 
         /// <summary>
-        /// 알람 복구 시 호출 - 해당 PM의 파라미터 정상화 및 대기 상태로 전환
+        /// 알람/워닝 복구 시 호출 - 해당 PM의 파라미터 정상화 및 상태 전환
         /// </summary>
         private void OnAlarmRestored(LogEntry entry)
         {
@@ -552,69 +559,98 @@ namespace IonImplationEtherCAT
                 return;
             }
 
+            // Warning 복구인지 Error 복구인지 구분
+            bool isErrorRecovery = entry.IsAlarm;  // IsAlarm=true면 Error, IsWarning=true면 Warning
+
             // 발생 위치에 따라 해당 PM에 알람 복구 처리
             switch (entry.Location)
             {
                 case "PM1":
-                    processModuleA.OnAlarmRestored();
+                    processModuleA.OnAlarmRestored(isErrorRecovery);
                     break;
                 case "PM2":
-                    processModuleB.OnAlarmRestored();
+                    processModuleB.OnAlarmRestored(isErrorRecovery);
                     break;
                 case "PM3":
-                    processModuleC.OnAlarmRestored();
+                    processModuleC.OnAlarmRestored(isErrorRecovery);
                     break;
             }
 
-            // 모든 알람이 복구되었으면 상태 초기화
+            // 모든 알람/워닝이 복구되었는지 확인
             if (!LogManager.Instance.HasActiveAlarms)
             {
-                // 워크플로우 취소 플래그 리셋
-                isWorkflowCancelled = false;
+                // Error(알람)가 있었는지 Warning만 있었는지 구분
+                bool wasError = needsReinitialization;  // Error 발생 시 true로 설정됨
 
-                // 명령 큐 알람 플래그 리셋
-                commandQueue.ResetAlarmStopFlag();
-                commandQueue.ResetStopFlag();
-
-                // 로그인 및 연결 상태에 따라 버튼 활성화
-                if (MainForm.IsLogined)
+                if (wasError)
                 {
-                    ActivateRecipeButtons(true);
-                    if (MainForm.IsConnected)
+                    // Error 복구: 처음부터 재시작 필요
+                    isWorkflowCancelled = false;
+
+                    // 명령 큐 알람 플래그 리셋
+                    commandQueue.ResetAlarmStopFlag();
+                    commandQueue.ResetStopFlag();
+
+                    // 로그인 및 연결 상태에 따라 버튼 활성화
+                    if (MainForm.IsLogined)
                     {
-                        ActivateEquipmentButtons(true);
-                        // 재초기화가 필요하면 Start 버튼 비활성화 유지
-                        if (!needsReinitialization)
+                        ActivateRecipeButtons(true);
+                        if (MainForm.IsConnected)
                         {
-                            btnAllProcess.Enabled = true;
+                            ActivateEquipmentButtons(true);
+                            // 재초기화가 필요하면 Start 버튼 비활성화 유지
+                            if (!needsReinitialization)
+                            {
+                                btnAllProcess.Enabled = true;
+                            }
                         }
                     }
-                }
 
-                // 황색 타워 램프 (대기 상태)
-                UpdateTowerLamp(TowerLampState.Yellow);
+                    // 황색 타워 램프 (대기 상태)
+                    UpdateTowerLamp(TowerLampState.Yellow);
 
-                // UI 업데이트
-                UpdateProcessDisplay();
+                    // UI 업데이트
+                    UpdateProcessDisplay();
 
-                // 복구 완료 메시지
-                if (needsReinitialization)
-                {
+                    // 복구 완료 메시지
                     MessageBox.Show(
                         "모든 알람이 복구되었습니다.\n\n공정을 처음부터 다시 시작하려면\nFOUP를 다시 로드해주세요.",
                         "알람 복구 완료",
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
                 }
-                else
+                else if (isWaitingForResume)
                 {
-                    MessageBox.Show(
-                        "모든 알람이 복구되었습니다.\n공정을 다시 시작할 수 있습니다.",
-                        "알람 복구 완료",
-                        MessageBoxButtons.OK,
-                        MessageBoxIcon.Information);
+                    // Warning 복구: 워크플로우 재개
+                    ResumeWorkflowAfterWarning();
                 }
             }
+        }
+
+        /// <summary>
+        /// 워닝 복구 후 워크플로우 재개
+        /// </summary>
+        private void ResumeWorkflowAfterWarning()
+        {
+            // 일시 정지 플래그 리셋
+            isWorkflowPaused = false;
+            isWaitingForResume = false;
+
+            // 명령 큐 일시 정지 플래그 리셋
+            commandQueue.ResetPauseFlag();
+
+            // 녹색 타워 램프 (공정 재개)
+            UpdateTowerLamp(TowerLampState.Green);
+
+            // UI 업데이트
+            UpdateProcessDisplay();
+
+            // 재개 알림
+            MessageBox.Show(
+                "모든 워닝이 복구되었습니다.\n공정이 재개됩니다.",
+                "워닝 복구 완료",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Information);
         }
 
         /// <summary>
@@ -653,6 +689,40 @@ namespace IonImplationEtherCAT
                 "알람",
                 MessageBoxButtons.OK,
                 MessageBoxIcon.Error);
+        }
+
+        /// <summary>
+        /// 워닝 발생 시 호출 - 워크플로우 일시정지 (PM 공정도 일시정지)
+        /// </summary>
+        private void OnWarningRaised(LogEntry entry)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(new Action<LogEntry>(OnWarningRaised), entry);
+                return;
+            }
+
+            // 워크플로우 일시정지 플래그 설정
+            isWorkflowPaused = true;
+            isWaitingForResume = true;
+
+            // 명령 큐에 일시정지 요청 (현재 TM 동작 완료 후 정지)
+            commandQueue.RequestPause();
+
+            // 황색 타워 램프 점등 (워닝 상태)
+            UpdateTowerLamp(TowerLampState.Yellow);
+
+            // UI 업데이트
+            UpdateProcessDisplay();
+
+            // 워닝 메시지 표시
+            MessageBox.Show(
+                $"워닝 발생!\n\n위치: {entry.Location}\n내용: {entry.Description}\n\n" +
+                $"워크플로우가 일시정지됩니다.\n" +
+                $"알람 뷰에서 복구하면 공정이 재개됩니다.",
+                "워닝",
+                MessageBoxButtons.OK,
+                MessageBoxIcon.Warning);
         }
 
         /// <summary>
@@ -1041,8 +1111,10 @@ namespace IonImplationEtherCAT
                 return;
             }
 
-            // 워크플로우 취소 플래그 초기화
+            // 워크플로우 플래그 초기화
             isWorkflowCancelled = false;
+            isWorkflowPaused = false;
+            isWaitingForResume = false;
 
             MessageBox.Show($"전체 자동 공정을 시작합니다.\n처리할 웨이퍼: {totalWafers}개\n\nFOUP A → (PM1/PM2 이온 주입) → PM3(어닐링) → FOUP B",
                 "자동 공정 시작", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -1073,9 +1145,29 @@ namespace IonImplationEtherCAT
                     if (isWorkflowCancelled && !commandQueue.IsExecuting)
                         throw new OperationCanceledException();
 
-                    // 알람 발생 시 즉시 중단
-                    if (LogManager.Instance.HasActiveAlarms)
+                    // Error(알람) 발생 시 즉시 중단 (Warning은 일시정지만)
+                    if (LogManager.Instance.HasActiveErrors)
                         throw new OperationCanceledException("알람 발생으로 워크플로우가 중단되었습니다.");
+
+                    // Warning으로 인한 일시정지 상태 처리
+                    if (isWorkflowPaused)
+                    {
+                        // 재개될 때까지 대기 (500ms 간격으로 체크)
+                        while (isWaitingForResume)
+                        {
+                            await Task.Delay(500);
+
+                            // 일시정지 중에도 Error(알람) 발생하면 완전 중단
+                            if (LogManager.Instance.HasActiveErrors)
+                                throw new OperationCanceledException("알람 발생으로 워크플로우가 중단되었습니다.");
+
+                            // 워크플로우가 취소되면 중단
+                            if (isWorkflowCancelled)
+                                throw new OperationCanceledException();
+                        }
+                        // 재개됨 - 다음 루프로 진행
+                        continue;
+                    }
 
                     // 정상 완료 조건: FOUP A 비어있고, 모든 PM 비어있고, TM도 웨이퍼 없음 (FOUP B 상태 무관)
                     if (foupA.IsEmpty &&

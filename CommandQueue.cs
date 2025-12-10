@@ -20,10 +20,14 @@ namespace IonImplationEtherCAT
         // 알람 발생으로 인한 즉시 중단 플래그
         private bool alarmStopRequested;
 
+        // 워닝 발생으로 인한 일시 정지 플래그
+        private bool pauseRequested;
+
         public bool IsExecuting => isExecuting;
         public int CommandCount => commands.Count;
         public bool IsStopRequested => stopRequested;
         public bool IsAlarmStopRequested => alarmStopRequested;
+        public bool IsPauseRequested => pauseRequested;
 
         #region TM 각도-LR 위치 매핑 상수
 
@@ -152,6 +156,22 @@ namespace IonImplationEtherCAT
         }
 
         /// <summary>
+        /// 워닝 발생으로 인한 일시 정지 요청 (현재 명령 완료 후 정지, 큐 유지)
+        /// </summary>
+        public void RequestPause()
+        {
+            pauseRequested = true;
+        }
+
+        /// <summary>
+        /// 일시 정지 플래그 리셋 (재개 시 호출)
+        /// </summary>
+        public void ResetPauseFlag()
+        {
+            pauseRequested = false;
+        }
+
+        /// <summary>
         /// 명령 실행 시작
         /// </summary>
         public async Task ExecuteAsync()
@@ -161,16 +181,24 @@ namespace IonImplationEtherCAT
 
             isExecuting = true;
             stopRequested = false; // 실행 시작 시 stop 플래그 초기화
-            // alarmStopRequested는 외부에서 설정되므로 여기서 초기화하지 않음
+            // alarmStopRequested, pauseRequested는 외부에서 설정되므로 여기서 초기화하지 않음
             ProcessCommand previousCommand = null;
 
             while (commands.Count > 0 && isExecuting)
             {
-                // Stop 또는 알람 중지 요청 확인
+                // Stop 또는 알람 중지 요청 확인 (완전 중지)
                 if (stopRequested || alarmStopRequested)
                 {
                     commands.Clear();
                     isExecuting = false;
+                    return;
+                }
+
+                // 일시 정지 요청 확인 (큐는 유지, 실행만 중단)
+                if (pauseRequested)
+                {
+                    isExecuting = false;
+                    // 큐를 비우지 않고 반환 - 재개 시 계속 실행 가능
                     return;
                 }
 
@@ -197,10 +225,17 @@ namespace IonImplationEtherCAT
                 command.IsCompleted = true;
                 previousCommand = command;
 
-                // 각 명령 완료 후 Stop 요청 확인
+                // 각 명령 완료 후 Stop/알람 요청 확인
                 if (stopRequested || alarmStopRequested)
                 {
                     commands.Clear();
+                    isExecuting = false;
+                    return;
+                }
+
+                // 각 명령 완료 후 일시 정지 요청 확인 (현재 명령 완료 후 정지)
+                if (pauseRequested)
+                {
                     isExecuting = false;
                     return;
                 }

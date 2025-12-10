@@ -551,9 +551,13 @@ namespace IonImplationEtherCAT
         }
 
         /// <summary>
-        /// 알람 복구 시 호출 - 파라미터 정상화 및 대기 상태로 전환 (자동 재개 안함)
+        /// 알람/워닝 복구 시 호출
         /// </summary>
-        public void OnAlarmRestored()
+        /// <param name="isErrorRecovery">
+        /// true: Error 복구 - Idle로 리셋, elapsedTime 초기화
+        /// false: Warning 복구 - 공정 재개 (Running), elapsedTime 유지
+        /// </param>
+        public void OnAlarmRestored(bool isErrorRecovery = true)
         {
             if (Parameters.IsDeviated)
             {
@@ -561,14 +565,18 @@ namespace IonImplationEtherCAT
                 Parameters.RestoreToNormal();
             }
 
-            // Error/Paused → Idle (자동 재개 안함 - 사용자가 다시 Start 해야 함)
-            if (ModuleState == State.Paused || ModuleState == State.Error)
+            if (ModuleState == State.Paused && !isErrorRecovery)
             {
+                // Warning 복구: 공정 재개 (elapsedTime 유지)
+                ResumeProcess();
+                LogManager.Instance.AddLog($"{Type} 공정", "워닝 복구됨, 공정 재개", Type.ToString(), LogCategory.Process, false);
+            }
+            else if (ModuleState == State.Paused || ModuleState == State.Error)
+            {
+                // Error 복구: 완전 리셋 (Idle로 전환)
                 ModuleState = State.Idle;
                 elapsedTime = 0;
                 IsUnloadRequested = false;
-
-                // 복구 로그
                 LogManager.Instance.AddLog($"{Type} 공정", "알람 복구됨, 대기 상태로 전환", Type.ToString(), LogCategory.Process, false);
             }
         }
